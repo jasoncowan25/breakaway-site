@@ -16,10 +16,10 @@ export default function HomePage() {
       date: "Apr 7-10, 2026",
       location: "The Jar PickleBall Club",
       price: "$118 CAD/day",
-      image: "/kids-pickleball-training.jpg",
+      image: "/kids-passover-camp-hero.webp",
       badges: [
-        { text: "Ages 8-16", variant: "accent" as const },
-        { text: "New", variant: "secondary" as const },
+        { text: "New", variant: "accent" as const },
+        { text: "Ages 8-16", variant: "secondary" as const },
       ],
       coach: "Joey Manchurek",
       link: "/pickleball-camps/kids-passover-pickleball-camp-toronto",
