@@ -1,0 +1,20 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "breakawaycamps.ca" }],
+      "destination": "https://www.breakawaycamps.ca/$1",
+      "permanent": true
+    },
+    {
+      "source": "/Toronto",
+      "destination": "/pickleball-camps",
+      "permanent": true
+    },
+    {
+      "source": "/toronto",
+      "destination": "/pickleball-camps",
+      "permanent": true
+    }
+  ]
+}
