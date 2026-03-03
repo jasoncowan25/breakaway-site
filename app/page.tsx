@@ -57,7 +57,16 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center bg-[#1e3a8a]">
-        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover object-top">
+        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/images/joey-video-poster.jpg"
+          className="absolute inset-0 w-full h-full object-cover object-top"
+        >
           <source src="/images/joey-coaching-hero.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40" />
