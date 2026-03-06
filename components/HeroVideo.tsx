@@ -43,7 +43,7 @@ export function HeroVideo() {
       poster="/images/joey-video-poster.jpg"
       className="absolute inset-0 w-full h-full object-cover object-top"
     >
-      <source src="/images/joey-coaching-hero.mp4" type="video/mp4" />
+      <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/git-blob/prj_dNRbXKeOHgjR8Yf7RyWy7VpFVGjy/ZG-enGq8hhvV9X9uslBRgV/public/images/joey-coaching-hero.mp4" type="video/mp4" />
     </video>
   )
 }
