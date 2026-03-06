@@ -16,7 +16,7 @@ export function HeroVideo() {
         title="Breakaway Pickleball Camp"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[300%] min-w-[100vw] min-h-[100vh] pointer-events-none"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-[200%] min-w-[100vw] min-h-[100vh] pointer-events-none"
         style={{ border: 0 }}
       />
     </div>
