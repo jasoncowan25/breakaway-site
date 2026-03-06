@@ -9,32 +9,34 @@ export function HeroVideo() {
     const video = videoRef.current
     if (!video) return
 
-    // Ensure muted (required for autoplay)
+    // Ensure muted (required for autoplay in browsers)
     video.muted = true
 
     const playVideo = async () => {
       try {
         await video.play()
-      } catch (err) {
-        // Autoplay was prevented, retry after interaction
-        console.log("[v0] Video autoplay blocked, waiting for interaction")
+      } catch {
+        // Autoplay blocked - video will show poster instead
       }
     }
 
     // Try playing immediately
     playVideo()
 
-    // Also try on canplay event in case video wasn't loaded yet
+    // Also try when video data is loaded
     video.addEventListener("canplay", playVideo)
+    video.addEventListener("loadeddata", playVideo)
 
     return () => {
       video.removeEventListener("canplay", playVideo)
+      video.removeEventListener("loadeddata", playVideo)
     }
   }, [])
 
   return (
     <video
       ref={videoRef}
+      src="/images/joey-coaching-hero.mp4"
       autoPlay
       loop
       muted
@@ -42,8 +44,6 @@ export function HeroVideo() {
       preload="auto"
       poster="/images/joey-video-poster.jpg"
       className="absolute inset-0 w-full h-full object-cover object-top"
-    >
-      <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/git-blob/prj_dNRbXKeOHgjR8Yf7RyWy7VpFVGjy/ZG-enGq8hhvV9X9uslBRgV/public/images/joey-coaching-hero.mp4" type="video/mp4" />
-    </video>
+    />
   )
 }
