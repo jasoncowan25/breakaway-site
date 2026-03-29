@@ -23,7 +23,7 @@ export default function HomePage() {
         { text: "Joey Manchurek Signature", variant: "secondary" as const },
       ],
       coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-beginner-pickleball-camp",
+      link: "/pickleball-camps/toronto-core-skills-pickleball-camp",
       imageEnhanced: true,
     },
     {
