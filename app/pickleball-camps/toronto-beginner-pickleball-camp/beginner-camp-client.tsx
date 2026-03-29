@@ -34,8 +34,8 @@ export default function TorontoBeginnerCampClient() {
   }, [])
 
   const camp = {
-    title: "Toronto Beginner Pickleball Intensive",
-    subtitle: "2-Day Foundation Training • Beginner Players (2.5-2.75)",
+    title: "Toronto Core Skills Pickleball Intensive",
+    subtitle: "2-Day Foundation Training • Players (2.5-2.75)",
     location: "Toronto",
     coach: "Joey Manchurek",
     date: "May 23-24, 2026",
@@ -54,9 +54,9 @@ export default function TorontoBeginnerCampClient() {
         sessions: [
           { time: "9:00 AM", activity: "Welcome & Orientation\nIntroductions, goals, and camp flow" },
           { time: "9:30 AM", activity: "Dynamic Warm-Up\nMovement, activation, and court prep" },
-          { time: "10:00 AM", activity: "Dink Fundamentals\nGrip, stance, and soft game basics" },
+          { time: "10:00 AM", activity: "Kitchen Fundamentals\nGrip, stance, and soft game basics" },
           { time: "12:00 PM", activity: "Lunch & Classroom Session\nRecap, video, and strategy discussion" },
-          { time: "1:00 PM", activity: "The Third Shot Drop\nBuilding consistency and touch" },
+          { time: "1:00 PM", activity: "Drive/Drop Consistency\nBuilding reliable shot selection and touch" },
           {
             time: "3:00 PM",
             activity: "Guided Match Play & Q&A\nApplying concepts in live games and wrap-up discussions",

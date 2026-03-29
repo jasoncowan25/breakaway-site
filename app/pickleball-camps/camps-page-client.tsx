@@ -23,7 +23,7 @@ function CampsPageContent() {
   const upcomingCamps = [
     {
       id: "toronto-beginner-may",
-      title: "Toronto Beginner Intensive (2.5-2.75)",
+      title: "Toronto Core Skills Intensive (2.5-2.75)",
       date: "May 23-24, 2026",
       location: "The Jar PickleBall Club",
       locationFilter: "Toronto",
