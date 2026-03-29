@@ -22,6 +22,24 @@ function CampsPageContent() {
 
   const upcomingCamps = [
     {
+      id: "toronto-beginner-may",
+      title: "Toronto Core Skills Intensive (2.5-2.75)",
+      date: "May 23-24, 2026",
+      location: "The Jar PickleBall Club",
+      locationFilter: "Toronto",
+      format: "Camp",
+      skillLevel: "2.5-2.75",
+      price: "$800 CAD",
+      image: "/toronto-beginner-intensive-may-2026.png",
+      badges: [
+        { text: "Just Announced", variant: "accent" as const },
+        { text: "Joey Manchurek Signature", variant: "secondary" as const },
+      ],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/toronto-beginner-pickleball-camp",
+      imageEnhanced: true,
+    },
+    {
       id: "toronto-april",
       title: "Toronto Intermediate Intensive (3.0-3.5)",
       date: "April 11-12, 2026",
@@ -58,18 +76,34 @@ function CampsPageContent() {
 
   const completedCamps = [
     {
+      id: "saint-martin-clinic",
+      title: "Saint Martin Pop-Up Clinic",
+      date: "Mar 2026",
+      location: "American Tennis Club, Saint Martin",
+      locationFilter: "Saint Martin",
+      format: "Clinic",
+      price: "",
+      image: "/saint-martin-clinic-action-1.jpg",
+      badges: [{ text: "Completed", variant: "secondary" as const }],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/saint-martin-pickleball-clinic/recap",
+      buttonText: "View Recap",
+      compact: true,
+    },
+    {
       id: "toronto-intermediate-jan",
       title: "Toronto Intermediate Intensive",
       date: "Jan 10-11, 2026",
       location: "The Jar PickleBall Club",
       locationFilter: "Toronto",
       format: "Camp",
-      price: "$800 CAD",
+      price: "",
       image: "/images/screenshot-202026-01-12-20at-204.png",
       badges: [{ text: "Sold Out", variant: "destructive" as const }],
       coach: "Joey Manchurek",
       link: "/pickleball-camps/toronto-intensive-jan/recap",
       buttonText: "View Recap",
+      compact: true,
     },
   ]
 
@@ -135,7 +169,7 @@ function CampsPageContent() {
           <AccordionTrigger className="text-sm font-semibold">Skill Level</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-wrap gap-2">
-              {["3.0", "3.5", "4.0+"].map((level) => (
+              {["2.5", "3.0", "3.5", "4.0+"].map((level) => (
                 <Button
                   key={level}
                   variant={selectedSkillLevels.includes(level) ? "default" : "outline"}
