@@ -12,6 +12,20 @@ import Link from "next/link"
 export default function HomePage() {
   const featuredCamps = [
     {
+      id: "toronto-beginner-may",
+      title: "Toronto Beginner Intensive (2.5-2.75)",
+      date: "May 23-24, 2026",
+      location: "The Jar PickleBall Club",
+      price: "$800 CAD",
+      image: "/toronto-beginner-intensive-may-2026.png",
+      badges: [
+        { text: "New", variant: "accent" as const },
+        { text: "Joey Manchurek Signature", variant: "secondary" as const },
+      ],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/toronto-beginner-pickleball-camp",
+    },
+    {
       id: "kids-passover-camp",
       title: "Kids Passover Pickleball Camp",
       date: "Apr 7-10, 2026",

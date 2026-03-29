@@ -22,6 +22,23 @@ function CampsPageContent() {
 
   const upcomingCamps = [
     {
+      id: "toronto-beginner-may",
+      title: "Toronto Beginner Intensive (2.5-2.75)",
+      date: "May 23-24, 2026",
+      location: "The Jar PickleBall Club",
+      locationFilter: "Toronto",
+      format: "Camp",
+      skillLevel: "2.5-2.75",
+      price: "$800 CAD",
+      image: "/toronto-beginner-intensive-may-2026.png",
+      badges: [
+        { text: "New", variant: "accent" as const },
+        { text: "Joey Manchurek Signature", variant: "secondary" as const },
+      ],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/toronto-beginner-pickleball-camp",
+    },
+    {
       id: "toronto-april",
       title: "Toronto Intermediate Intensive (3.0-3.5)",
       date: "April 11-12, 2026",
