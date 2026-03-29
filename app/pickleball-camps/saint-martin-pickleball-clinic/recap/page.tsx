@@ -79,7 +79,7 @@ export default function SaintMartinClinicRecapPage() {
         {/* Second Image */}
         <div className="relative mb-12 aspect-[4/3] w-full overflow-hidden rounded-xl">
           <Image
-            src="/saint-martin-clinic-action-2.jpg"
+            src="/saint-martin-clinic-action-game.jpg"
             alt="Players practicing at the American Tennis Club"
             fill
             className="object-cover"
