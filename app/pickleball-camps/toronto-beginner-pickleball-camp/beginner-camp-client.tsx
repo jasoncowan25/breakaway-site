@@ -311,7 +311,7 @@ export default function TorontoBeginnerCampClient() {
 
                   <div className="bg-accent/10 rounded-lg p-3">
                     <p className="text-sm font-semibold text-accent-foreground">
-                      Only {camp.spotsLeft} spots left
+                      Only {camp.spotsLeft} spots
                     </p>
                   </div>
 
@@ -355,7 +355,7 @@ export default function TorontoBeginnerCampClient() {
           <div>
             <div className="text-2xl font-bold text-primary">{camp.price}</div>
             <div className="text-xs text-muted-foreground">
-              Only {camp.spotsLeft} spots left
+              Only {camp.spotsLeft} spots
             </div>
           </div>
           <Button asChild className="bg-primary hover:bg-primary/90 text-white px-8">
