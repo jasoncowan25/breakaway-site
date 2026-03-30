@@ -26,7 +26,12 @@ export function Footer({ hideNotifySignup = false }: { hideNotifySignup?: boolea
             Contact: <span className="text-[#111827]">breakawaypickleball@gmail.com</span>
           </p>
 
-          <p className="mt-3 text-xs text-[#111827]/60">© 2026 Breakaway Pickleball Camps. All rights reserved.</p>
+          <p className="mt-3 text-xs text-[#111827]/60">
+            © 2026 Breakaway Pickleball Camps. All rights reserved.{" "}
+            <Link href="/privacy-policy" className="text-[#111827]/60 hover:underline">
+              Privacy
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
