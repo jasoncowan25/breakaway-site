@@ -25,6 +25,7 @@ function CampsPageContent() {
       id: "toronto-beginner-may",
       title: "Toronto Core Skills Intensive (2.5-2.75)",
       date: "May 23-24, 2026",
+      sortDate: new Date("2026-05-23"),
       location: "The Jar PickleBall Club",
       locationFilter: "Toronto",
       format: "Camp",
@@ -38,11 +39,13 @@ function CampsPageContent() {
       coach: "Joey Manchurek",
       link: "/pickleball-camps/toronto-core-skills-pickleball-camp",
       imageEnhanced: true,
+      soldOut: false,
     },
     {
       id: "toronto-april",
       title: "Toronto Intermediate Intensive (3.0-3.5)",
       date: "April 11-12, 2026",
+      sortDate: new Date("2026-04-11"),
       location: "The Jar PickleBall Club",
       locationFilter: "Toronto",
       format: "Camp",
@@ -55,11 +58,13 @@ function CampsPageContent() {
       ],
       coach: "Joey Manchurek",
       link: "/pickleball-camps/toronto-intermediate-pickleball-camp",
+      soldOut: false,
     },
     {
       id: "kids-passover-camp",
       title: "Kids Passover Pickleball Camp",
       date: "April 7-10, 2026",
+      sortDate: new Date("2026-04-07"),
       location: "The Jar PickleBall Club",
       locationFilter: "Toronto",
       format: "Camp",
@@ -71,8 +76,15 @@ function CampsPageContent() {
       ],
       coach: "Joey Manchurek",
       link: "/pickleball-camps/kids-passover-pickleball-camp-toronto",
+      soldOut: true,
     },
-  ]
+  ].sort((a, b) => {
+    // Sort by soldOut status first (available camps first), then by date
+    if (a.soldOut !== b.soldOut) {
+      return a.soldOut ? 1 : -1
+    }
+    return a.sortDate.getTime() - b.sortDate.getTime()
+  })
 
   const completedCamps = [
     {
