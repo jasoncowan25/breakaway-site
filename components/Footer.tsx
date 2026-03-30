@@ -28,7 +28,7 @@ export function Footer({ hideNotifySignup = false }: { hideNotifySignup?: boolea
 
           <p className="mt-3 text-xs text-[#111827]/60">
             © 2026 Breakaway Pickleball Camps. All rights reserved.{" "}
-            <Link href="/privacy-policy" className="hover:underline">
+            <Link href="/privacy-policy" className="text-[#111827]/60 hover:underline">
               Privacy
             </Link>
           </p>
