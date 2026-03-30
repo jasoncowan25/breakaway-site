@@ -15,6 +15,7 @@ export default function HomePage() {
       id: "toronto-beginner-may",
       title: "Toronto Core Skills Intensive (2.5-2.75)",
       date: "May 23-24, 2026",
+      sortDate: new Date("2026-05-23"),
       location: "The Jar PickleBall Club",
       price: "$800 CAD",
       image: "/toronto-beginner-intensive-may-2026.png",
@@ -25,11 +26,13 @@ export default function HomePage() {
       coach: "Joey Manchurek",
       link: "/pickleball-camps/toronto-core-skills-pickleball-camp",
       imageEnhanced: true,
+      soldOut: false,
     },
     {
       id: "kids-passover-camp",
       title: "Kids Passover Pickleball Camp",
       date: "Apr 7-10, 2026",
+      sortDate: new Date("2026-04-07"),
       location: "The Jar PickleBall Club",
       price: "$118 CAD/day",
       image: "/kids-passover-camp-hero.webp",
@@ -45,18 +48,25 @@ export default function HomePage() {
       id: "toronto-april",
       title: "Toronto Intermediate Intensive (3.0-3.5)",
       date: "Apr 11-12, 2026",
+      sortDate: new Date("2026-04-11"),
       location: "The Jar PickleBall Club",
       price: "$900 CAD",
       image: "/toronto-coaching-instruction.png",
       badges: [
-        { text: "Sold Out", variant: "destructive" as const },
+        { text: "One Spot Left", variant: "accent" as const },
         { text: "Joey Manchurek Signature", variant: "secondary" as const },
       ],
       coach: "Joey Manchurek",
       link: "/pickleball-camps/toronto-intermediate-pickleball-camp",
-      soldOut: true,
+      soldOut: false,
     },
-  ]
+  ].sort((a, b) => {
+    // Sort by soldOut status first (available camps first), then by date
+    if (a.soldOut !== b.soldOut) {
+      return a.soldOut ? 1 : -1
+    }
+    return a.sortDate.getTime() - b.sortDate.getTime()
+  })
 
   return (
     <div className="min-h-screen bg-background">

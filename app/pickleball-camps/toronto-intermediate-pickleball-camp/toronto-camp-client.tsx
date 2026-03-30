@@ -99,7 +99,7 @@ export default function TorontoIntermediateCampClient() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="mx-auto max-w-7xl">
-            <Badge className="mb-4 bg-accent text-accent-foreground">New</Badge>
+            <Badge className="mb-4 bg-accent text-accent-foreground">One Spot Left</Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">{camp.title}</h1>
             <p className="text-xl text-white/90">{camp.subtitle}</p>
             <div className="flex items-center gap-4 mt-3 text-white/80">
@@ -309,14 +309,16 @@ export default function TorontoIntermediateCampClient() {
                     </div>
                   </div>
 
-                  <div className="bg-destructive/10 rounded-lg p-3">
-                    <p className="text-sm font-semibold text-destructive">
-                      Sold Out
+                  <div className="bg-accent/10 rounded-lg p-3">
+                    <p className="text-sm font-semibold text-accent-foreground">
+                      Only 1 spot left
                     </p>
                   </div>
 
-                  <Button disabled className="w-full bg-muted text-muted-foreground text-lg py-6 cursor-not-allowed">
-                    Sold Out
+                  <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-6">
+                    <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
+                      Book Now
+                    </a>
                   </Button>
 
                   <div className="pt-4 border-t border-border space-y-2 text-sm text-muted-foreground">
@@ -352,12 +354,14 @@ export default function TorontoIntermediateCampClient() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="text-2xl font-bold text-primary">{camp.price}</div>
-            <div className="text-xs text-destructive font-semibold">
-              Sold Out
+            <div className="text-xs text-accent-foreground font-semibold">
+              Only 1 spot left
             </div>
           </div>
-          <Button disabled className="bg-muted text-muted-foreground px-8 cursor-not-allowed">
-            Sold Out
+          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-8">
+            <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
+              Book Now
+            </a>
           </Button>
         </div>
       </div>
