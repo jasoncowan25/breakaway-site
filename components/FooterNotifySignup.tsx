@@ -3,13 +3,18 @@
 import type React from "react"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { ChevronDown } from "lucide-react"
 
-export function FooterNotifySignup() {
+interface FooterNotifySignupProps {
+  showViewCampsButton?: boolean
+}
+
+export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotifySignupProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [email, setEmail] = useState("")
   const [postalCode, setPostalCode] = useState("")
@@ -72,16 +77,25 @@ export function FooterNotifySignup() {
           className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 ${isExpanded ? "mb-4" : ""}`}
         >
           <p className="text-[#111827] text-sm md:text-base font-medium">Get notified when a camp goes live</p>
-          <Button
-            onClick={() => setIsExpanded(!isExpanded)}
-            variant="outline"
-            className="border-[#1e3a8a] text-[#1e3a8a] hover:bg-[#1e3a8a]/10 w-full md:w-auto"
-          >
-            Notify Me
-            <ChevronDown
-              className={`ml-2 h-4 w-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
-            />
-          </Button>
+          <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+            {showViewCampsButton && (
+              <Link href="/pickleball-camps">
+                <Button className="bg-lime-400 text-blue-950 hover:bg-lime-500 w-full md:w-auto">
+                  View Upcoming Camps
+                </Button>
+              </Link>
+            )}
+            <Button
+              onClick={() => setIsExpanded(!isExpanded)}
+              variant="outline"
+              className="border-[#1e3a8a] text-[#1e3a8a] hover:bg-[#1e3a8a]/10 w-full md:w-auto"
+            >
+              Notify Me
+              <ChevronDown
+                className={`ml-2 h-4 w-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+              />
+            </Button>
+          </div>
         </div>
 
         {/* Expanded State */}

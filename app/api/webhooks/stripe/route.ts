@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
       // 3. Send confirmation email to customer
       const { error: emailError } = await resend.emails.send({
-        from: "Breakaway Pickleball Camps <bookings@breakawaycamps.ca>",
+        from: "Breakaway Pickleball Camps <bookings@breakawaypickleball.ca>",
         replyTo: "breakawaypickleball@gmail.com",
         to: customerEmail,
         subject: `Booking Confirmed — ${camp.title}`,
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
 
       // 4. Send separate copy to owner
       const { error: bccError } = await resend.emails.send({
-        from: "Breakaway Pickleball Camps <bookings@breakawaycamps.ca>",
+        from: "Breakaway Pickleball Camps <bookings@breakawaypickleball.ca>",
         to: "breakawaypickleball@gmail.com",
         subject: `[Copy] Booking Confirmed — ${camp.title} (${customerEmail})`,
         html: emailHtml,

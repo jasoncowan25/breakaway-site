@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.breakawaycamps.ca"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.breakawaypickleball.ca"),
   alternates: {
     canonical: "/",
   },

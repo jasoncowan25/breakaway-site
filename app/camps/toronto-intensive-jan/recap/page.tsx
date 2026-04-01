@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FooterNotifySignup } from "@/components/FooterNotifySignup"
 
 export default function TorontoIntensiveRecapPage() {
   return (
@@ -208,15 +209,10 @@ export default function TorontoIntensiveRecapPage() {
           <p className="font-medium text-blue-950">Next camps opening shortly.</p>
         </section>
 
-        {/* CTA */}
-        <div className="mt-12 text-center">
-          <Link href="/pickleball-camps">
-            <Button size="lg" className="bg-lime-400 text-blue-950 hover:bg-lime-500">
-              View Upcoming Camps
-            </Button>
-          </Link>
         </div>
-      </div>
-    </main>
+
+      {/* CTA & Notify Signup */}
+      <FooterNotifySignup showViewCampsButton />
+  </main>
   )
 }

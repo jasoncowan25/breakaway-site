@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: [],
     },
-    sitemap: "https://www.breakawaycamps.ca/sitemap.xml",
+    sitemap: "https://www.breakawaypickleball.ca/sitemap.xml",
   }
 }

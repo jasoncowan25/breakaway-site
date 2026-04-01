@@ -3,7 +3,7 @@ import { parseOpenAtUTC, addMinutes, toICSDateUTC } from "@/lib/datetime"
 export function googleCalendarUrl({
   title = "Breakaway Camps – Registration Opens",
   details = "Be ready to register when the camp opens.",
-  location = process.env.NEXT_PUBLIC_SITE_URL || "breakawaycamps.ca",
+  location = process.env.NEXT_PUBLIC_SITE_URL || "breakawaypickleball.ca",
   openAtISO,
 }: {
   title?: string

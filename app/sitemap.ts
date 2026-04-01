@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.breakawaycamps.ca"
+  const baseUrl = "https://www.breakawaypickleball.ca"
 
   return [
     // Main pages
