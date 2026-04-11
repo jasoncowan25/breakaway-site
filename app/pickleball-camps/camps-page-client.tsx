@@ -60,24 +60,7 @@ function CampsPageContent() {
       link: "/pickleball-camps/toronto-intermediate-pickleball-camp",
       soldOut: false,
     },
-    {
-      id: "kids-passover-camp",
-      title: "Kids Passover Pickleball Camp",
-      date: "April 7-10, 2026",
-      sortDate: new Date("2026-04-07"),
-      location: "The Jar PickleBall Club",
-      locationFilter: "Toronto & GTA",
-      format: "Camp",
-      price: "$118 CAD/day",
-      image: "/kids-passover-camp-hero.webp",
-      badges: [
-        { text: "Sold Out", variant: "destructive" as const },
-        { text: "Ages 8-16", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/kids-passover-pickleball-camp-toronto",
-      soldOut: true,
-    },
+    
   ].sort((a, b) => {
     // Sort by soldOut status first (available camps first), then by date
     if (a.soldOut !== b.soldOut) {
@@ -87,6 +70,24 @@ function CampsPageContent() {
   })
 
   const completedCamps = [
+    {
+      id: "kids-passover-camp",
+      title: "Kids Passover Pickleball Camp",
+      date: "April 7-10, 2026",
+      location: "The Jar PickleBall Club",
+      locationFilter: "Toronto & GTA",
+      format: "Camp",
+      price: "",
+      image: "/kids-passover-camp-hero.webp",
+      badges: [
+        { text: "Completed", variant: "secondary" as const },
+        { text: "Ages 8-16", variant: "secondary" as const },
+      ],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/kids-passover-pickleball-camp-toronto/recap",
+      buttonText: "View Recap",
+      compact: true,
+    },
     {
       id: "saint-martin-clinic",
       title: "Saint Martin Pop-Up Clinic",

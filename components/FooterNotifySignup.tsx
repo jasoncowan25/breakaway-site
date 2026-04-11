@@ -153,6 +153,7 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
                     { id: "beginner", label: "Beginner (2.5–3.0)" },
                     { id: "intermediate", label: "Intermediate (3.0–3.5)" },
                     { id: "advanced", label: "Advanced (4.0+)" },
+                    { id: "kids", label: "Kids Camps (Ages 8-16)" },
                   ].map((level) => (
                     <div key={level.id} className="flex items-center space-x-3">
                       <Checkbox
