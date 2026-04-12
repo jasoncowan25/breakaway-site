@@ -79,7 +79,7 @@ function CampsPageContent() {
       locationFilter: "Toronto & GTA",
       format: "Camp",
       price: "",
-      image: "/images/kids-passover-camp-group.png",
+      image: "/images/kids-camp-group-photo.png",
       badges: [
         { text: "Completed", variant: "secondary" as const },
         { text: "Ages 8-16", variant: "secondary" as const },

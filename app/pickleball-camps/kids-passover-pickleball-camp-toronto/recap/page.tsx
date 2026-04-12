@@ -16,7 +16,7 @@ export default function KidsPassoverCampRecapPage() {
       {/* Hero Section with Group Photo */}
       <div className="relative h-[50vh] min-h-[400px] w-full overflow-hidden bg-blue-950">
         <Image
-          src="/images/kids-passover-camp-group.png"
+          src="/images/kids-camp-group-photo.png"
           alt="Kids Passover Pickleball Camp group photo"
           fill
           className="object-cover object-center"

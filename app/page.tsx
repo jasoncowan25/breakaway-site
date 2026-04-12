@@ -97,7 +97,7 @@ export default function HomePage() {
             <div className="group relative overflow-hidden rounded-lg bg-card border shadow-sm hover:shadow-md transition-shadow">
               <div className="relative h-48 overflow-hidden">
                 <img
-                  src="/images/kids-passover-camp-group.png"
+                  src="/images/kids-camp-group-photo.png"
                   alt="Kids Passover Pickleball Camp group photo"
                   className="w-full h-full object-cover"
                 />
