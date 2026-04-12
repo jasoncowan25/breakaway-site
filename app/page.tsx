@@ -28,38 +28,6 @@ export default function HomePage() {
       imageEnhanced: true,
       soldOut: false,
     },
-    {
-      id: "kids-passover-camp",
-      title: "Kids Passover Pickleball Camp",
-      date: "Apr 7-10, 2026",
-      sortDate: new Date("2026-04-07"),
-      location: "The Jar PickleBall Club",
-      price: "$118 CAD/day",
-      image: "/kids-passover-camp-hero.webp",
-      badges: [
-        { text: "Sold Out", variant: "destructive" as const },
-        { text: "Ages 8-16", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/kids-passover-pickleball-camp-toronto",
-      soldOut: true,
-    },
-    {
-      id: "toronto-april",
-      title: "Toronto Intermediate Intensive (3.0-3.5)",
-      date: "Apr 11-12, 2026",
-      sortDate: new Date("2026-04-11"),
-      location: "The Jar PickleBall Club",
-      price: "$900 CAD",
-      image: "/toronto-coaching-instruction.png",
-      badges: [
-        { text: "One Spot Left", variant: "accent" as const },
-        { text: "Joey Manchurek Signature", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-intermediate-pickleball-camp",
-      soldOut: false,
-    },
   ].sort((a, b) => {
     // Sort by soldOut status first (available camps first), then by date
     if (a.soldOut !== b.soldOut) {
@@ -124,7 +92,35 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-primary mb-6">Recently Completed Camps</h2>
 
-          <div className="max-w-md">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Kids Passover Camp */}
+            <div className="group relative overflow-hidden rounded-lg bg-card border shadow-sm hover:shadow-md transition-shadow">
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src="/kids-passover-camp-hero.webp"
+                  alt="Kids Passover Pickleball Camp group photo"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-3 right-3 flex gap-2">
+                  <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
+                    Ages 8-16
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-primary mb-1">Kids Passover Pickleball Camp</h3>
+                <p className="text-sm text-muted-foreground mb-4">April 7-10, 2026</p>
+
+                <Button asChild variant="outline" className="w-full bg-transparent">
+                  <Link href="/pickleball-camps/kids-passover-pickleball-camp-toronto/recap" scroll={true}>
+                    View Recap
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Toronto Intermediate Intensive */}
             <div className="group relative overflow-hidden rounded-lg bg-card border shadow-sm hover:shadow-md transition-shadow">
               <div className="relative h-48 overflow-hidden">
                 <img
