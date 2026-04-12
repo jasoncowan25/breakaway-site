@@ -113,7 +113,7 @@ function CampsPageContent() {
       format: "Camp",
       price: "",
       image: "/images/screenshot-202026-01-12-20at-204.png",
-      badges: [{ text: "Sold Out", variant: "destructive" as const }],
+      badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
       link: "/pickleball-camps/toronto-intensive-jan/recap",
       buttonText: "View Recap",

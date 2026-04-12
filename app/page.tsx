@@ -102,8 +102,8 @@ export default function HomePage() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-3 right-3">
-                  <span className="inline-flex items-center rounded-full bg-destructive px-3 py-1 text-xs font-semibold text-destructive-foreground">
-                    Sold Out
+                  <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                    Completed
                   </span>
                 </div>
               </div>
@@ -129,8 +129,8 @@ export default function HomePage() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-3 right-3">
-                  <span className="inline-flex items-center rounded-full bg-destructive px-3 py-1 text-xs font-semibold text-destructive-foreground">
-                    Sold Out
+                  <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                    Completed
                   </span>
                 </div>
               </div>
