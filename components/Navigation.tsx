@@ -34,12 +34,6 @@ export function Navigation() {
                 <DropdownMenuItem asChild>
                   <Link href="/pickleball-camps/toronto-core-skills-pickleball-camp">Toronto Core Skills Intensive</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/pickleball-camps/toronto-intermediate-pickleball-camp">Toronto Intermediate Intensive</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/pickleball-camps/kids-passover-pickleball-camp-toronto">Kids Passover Camp</Link>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 

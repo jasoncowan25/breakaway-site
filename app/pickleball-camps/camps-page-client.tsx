@@ -41,43 +41,7 @@ function CampsPageContent() {
       imageEnhanced: true,
       soldOut: false,
     },
-    {
-      id: "toronto-april",
-      title: "Toronto Intermediate Intensive (3.0-3.5)",
-      date: "April 11-12, 2026",
-      sortDate: new Date("2026-04-11"),
-      location: "The Jar PickleBall Club",
-      locationFilter: "Toronto & GTA",
-      format: "Camp",
-      skillLevel: "3.0-3.5",
-      price: "$900 CAD",
-      image: "/toronto-coaching-instruction.png",
-      badges: [
-        { text: "One Spot Left", variant: "accent" as const },
-        { text: "Joey Manchurek Signature", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-intermediate-pickleball-camp",
-      soldOut: false,
-    },
-    {
-      id: "kids-passover-camp",
-      title: "Kids Passover Pickleball Camp",
-      date: "April 7-10, 2026",
-      sortDate: new Date("2026-04-07"),
-      location: "The Jar PickleBall Club",
-      locationFilter: "Toronto & GTA",
-      format: "Camp",
-      price: "$118 CAD/day",
-      image: "/kids-passover-camp-hero.webp",
-      badges: [
-        { text: "Sold Out", variant: "destructive" as const },
-        { text: "Ages 8-16", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/kids-passover-pickleball-camp-toronto",
-      soldOut: true,
-    },
+    
   ].sort((a, b) => {
     // Sort by soldOut status first (available camps first), then by date
     if (a.soldOut !== b.soldOut) {
@@ -87,6 +51,39 @@ function CampsPageContent() {
   })
 
   const completedCamps = [
+    {
+      id: "toronto-april",
+      title: "Toronto Intermediate Intensive (3.0-3.5)",
+      date: "April 11-12, 2026",
+      location: "The Jar PickleBall Club",
+      locationFilter: "Toronto & GTA",
+      format: "Camp",
+      price: "",
+      image: "/images/toronto-intermediate-april-group.jpg",
+      badges: [{ text: "Completed", variant: "secondary" as const }],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/toronto-intermediate-pickleball-camp/recap",
+      buttonText: "View Recap",
+      compact: true,
+    },
+    {
+      id: "kids-passover-camp",
+      title: "Kids Passover Pickleball Camp",
+      date: "April 7-10, 2026",
+      location: "The Jar PickleBall Club",
+      locationFilter: "Toronto & GTA",
+      format: "Camp",
+      price: "",
+      image: "/images/kids-camp-group-photo.png",
+      badges: [
+        { text: "Completed", variant: "secondary" as const },
+        { text: "Ages 8-16", variant: "secondary" as const },
+      ],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/kids-passover-pickleball-camp-toronto/recap",
+      buttonText: "View Recap",
+      compact: true,
+    },
     {
       id: "saint-martin-clinic",
       title: "Saint Martin Pop-Up Clinic",
@@ -111,7 +108,7 @@ function CampsPageContent() {
       format: "Camp",
       price: "",
       image: "/images/screenshot-202026-01-12-20at-204.png",
-      badges: [{ text: "Sold Out", variant: "destructive" as const }],
+      badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
       link: "/pickleball-camps/toronto-intensive-jan/recap",
       buttonText: "View Recap",
