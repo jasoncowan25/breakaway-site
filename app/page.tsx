@@ -17,7 +17,7 @@ export default function HomePage() {
       date: "May 23-24, 2026",
       sortDate: new Date("2026-05-23"),
       location: "The Jar PickleBall Club",
-      price: "$800 CAD",
+      price: "$675 CAD",
       image: "/toronto-beginner-intensive-may-2026.png",
       badges: [
         { text: "Just Announced", variant: "accent" as const },

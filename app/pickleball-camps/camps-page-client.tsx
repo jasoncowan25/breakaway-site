@@ -30,7 +30,7 @@ function CampsPageContent() {
       locationFilter: "Toronto & GTA",
       format: "Camp",
       skillLevel: "2.5-2.75",
-      price: "$800 CAD",
+      price: "$675 CAD",
       image: "/toronto-beginner-intensive-may-2026.png",
       badges: [
         { text: "Just Announced", variant: "accent" as const },
