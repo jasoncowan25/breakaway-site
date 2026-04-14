@@ -5,12 +5,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 // Map payment link URLs to max spots
 const CAMP_CONFIG: Record<string, number> = {
-  "https://book.stripe.com/8x228r8fGdH98qybOq": 4, // Week 1 - Fundamentals AM
-  "https://book.stripe.com/4gM5kD3ZqcD59uC9Gi": 4, // Week 1 - Intermediate PM
-  "https://book.stripe.com/6oUaEX2Vm0Un22abOq": 4, // Week 2 - Fundamentals AM
-  "https://book.stripe.com/00wbJ13Zq1YrfT0bOq": 4, // Week 2 - Intermediate PM
-  "https://book.stripe.com/cNi5kDbrS9qTcGObOq": 4, // Week 3 - Fundamentals AM
-  "https://book.stripe.com/7sYaEX9jKfPh22adWy": 4, // Week 3 - Intermediate PM
+  "https://book.stripe.com/8x228r8fGdH98qybOqf3a0j": 4, // Week 1 - Fundamentals AM
+  "https://book.stripe.com/4gM5kD3ZqcD59uC9Gif3a0k": 4, // Week 1 - Intermediate PM
+  "https://book.stripe.com/6oUaEX2Vm0Un22abOqf3a0l": 4, // Week 2 - Fundamentals AM
+  "https://book.stripe.com/00wbJ13Zq1YrfT0bOqf3a0m": 4, // Week 2 - Intermediate PM
+  "https://book.stripe.com/cNi5kDbrS9qTcGObOqf3a0n": 4, // Week 3 - Fundamentals AM
+  "https://book.stripe.com/7sYaEX9jKfPh22adWyf3a0o": 4, // Week 3 - Intermediate PM
 }
 
 export async function GET() {

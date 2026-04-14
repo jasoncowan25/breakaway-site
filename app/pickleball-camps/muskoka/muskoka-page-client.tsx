@@ -30,7 +30,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/8x228r8fGdH98qybOq",
+    checkoutUrl: "https://book.stripe.com/8x228r8fGdH98qybOqf3a0j",
     week: 1,
   },
   {
@@ -44,7 +44,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/4gM5kD3ZqcD59uC9Gi",
+    checkoutUrl: "https://book.stripe.com/4gM5kD3ZqcD59uC9Gif3a0k",
     week: 1,
   },
   {
@@ -58,7 +58,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/6oUaEX2Vm0Un22abOq",
+    checkoutUrl: "https://book.stripe.com/6oUaEX2Vm0Un22abOqf3a0l",
     week: 2,
   },
   {
@@ -72,7 +72,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/00wbJ13Zq1YrfT0bOq",
+    checkoutUrl: "https://book.stripe.com/00wbJ13Zq1YrfT0bOqf3a0m",
     week: 2,
   },
   {
@@ -86,7 +86,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/cNi5kDbrS9qTcGObOq",
+    checkoutUrl: "https://book.stripe.com/cNi5kDbrS9qTcGObOqf3a0n",
     week: 3,
   },
   {
@@ -100,7 +100,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/7sYaEX9jKfPh22adWy",
+    checkoutUrl: "https://book.stripe.com/7sYaEX9jKfPh22adWyf3a0o",
     week: 3,
   },
 ]
