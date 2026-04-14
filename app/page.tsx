@@ -2,6 +2,7 @@ import { Navigation } from "@/components/Navigation"
 import { CampFinder } from "@/components/CampFinder"
 import { ValueProps } from "@/components/ValueProps"
 import { CampCard } from "@/components/CampCard"
+import { MuskokaHubCard } from "@/components/MuskokaHubCard"
 import { Footer } from "@/components/Footer"
 import { HeroAvatars } from "@/components/HeroAvatars"
 import { HeroVideo } from "@/components/HeroVideo"
@@ -79,7 +80,8 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <MuskokaHubCard className="md:col-span-2 lg:col-span-2" />
             {featuredCamps.map((camp) => (
               <CampCard key={camp.id} {...camp} />
             ))}
