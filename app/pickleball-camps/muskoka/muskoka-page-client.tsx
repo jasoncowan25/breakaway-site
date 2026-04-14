@@ -245,7 +245,7 @@ export function MuskokaPageClient() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-primary mb-2">July 2026 Camps</h2>
             <p className="text-muted-foreground">
-              6 small-group camps. 4 players per session. Three days of focused training with a 5.0 pro.
+              Choose from 6 camps. 4 players per session.
             </p>
           </div>
 
