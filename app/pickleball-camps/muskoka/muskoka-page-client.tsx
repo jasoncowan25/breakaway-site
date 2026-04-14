@@ -1,10 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Calendar, Clock, Users, Check, MapPin, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
@@ -20,7 +22,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drives", "Drops", "Dinking", "Positioning", "Attacks"],
-    checkoutUrl: "",
+    checkoutUrl: "https://buy.stripe.com/eVq00jfI8cD54ai4lY",
     week: 1,
   },
   {
@@ -34,7 +36,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core Skills", "Positioning"],
-    checkoutUrl: "",
+    checkoutUrl: "https://buy.stripe.com/eVq5kD0Nebz14ai5q2",
     week: 1,
   },
   {
@@ -48,21 +50,21 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drives", "Drops", "Dinking", "Positioning", "Attacks"],
-    checkoutUrl: "",
+    checkoutUrl: "https://buy.stripe.com/8x2cN5gMcbz19uC6u6",
     week: 2,
   },
   {
-    id: "muskoka-fundamentals-jul-13",
-    title: "Fundamentals Camp",
-    level: "Fundamentals (Under 3.0)",
-    levelVariant: "secondary" as const,
+    id: "muskoka-intermediate-jul-13-pm",
+    title: "Intermediate Camp",
+    level: "Intermediate (3.0+)",
+    levelVariant: "accent" as const,
     dates: "July 13-15, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
     price: "$800 CAD",
     maxPlayers: 4,
-    focus: ["Core Skills", "Positioning"],
-    checkoutUrl: "",
+    focus: ["Drives", "Drops", "Dinking", "Positioning", "Attacks"],
+    checkoutUrl: "https://buy.stripe.com/eVqbJ12Vm9qT6iq5q2",
     week: 2,
   },
   {
@@ -76,7 +78,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core Skills", "Positioning"],
-    checkoutUrl: "",
+    checkoutUrl: "https://buy.stripe.com/8x228rcvWcD536e19M",
     week: 3,
   },
   {
@@ -90,7 +92,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drives", "Drops", "Dinking", "Positioning", "Attacks"],
-    checkoutUrl: "",
+    checkoutUrl: "https://buy.stripe.com/3cI28r2Vm5aD9uC7ya",
     week: 3,
   },
 ]
@@ -146,7 +148,7 @@ function CampCard({ camp }: { camp: (typeof muskokaCamps)[0] }) {
             {hasCheckout ? (
               <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
                 <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
-                  Book Now
+                  Book
                 </a>
               </Button>
             ) : (
@@ -162,6 +164,8 @@ function CampCard({ camp }: { camp: (typeof muskokaCamps)[0] }) {
 }
 
 export function MuskokaPageClient() {
+  const [mapModalOpen, setMapModalOpen] = useState(false)
+  
   const scrollToCamps = () => {
     document.getElementById("camps")?.scrollIntoView({ behavior: "smooth" })
   }
@@ -335,7 +339,7 @@ export function MuskokaPageClient() {
                 ))}
               </ul>
 
-              {/* Map placeholder */}
+              {/* Map section */}
               <div className="bg-muted rounded-xl p-6">
                 <div className="flex items-start gap-3 mb-4">
                   <MapPin className="h-5 w-5 text-primary mt-0.5" />
@@ -346,14 +350,19 @@ export function MuskokaPageClient() {
                     </p>
                   </div>
                 </div>
-                <div className="bg-primary/10 rounded-lg aspect-video flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-8 w-8 text-primary/50 mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">
-                      Exact address provided after booking
-                    </p>
-                  </div>
-                </div>
+                <button
+                  onClick={() => setMapModalOpen(true)}
+                  className="relative rounded-lg aspect-video overflow-hidden w-full cursor-pointer hover:opacity-95 transition-opacity"
+                >
+                  <img
+                    src="/muskoka-photos/muskoka-region-map.jpg"
+                    alt="Muskoka region map - click to enlarge"
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+                <p className="text-xs text-muted-foreground mt-3 text-center">
+                  Click map to enlarge. Exact address shared with campers before camp begins.
+                </p>
               </div>
             </div>
           </div>
@@ -377,6 +386,25 @@ export function MuskokaPageClient() {
       </section>
 
       <Footer />
+
+      {/* Map Modal */}
+      <Dialog open={mapModalOpen} onOpenChange={setMapModalOpen}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          <DialogTitle className="sr-only">Muskoka Region Map</DialogTitle>
+          <div className="relative">
+            <img
+              src="/muskoka-photos/muskoka-region-map.jpg"
+              alt="Muskoka region map showing Lake Joseph area"
+              className="w-full h-auto"
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+              <p className="text-white text-sm text-center">
+                Exact address will be shared with campers before camp begins.
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
