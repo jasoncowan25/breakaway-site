@@ -14,7 +14,7 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
     <Link
       href="/pickleball-camps/muskoka"
       className={cn(
-        "group relative overflow-hidden rounded-lg bg-card border-2 border-accent/30 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1",
+        "group relative overflow-hidden rounded-lg bg-card border border-border shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1",
         className
       )}
     >
@@ -27,7 +27,6 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
             alt="Muskoka cottage country autumn scenery"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/40" />
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
@@ -94,7 +93,6 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
             alt="Muskoka cottage country autumn scenery"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/40" />
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
