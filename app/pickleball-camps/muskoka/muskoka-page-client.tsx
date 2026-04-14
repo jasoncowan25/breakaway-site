@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import useSWR from "swr"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
@@ -9,6 +10,13 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Calendar, Clock, Users, Check, MapPin, ArrowRight } from "lucide-react"
 import Link from "next/link"
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
+type AvailabilityData = {
+  availability: Record<string, { spotsRemaining: number; maxSpots: number }>
+  lastUpdated: string
+}
 
 const muskokaCamps = [
   {
@@ -97,8 +105,16 @@ const muskokaCamps = [
   },
 ]
 
-function CampCard({ camp }: { camp: (typeof muskokaCamps)[0] }) {
+function CampCard({ 
+  camp, 
+  availability 
+}: { 
+  camp: (typeof muskokaCamps)[0]
+  availability?: { spotsRemaining: number; maxSpots: number }
+}) {
   const hasCheckout = camp.checkoutUrl && camp.checkoutUrl.length > 0
+  const spotsRemaining = availability?.spotsRemaining ?? camp.maxPlayers
+  const isSoldOut = spotsRemaining === 0
 
   return (
     <Card className="overflow-hidden h-full flex flex-col">
@@ -106,9 +122,19 @@ function CampCard({ camp }: { camp: (typeof muskokaCamps)[0] }) {
         {/* Badges */}
         <div className="flex items-center justify-between mb-3">
           <Badge variant={camp.levelVariant}>{camp.level}</Badge>
-          <Badge variant="outline" className="text-xs">
-            <Users className="h-3 w-3 mr-1" />4 Players Max
-          </Badge>
+          {isSoldOut ? (
+            <Badge variant="destructive" className="text-xs">
+              Sold Out
+            </Badge>
+          ) : (
+            <Badge 
+              variant="outline" 
+              className={`text-xs ${spotsRemaining <= 2 ? "border-orange-500 text-orange-600" : ""}`}
+            >
+              <Users className="h-3 w-3 mr-1" />
+              {spotsRemaining} {spotsRemaining === 1 ? "Spot" : "Spots"} Left
+            </Badge>
+          )}
         </div>
 
         {/* Title */}
@@ -145,7 +171,11 @@ function CampCard({ camp }: { camp: (typeof muskokaCamps)[0] }) {
         <div className="mt-auto pt-4 border-t">
           <div className="flex items-center justify-between">
             <span className="text-2xl font-bold text-primary">{camp.price}</span>
-            {hasCheckout ? (
+            {isSoldOut ? (
+              <Button disabled variant="outline">
+                Sold Out
+              </Button>
+            ) : hasCheckout ? (
               <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
                 <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
                   Book
@@ -165,6 +195,16 @@ function CampCard({ camp }: { camp: (typeof muskokaCamps)[0] }) {
 
 export function MuskokaPageClient() {
   const [mapModalOpen, setMapModalOpen] = useState(false)
+  
+  const { data: availabilityData } = useSWR<AvailabilityData>(
+    "/api/camp-availability",
+    fetcher,
+    { refreshInterval: 30000 } // Refresh every 30 seconds
+  )
+  
+  const getAvailability = (checkoutUrl: string) => {
+    return availabilityData?.availability?.[checkoutUrl]
+  }
   
   const scrollToCamps = () => {
     document.getElementById("camps")?.scrollIntoView({ behavior: "smooth" })
@@ -258,7 +298,7 @@ export function MuskokaPageClient() {
               {muskokaCamps
                 .filter((c) => c.week === 1)
                 .map((camp) => (
-                  <CampCard key={camp.id} camp={camp} />
+                  <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
                 ))}
             </div>
           </div>
@@ -272,7 +312,7 @@ export function MuskokaPageClient() {
               {muskokaCamps
                 .filter((c) => c.week === 2)
                 .map((camp) => (
-                  <CampCard key={camp.id} camp={camp} />
+                  <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
                 ))}
             </div>
           </div>
@@ -286,7 +326,7 @@ export function MuskokaPageClient() {
               {muskokaCamps
                 .filter((c) => c.week === 3)
                 .map((camp) => (
-                  <CampCard key={camp.id} camp={camp} />
+                  <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
                 ))}
             </div>
           </div>
