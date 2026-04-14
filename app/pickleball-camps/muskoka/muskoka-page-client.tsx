@@ -194,7 +194,7 @@ export function MuskokaPageClient() {
             <div>
               <p className="text-sm font-semibold text-accent tracking-wide mb-2">MUSKOKA SUMMER CAMPS</p>
               <h1 className="text-4xl lg:text-5xl font-bold text-primary mb-4 text-balance">
-                Train With A 5.0 Pro In Cottage Country
+                Train With A Pro In Cottage Country
               </h1>
               <p className="text-lg text-muted-foreground mb-6">
                 Joey Manchurek - former OHL Captain turned 5.0 DUPR pickleball pro - is running six small-group
@@ -340,7 +340,7 @@ export function MuskokaPageClient() {
                 <div className="flex items-start gap-3 mb-4">
                   <MapPin className="h-5 w-5 text-primary mt-0.5" />
                   <div>
-                    <p className="font-semibold text-primary">Near Lake Joseph, Ontario</p>
+                    <p className="font-semibold text-primary">Muskoka, Ontario</p>
                     <p className="text-sm text-muted-foreground">
                       Roughly 2 hours north of Toronto
                     </p>
