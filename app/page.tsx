@@ -19,7 +19,7 @@ export default function HomePage() {
       sortDate: new Date("2026-05-23"),
       location: "The Jar PickleBall Club",
       price: "$675 CAD",
-      image: "/toronto-beginner-intensive-may-2026.png",
+      image: "/toronto-coaching-instruction.png",
       badges: [
         { text: "New", variant: "accent" as const },
         { text: "Joey Signature", variant: "secondary" as const },
@@ -84,7 +84,7 @@ export default function HomePage() {
             {featuredCamps.map((camp) => (
               <CampCard key={camp.id} {...camp} />
             ))}
-            <MuskokaHubCard className="md:col-span-2 lg:col-span-2" />
+            <MuskokaHubCard />
           </div>
         </div>
       </section>
