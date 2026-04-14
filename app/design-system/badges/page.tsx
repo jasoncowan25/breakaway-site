@@ -302,7 +302,7 @@ export default function BadgeDesignSystemPage() {
               <CardContent>
                 <div className="flex items-center justify-between pt-4 border-t">
                   <span className="text-2xl font-bold text-primary">$675 CAD</span>
-                  <Button className="bg-primary hover:bg-primary/90 text-white">Book Now</Button>
+                  <Button className="bg-primary hover:bg-primary/90 text-white">Book Camp</Button>
                 </div>
               </CardContent>
             </Card>
