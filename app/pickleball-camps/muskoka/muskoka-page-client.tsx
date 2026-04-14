@@ -253,8 +253,8 @@ export function MuskokaPageClient() {
                   <p className="text-xs text-muted-foreground">DUPR Rating</p>
                 </div>
                 <div className="bg-primary/5 rounded-lg p-4 text-center flex-1">
-                  <p className="text-2xl font-bold text-primary">OHL</p>
-                  <p className="text-xs text-muted-foreground">Captain</p>
+                  <p className="text-2xl font-bold text-primary">500+</p>
+                  <p className="text-xs text-muted-foreground">Players Coached</p>
                 </div>
               </div>
 
