@@ -5,12 +5,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 // Map payment link URLs to max spots
 const CAMP_CONFIG: Record<string, number> = {
-  "https://book.stripe.com/8x228r8fGdH98qybOqf3a0j": 4, // Week 1 - Fundamentals AM
-  "https://book.stripe.com/4gM5kD3ZqcD59uC9Gif3a0k": 4, // Week 1 - Intermediate PM
-  "https://book.stripe.com/6oUaEX2Vm0Un22abOqf3a0l": 4, // Week 2 - Fundamentals AM
-  "https://book.stripe.com/00wbJ13Zq1YrfT0bOqf3a0m": 4, // Week 2 - Intermediate PM
-  "https://book.stripe.com/cNi5kDbrS9qTcGObOqf3a0n": 4, // Week 3 - Fundamentals AM
-  "https://book.stripe.com/7sYaEX9jKfPh22adWyf3a0o": 4, // Week 3 - Intermediate PM
+  "https://book.stripe.com/28E00j2Vmbz18qy5q2f3a0p": 4, // July 10-12 - Fundamentals AM
+  "https://book.stripe.com/dRm8wPeE46eHeOW05If3a0q": 4, // July 10-12 - Intermediate PM
+  "https://book.stripe.com/dRmfZhanOcD5bCK8Cef3a0r": 4, // July 13-15 - Fundamentals AM
+  "https://book.stripe.com/9B600j7bC5aD22a3hUf3a0s": 4, // July 13-15 - Intermediate PM
+  "https://book.stripe.com/3cI5kDanOfPhgX4g4Gf3a0t": 4, // July 17-19 - Fundamentals AM
+  "https://book.stripe.com/6oU3cvgMc32v6iqf0Cf3a0u": 4, // July 17-19 - Intermediate PM
 }
 
 export async function GET() {

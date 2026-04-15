@@ -30,7 +30,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/8x228r8fGdH98qybOqf3a0j",
+    checkoutUrl: "https://book.stripe.com/28E00j2Vmbz18qy5q2f3a0p",
     week: 1,
   },
   {
@@ -44,7 +44,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/4gM5kD3ZqcD59uC9Gif3a0k",
+    checkoutUrl: "https://book.stripe.com/dRm8wPeE46eHeOW05If3a0q",
     week: 1,
   },
   {
@@ -58,7 +58,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/6oUaEX2Vm0Un22abOqf3a0l",
+    checkoutUrl: "https://book.stripe.com/dRmfZhanOcD5bCK8Cef3a0r",
     week: 2,
   },
   {
@@ -72,7 +72,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/00wbJ13Zq1YrfT0bOqf3a0m",
+    checkoutUrl: "https://book.stripe.com/9B600j7bC5aD22a3hUf3a0s",
     week: 2,
   },
   {
@@ -86,7 +86,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/cNi5kDbrS9qTcGObOqf3a0n",
+    checkoutUrl: "https://book.stripe.com/3cI5kDanOfPhgX4g4Gf3a0t",
     week: 3,
   },
   {
@@ -100,7 +100,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/7sYaEX9jKfPh22adWyf3a0o",
+    checkoutUrl: "https://book.stripe.com/6oU3cvgMc32v6iqf0Cf3a0u",
     week: 3,
   },
 ]
@@ -193,8 +193,11 @@ function CampCard({
   )
 }
 
+type LevelFilter = "all" | "under3" | "3plus"
+
 export function MuskokaPageClient() {
   const [mapModalOpen, setMapModalOpen] = useState(false)
+  const [levelFilter, setLevelFilter] = useState<LevelFilter>("all")
   
   const { data: availabilityData } = useSWR<AvailabilityData>(
     "/api/camp-availability",
@@ -204,6 +207,12 @@ export function MuskokaPageClient() {
   
   const getAvailability = (checkoutUrl: string) => {
     return availabilityData?.availability?.[checkoutUrl]
+  }
+  
+  const filterCampsByLevel = (camps: typeof muskokaCamps) => {
+    if (levelFilter === "all") return camps
+    if (levelFilter === "under3") return camps.filter(c => c.level.includes("Under 3.0"))
+    return camps.filter(c => c.level.includes("3.0+"))
   }
   
   const scrollToCamps = () => {
@@ -280,54 +289,88 @@ export function MuskokaPageClient() {
       {/* Camps Section */}
       <section id="camps" className="py-16 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-primary mb-2">July 2026 Camps</h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-6">
               Choose from 6 camps. 4 players per session.
             </p>
+            
+            {/* Level Filter */}
+            <div className="flex justify-center gap-2">
+              <Button
+                variant={levelFilter === "all" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setLevelFilter("all")}
+                className={levelFilter === "all" ? "bg-primary text-primary-foreground" : ""}
+              >
+                All Levels
+              </Button>
+              <Button
+                variant={levelFilter === "under3" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setLevelFilter("under3")}
+                className={levelFilter === "under3" ? "bg-primary text-primary-foreground" : ""}
+              >
+                Under 3.0
+              </Button>
+              <Button
+                variant={levelFilter === "3plus" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setLevelFilter("3plus")}
+                className={levelFilter === "3plus" ? "bg-primary text-primary-foreground" : ""}
+              >
+                3.0+
+              </Button>
+            </div>
           </div>
 
           {/* Week 1 */}
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-              Week 1: July 10-12
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {muskokaCamps
-                .filter((c) => c.week === 1)
-                .map((camp) => (
-                  <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
-                ))}
+          {filterCampsByLevel(muskokaCamps).filter((c) => c.week === 1).length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                July 10-12
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filterCampsByLevel(muskokaCamps)
+                  .filter((c) => c.week === 1)
+                  .map((camp) => (
+                    <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
+                  ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Week 2 */}
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-              Week 2: July 13-15
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {muskokaCamps
-                .filter((c) => c.week === 2)
-                .map((camp) => (
-                  <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
-                ))}
+          {filterCampsByLevel(muskokaCamps).filter((c) => c.week === 2).length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                July 13-15
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filterCampsByLevel(muskokaCamps)
+                  .filter((c) => c.week === 2)
+                  .map((camp) => (
+                    <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
+                  ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Week 3 */}
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-              Week 3: July 17-19
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {muskokaCamps
-                .filter((c) => c.week === 3)
-                .map((camp) => (
-                  <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
-                ))}
+          {filterCampsByLevel(muskokaCamps).filter((c) => c.week === 3).length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                July 17-19
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filterCampsByLevel(muskokaCamps)
+                  .filter((c) => c.week === 3)
+                  .map((camp) => (
+                    <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} />
+                  ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Booking note */}
           <p className="text-sm text-muted-foreground text-center mt-8">
