@@ -13,11 +13,11 @@ export function Navigation() {
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/breakaway-text-logo-tight.png"
+              src="/breakaway-text-logo-on-white.svg"
               alt="Breakaway Pickleball Camps"
               width={200}
-              height={50}
-              className="h-10 w-auto mb-0 mt-1"
+              height={48}
+              className="h-10 w-auto"
             />
           </Link>
 
