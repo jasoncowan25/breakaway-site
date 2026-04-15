@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import Script from "next/script"
 import { ScrollToTop } from "@/components/ScrollToTop"
+import { ResizeObserverFix } from "@/components/ResizeObserverFix"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -55,22 +56,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script id="resize-observer-fix" strategy="beforeInteractive">
-          {`
-            // Suppress ResizeObserver loop error - this is a known browser issue
-            // that occurs when resize observations can't be delivered in a single frame
-            const ro = window.ResizeObserver;
-            window.ResizeObserver = class extends ro {
-              constructor(callback) {
-                super((entries, observer) => {
-                  requestAnimationFrame(() => {
-                    callback(entries, observer);
-                  });
-                });
-              }
-            };
-          `}
-        </Script>
         <Script src="https://www.googletagmanager.com/gtag/js?id=AW-17655187543" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -82,6 +67,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased flex flex-col min-h-screen`}>
+        <ResizeObserverFix />
         <ScrollToTop />
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
