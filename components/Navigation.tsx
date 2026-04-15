@@ -31,14 +31,8 @@ export function Navigation() {
                 <DropdownMenuItem asChild>
                   <Link href="/pickleball-camps">All Camps</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem disabled className="text-xs text-muted-foreground font-semibold">
-                  MUSKOKA SUMMER CAMPS
-                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/pickleball-camps/muskoka">Muskoka Hub</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem disabled className="text-xs text-muted-foreground font-semibold mt-2">
-                  TORONTO & GTA
+                  <Link href="/pickleball-camps/muskoka">Muskoka Adult Summer Camps</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/pickleball-camps/toronto-core-skills-pickleball-camp">Toronto Fundamentals Intensive (2.5–2.75)</Link>
