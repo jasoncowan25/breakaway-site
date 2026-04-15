@@ -9,6 +9,7 @@ import { CheckCircle, MapPin, Clock, Users, Calendar, ArrowRight } from "lucide-
 import { Footer } from "@/components/Footer"
 import Link from "next/link"
 
+// Experience page with two selectable camp experiences
 export default function ExperiencePage() {
   const [selectedExperience, setSelectedExperience] = useState<"toronto" | "muskoka">("toronto")
 
