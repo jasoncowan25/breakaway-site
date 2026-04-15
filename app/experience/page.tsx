@@ -157,7 +157,7 @@ export default function ExperiencePage() {
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-border">
-                <span className="text-sm text-muted-foreground">Half day, snacks included.<br></span>
+                <span className="text-sm text-muted-foreground">Half day, snacks included</span>
               </div>
             </button>
           </div>
