@@ -41,6 +41,7 @@ export function CampFinder() {
               <SelectValue placeholder="Select skill level" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="2.5">2.5 (Under 3.0)</SelectItem>
               <SelectItem value="3.0">3.0</SelectItem>
               <SelectItem value="3.5">3.5</SelectItem>
               <SelectItem value="4.0">4.0+</SelectItem>

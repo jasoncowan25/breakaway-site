@@ -15,8 +15,26 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 function CampsPageContent() {
   const searchParams = useSearchParams()
   const [showFilters, setShowFilters] = useState(false)
-  const [selectedSkillLevels, setSelectedSkillLevels] = useState<string[]>([])
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([])
+  
+  // Parse URL params for initial filter state
+  const locationParam = searchParams.get("location")
+  const skillParam = searchParams.get("skill")
+  
+  // Map URL location values to filter values
+  const getInitialLocations = (): string[] => {
+    if (!locationParam) return []
+    if (locationParam === "toronto-gta") return ["Toronto & GTA"]
+    if (locationParam === "muskoka") return ["Muskoka"]
+    return []
+  }
+  
+  const getInitialSkillLevels = (): string[] => {
+    if (!skillParam) return []
+    return [skillParam]
+  }
+  
+  const [selectedSkillLevels, setSelectedSkillLevels] = useState<string[]>(getInitialSkillLevels)
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(getInitialLocations)
   const [selectedFormats, setSelectedFormats] = useState<string[]>([])
   const [dateFilter, setDateFilter] = useState<"upcoming" | "completed">("upcoming")
 
@@ -239,12 +257,17 @@ function CampsPageContent() {
     if (selectedFormats.length > 0 && !selectedFormats.includes(camp.format)) {
       return false
     }
-    if (
-      selectedSkillLevels.length > 0 &&
-      camp.skillLevel &&
-      !selectedSkillLevels.some((level) => camp.skillLevel?.includes(level))
-    ) {
-      return false
+    if (selectedSkillLevels.length > 0 && camp.skillLevel) {
+      const matchesSkillLevel = selectedSkillLevels.some((level) => {
+        // "2.5" filter should match "Under 3.0" and "2.5-2.75"
+        if (level === "2.5") {
+          return camp.skillLevel?.includes("Under 3.0") || camp.skillLevel?.includes("2.5")
+        }
+        return camp.skillLevel?.includes(level)
+      })
+      if (!matchesSkillLevel) {
+        return false
+      }
     }
     return true
   })
