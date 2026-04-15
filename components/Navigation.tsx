@@ -44,7 +44,7 @@ export function Navigation() {
               Coaches
             </Link>
             <Link
-              href="/pickleball-camp-experience"
+              href="/experience"
               className="text-sm font-medium text-foreground hover:text-primary transition-colors"
             >
               The Experience
