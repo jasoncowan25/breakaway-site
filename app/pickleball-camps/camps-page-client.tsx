@@ -148,13 +148,13 @@ function CampsPageContent() {
     },
     {
       id: "muskoka-fundamentals-jul-13",
-      title: "Muskoka Fundamentals Camp (Under 3.0)",
+      title: "Muskoka Intermediate Camp (3.0+)",
       date: "July 13-15, 2026",
       sortDate: new Date("2026-07-13"),
       location: "Private Facility, Muskoka",
       locationFilter: "Muskoka",
       format: "Camp",
-      skillLevel: "Under 3.0",
+      skillLevel: "3.0+",
       price: "$800 CAD",
       image: "/muskoka-photos/muskoka-court-indoor.jpg",
       badges: [
