@@ -42,7 +42,7 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
           
           <h3 className="text-xl md:text-2xl font-bold text-primary mb-2">Muskoka Adult Pickleball Camps</h3>
           <p className="text-muted-foreground text-sm mb-4">
-            For all skill levels · with Joey Manchurek at our private Muskoka facility
+            with Joey Manchurek at our private Muskoka facility
           </p>
 
           {/* Stat chips */}
