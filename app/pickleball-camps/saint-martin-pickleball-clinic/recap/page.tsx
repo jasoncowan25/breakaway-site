@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Trophy, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Metadata } from "next"
 import { FooterNotifySignup } from "@/components/FooterNotifySignup"
 
@@ -59,12 +60,8 @@ export default function SaintMartinClinicRecapPage() {
           </div>
 
           <div className="mt-4 inline-flex items-center gap-3">
-            <span className="rounded-full bg-lime-400/20 px-3 py-1 text-sm font-medium text-lime-700">
-              Completed
-            </span>
-            <span className="rounded-full bg-blue-950/10 px-3 py-1 text-sm font-medium text-blue-950">
-              Pop-Up Clinic
-            </span>
+            <Badge variant="accent">Completed</Badge>
+            <Badge variant="secondary">Pop-Up Clinic</Badge>
           </div>
         </div>
 

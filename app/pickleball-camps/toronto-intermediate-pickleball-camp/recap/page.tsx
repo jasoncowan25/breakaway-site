@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 export const metadata = {
   title: "Toronto 3.0-3.5 Camp Recap | April 2026 | Breakaway Pickleball",
@@ -56,12 +57,8 @@ export default function TorontoIntermediateAprilRecapPage() {
           </div>
           
           <div className="flex gap-2">
-            <span className="inline-flex items-center rounded-full bg-destructive/10 px-3 py-1 text-xs font-semibold text-destructive">
-              Sold Out
-            </span>
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              Pro-Led Training
-            </span>
+            <Badge variant="destructive">Sold Out</Badge>
+            <Badge variant="secondary">Pro-Led Training</Badge>
           </div>
         </header>
 

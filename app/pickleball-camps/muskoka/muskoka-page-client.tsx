@@ -454,7 +454,7 @@ export function MuskokaPageClient() {
                   />
                 </button>
                 <p className="text-xs text-muted-foreground mt-3 text-center">
-                  Click map to enlarge. Exact address shared with campers before camp begins.
+                  Click map to enlarge. Exact address shared before camp begins.
                 </p>
               </div>
             </div>
@@ -471,7 +471,7 @@ export function MuskokaPageClient() {
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Train where you&apos;d rather be.</h2>
-          <p className="text-white/80 mb-6">Join Joey this July in Muskoka cottage country.</p>
+          <p className="text-white/80 mb-6">Join Joey this summer in Muskoka cottage country.</p>
           <Button onClick={scrollToCamps} size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
             View Camps <ArrowRight className="ml-2 h-4 w-4" />
           </Button>

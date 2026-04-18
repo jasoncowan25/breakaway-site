@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer"
 import { HeroAvatars } from "@/components/HeroAvatars"
 import { HeroVideo } from "@/components/HeroVideo"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Quote } from "lucide-react"
 import Link from "next/link"
 
@@ -104,9 +105,7 @@ export default function HomePage() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-3 right-3">
-                  <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                    Completed
-                  </span>
+                  <Badge variant="default">Completed</Badge>
                 </div>
               </div>
 
@@ -131,9 +130,7 @@ export default function HomePage() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-3 right-3">
-                  <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                    Completed
-                  </span>
+                  <Badge variant="default">Completed</Badge>
                 </div>
               </div>
 

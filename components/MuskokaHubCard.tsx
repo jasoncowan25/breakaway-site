@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -27,17 +28,11 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
         />
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-            Just Announced
-          </span>
-          <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-            Joey Signature
-          </span>
+          <Badge variant="accent">Just Announced</Badge>
+          <Badge variant="default">Joey Signature</Badge>
         </div>
         <div className="absolute bottom-3 left-3">
-          <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-            New Private Facility
-          </span>
+          <Badge variant="secondary">New Private Facility</Badge>
         </div>
       </div>
 
