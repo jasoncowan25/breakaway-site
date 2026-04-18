@@ -76,8 +76,10 @@ export async function GET() {
         }
       }
 
-      // Log metadata for debugging
-      if (session.metadata && Object.keys(session.metadata).length > 0) {
+      // Log metadata for debugging - check BOTH session and payment intent metadata
+      const hasSessionMetadata = session.metadata && Object.keys(session.metadata).length > 0
+      const hasPaymentIntentMetadata = paymentIntentMetadata && Object.keys(paymentIntentMetadata).length > 0
+      if (hasSessionMetadata || hasPaymentIntentMetadata) {
         debugInfo.push({
           sessionId: session.id,
           metadata: session.metadata as Record<string, string>,
