@@ -15,13 +15,14 @@ const CAMP_CONFIG: Record<string, number> = {
 
 // Map Stripe product IDs to payment link URLs
 // Used for count_as_camp metadata to reassign payments
+// To transfer a payment: add metadata count_as_camp: "prod_XXX" to the checkout session in Stripe
 const PRODUCT_TO_LINK: Record<string, string> = {
-  "prod_SLQXDhB3dSc2NJ": "https://book.stripe.com/28E00j2Vmbz18qy5q2f3a0p", // July 10-12 - Fundamentals AM
-  "prod_SLQZvJx9SBPpvC": "https://book.stripe.com/dRm8wPeE46eHeOW05If3a0q", // July 10-12 - Intermediate PM
-  "prod_SLQbLGkPNvMIwG": "https://book.stripe.com/dRmfZhanOcD5bCK8Cef3a0r", // July 13-15 - Intermediate AM
-  "prod_SLQcFqBe0mU9j6": "https://book.stripe.com/9B600j7bC5aD22a3hUf3a0s", // July 13-15 - Intermediate PM
-  "prod_SLQe2VkVSjn0GS": "https://book.stripe.com/3cI5kDanOfPhgX4g4Gf3a0t", // July 17-19 - Fundamentals AM
-  "prod_SLQfHEJfr1qUlz": "https://book.stripe.com/6oU3cvgMc32v6iqf0Cf3a0u", // July 17-19 - Intermediate PM
+  "prod_UKtnS4kMQQx6HI": "https://book.stripe.com/28E00j2Vmbz18qy5q2f3a0p", // July 10-12 - Morning (Fundamentals)
+  "prod_UKtnU177PNSIMw": "https://book.stripe.com/dRm8wPeE46eHeOW05If3a0q", // July 10-12 - Afternoon (Intermediate)
+  "prod_UKtn2FDQkfBiaN": "https://book.stripe.com/dRmfZhanOcD5bCK8Cef3a0r", // July 13-15 - Morning (Intermediate)
+  "prod_UKtnLns2d1cyI1": "https://book.stripe.com/9B600j7bC5aD22a3hUf3a0s", // July 13-15 - Afternoon (Intermediate)
+  "prod_UKtnFKj6lyQxoB": "https://book.stripe.com/3cI5kDanOfPhgX4g4Gf3a0t", // July 17-19 - Morning (Fundamentals)
+  "prod_UKtnZ7rPql9dQD": "https://book.stripe.com/6oU3cvgMc32v6iqf0Cf3a0u", // July 17-19 - Afternoon (Intermediate)
 }
 
 
