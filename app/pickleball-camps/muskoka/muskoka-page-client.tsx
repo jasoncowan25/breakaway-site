@@ -304,7 +304,7 @@ export function MuskokaPageClient() {
       <section id="camps" className="py-16 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-primary mb-2">July 2026 Camps</h2>
+            <h2 className="text-3xl font-bold text-primary mb-2">Muskoka 2026 Camps</h2>
             <p className="text-muted-foreground mb-6">
               Choose from 6 camps. 4 players per session.
             </p>
