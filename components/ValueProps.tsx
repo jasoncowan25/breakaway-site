@@ -25,13 +25,12 @@ export function ValueProps() {
         <div className="grid md:grid-cols-3 gap-8">
           {values.map((value, idx) => (
             <div key={idx} className="flex flex-col items-center text-center">
-              <div className="mb-4">
+              <div className="mb-4 w-[120px] h-[120px] relative">
                 <Image
                   src={value.icon}
                   alt={value.title}
-                  width={112}
-                  height={112}
-                  className="object-contain"
+                  fill
+                  className="object-contain scale-150"
                 />
               </div>
               <h3 className="text-xl font-bold text-primary mb-2">{value.title}</h3>
