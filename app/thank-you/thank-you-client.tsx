@@ -6,6 +6,7 @@ import { CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import Script from "next/script"
 
 export default function ThankYouClient() {
   const [mounted, setMounted] = useState(false)
@@ -15,7 +16,21 @@ export default function ThankYouClient() {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-800 px-4">
+    <>
+      {/* Google tag (gtag.js) */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-17655187543"
+        strategy="afterInteractive"
+      />
+      <Script id="google-ads-config" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-17655187543');
+        `}
+      </Script>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-800 px-4">
       <Card className="max-w-2xl w-full shadow-lg border border-gray-200 rounded-2xl">
         <CardContent className="p-8 md:p-12 space-y-6 text-center">
           {mounted && (
@@ -64,5 +79,6 @@ export default function ThankYouClient() {
         <img src="/breakaway-logo.png" alt="Breakaway Pickleball Camps" className="h-12 w-auto mx-auto opacity-50" />
       </div>
     </div>
+    </>
   )
 }
