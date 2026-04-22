@@ -29,8 +29,8 @@ export function ValueProps() {
                 <Image
                   src={value.icon}
                   alt={value.title}
-                  width={80}
-                  height={80}
+                  width={96}
+                  height={96}
                   className="object-contain"
                 />
               </div>
