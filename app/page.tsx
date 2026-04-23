@@ -96,7 +96,7 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-primary mb-6">Recently Completed Camps</h2>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-2xl">
-            {/* Toronto Intermediate Intensive - April */}
+            {/* Toronto Intermediate Intensive - April (no recap page yet) */}
             <div className="group relative overflow-hidden rounded-lg bg-card border shadow-sm hover:shadow-md transition-shadow">
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -111,13 +111,7 @@ export default function HomePage() {
 
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-primary mb-1">Toronto Intermediate Intensive</h3>
-                <p className="text-sm text-muted-foreground mb-4">April 11-12, 2026</p>
-
-                <Button asChild variant="outline" className="w-full bg-transparent">
-                  <Link href="/pickleball-camps/toronto-intermediate-pickleball-camp/recap" scroll={true}>
-                    View Recap
-                  </Link>
-                </Button>
+                <p className="text-sm text-muted-foreground">April 11-12, 2026</p>
               </div>
             </div>
 

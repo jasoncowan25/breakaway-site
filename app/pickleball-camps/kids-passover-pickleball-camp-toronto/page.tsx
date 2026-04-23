@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Breakaway Kids Passover Pickleball Camp | Ages 8-16 | Toronto",
   description:
     "Breakaway Kids Passover Pickleball Camp at The Jar PickleBall Club in Toronto, April 7-10 2026. Ages 8-16, no experience required. $118/day.",
+  alternates: {
+    canonical: "/pickleball-camps/kids-passover-pickleball-camp-toronto",
+  },
   openGraph: {
     title: "Breakaway Kids Passover Pickleball Camp",
     description:

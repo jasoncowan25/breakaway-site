@@ -8,6 +8,12 @@ import { Footer } from "@/components/Footer"
 export const metadata: Metadata = {
   title: "Pickleball Coaches | Pro-Led Training | Breakaway Camps",
   description: "Learn from experienced, certified pickleball coaches who are passionate about elevating your game",
+  alternates: {
+    canonical: "/pickleball-coaches",
+  },
+  openGraph: {
+    url: "/pickleball-coaches",
+  },
 }
 
 export default function CoachesPage() {

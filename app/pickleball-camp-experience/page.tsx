@@ -8,6 +8,12 @@ import { Footer } from "@/components/Footer"
 export const metadata: Metadata = {
   title: "The Breakaway Experience | Premium Pickleball Camps",
   description: "Immersive, small-group training designed to transform your game in days — not months",
+  alternates: {
+    canonical: "/pickleball-camp-experience",
+  },
+  openGraph: {
+    url: "/pickleball-camp-experience",
+  },
 }
 
 export default function ExperiencePage() {

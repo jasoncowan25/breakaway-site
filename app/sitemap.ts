@@ -42,50 +42,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    // Camp detail pages
+    // Live camp pages
+    {
+      url: `${baseUrl}/pickleball-camps/toronto-core-skills-pickleball-camp`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
     {
       url: `${baseUrl}/pickleball-camps/kids-passover-pickleball-camp-toronto`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
+      changeFrequency: "monthly",
       priority: 0.85,
     },
+    // Recap pages (only ones that exist)
     {
-      url: `${baseUrl}/pickleball-camps/toronto-intermediate-pickleball-camp`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/pickleball-camps/saint-martin-pickleball-clinic`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/pickleball-camps/toronto-intensive-jan`,
+      url: `${baseUrl}/pickleball-camps/kids-passover-pickleball-camp-toronto/recap`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/pickleball-camps/toronto-intensive-jan/recap`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    // Waiver pages
-    {
-      url: `${baseUrl}/waiver`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/waiver-u18`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    
   ]
 }

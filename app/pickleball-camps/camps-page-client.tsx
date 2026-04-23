@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense } from "react"
+import { useState, Suspense, useEffect } from "react"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { CampCard } from "@/components/CampCard"
@@ -10,16 +10,18 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Filter } from "lucide-react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 function CampsPageContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [showFilters, setShowFilters] = useState(false)
   
   // Parse URL params for initial filter state
   const locationParam = searchParams.get("location")
   const skillParam = searchParams.get("skill")
+  const viewParam = searchParams.get("view")
   
   // Map URL location values to filter values
   const getInitialLocations = (): string[] => {
@@ -37,7 +39,24 @@ function CampsPageContent() {
   const [selectedSkillLevels, setSelectedSkillLevels] = useState<string[]>(getInitialSkillLevels)
   const [selectedLocations, setSelectedLocations] = useState<string[]>(getInitialLocations)
   const [selectedFormats, setSelectedFormats] = useState<string[]>([])
-  const [dateFilter, setDateFilter] = useState<"upcoming" | "completed">("upcoming")
+  const [dateFilter, setDateFilter] = useState<"upcoming" | "completed">(
+    viewParam === "completed" ? "completed" : "upcoming"
+  )
+
+  // Sync dateFilter with URL
+  useEffect(() => {
+    const currentView = searchParams.get("view")
+    if (dateFilter === "completed" && currentView !== "completed") {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set("view", "completed")
+      router.replace(`/pickleball-camps?${params.toString()}`, { scroll: false })
+    } else if (dateFilter === "upcoming" && currentView === "completed") {
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete("view")
+      const queryString = params.toString()
+      router.replace(queryString ? `/pickleball-camps?${queryString}` : "/pickleball-camps", { scroll: false })
+    }
+  }, [dateFilter, searchParams, router])
 
   const upcomingCamps = [
     {
@@ -65,6 +84,7 @@ function CampsPageContent() {
     return a.sortDate.getTime() - b.sortDate.getTime()
   })
 
+  // Only kids passover camp has a recap - other camps show as "Completed" without recap button
   const completedCamps = [
     {
       id: "toronto-april",
@@ -77,8 +97,7 @@ function CampsPageContent() {
       image: "/images/toronto-intermediate-april-group.jpg",
       badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-intermediate-pickleball-camp/recap",
-      buttonText: "View Recap",
+      // No link - recap doesn't exist yet
       compact: true,
     },
     {
@@ -110,8 +129,7 @@ function CampsPageContent() {
       image: "/saint-martin-clinic-action-1.jpg",
       badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
-      link: "/pickleball-camps/saint-martin-pickleball-clinic/recap",
-      buttonText: "View Recap",
+      // No link - recap doesn't exist yet
       compact: true,
     },
     {
@@ -125,35 +143,37 @@ function CampsPageContent() {
       image: "/images/screenshot-202026-01-12-20at-204.png",
       badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-intensive-jan/recap",
-      buttonText: "View Recap",
+      // No link - recap doesn't exist yet
       compact: true,
     },
   ]
 
-  const allCamps = dateFilter === "upcoming" ? upcomingCamps : completedCamps
-
-  const filteredCamps = allCamps.filter((camp) => {
-    if (selectedLocations.length > 0 && !selectedLocations.includes(camp.locationFilter)) {
-      return false
-    }
-    if (selectedFormats.length > 0 && !selectedFormats.includes(camp.format)) {
-      return false
-    }
-    if (selectedSkillLevels.length > 0 && camp.skillLevel) {
-      const matchesSkillLevel = selectedSkillLevels.some((level) => {
-        // "2.5" filter should match "Under 3.0" and "2.5-2.75"
-        if (level === "2.5") {
-          return camp.skillLevel?.includes("Under 3.0") || camp.skillLevel?.includes("2.5")
-        }
-        return camp.skillLevel?.includes(level)
-      })
-      if (!matchesSkillLevel) {
+  const filterCamps = (camps: typeof upcomingCamps | typeof completedCamps) => {
+    return camps.filter((camp) => {
+      if (selectedLocations.length > 0 && !selectedLocations.includes(camp.locationFilter)) {
         return false
       }
-    }
-    return true
-  })
+      if (selectedFormats.length > 0 && !selectedFormats.includes(camp.format)) {
+        return false
+      }
+      if (selectedSkillLevels.length > 0 && "skillLevel" in camp && camp.skillLevel) {
+        const matchesSkillLevel = selectedSkillLevels.some((level) => {
+          // "2.5" filter should match "Under 3.0" and "2.5-2.75"
+          if (level === "2.5") {
+            return camp.skillLevel?.includes("Under 3.0") || camp.skillLevel?.includes("2.5")
+          }
+          return camp.skillLevel?.includes(level)
+        })
+        if (!matchesSkillLevel) {
+          return false
+        }
+      }
+      return true
+    })
+  }
+
+  const filteredUpcomingCamps = filterCamps(upcomingCamps)
+  const filteredCompletedCamps = filterCamps(completedCamps)
 
   const toggleLocation = (location: string) => {
     setSelectedLocations((prev) => (prev.includes(location) ? prev.filter((l) => l !== location) : [...prev, location]))
@@ -274,6 +294,8 @@ function CampsPageContent() {
                 : "border-transparent text-muted-foreground"
             }`}
             onClick={() => setDateFilter("upcoming")}
+            aria-selected={dateFilter === "upcoming"}
+            role="tab"
           >
             Upcoming Camps
           </Button>
@@ -285,6 +307,8 @@ function CampsPageContent() {
                 : "border-transparent text-muted-foreground"
             }`}
             onClick={() => setDateFilter("completed")}
+            aria-selected={dateFilter === "completed"}
+            role="tab"
           >
             Recently Completed
           </Button>
@@ -324,28 +348,50 @@ function CampsPageContent() {
             </div>
           </aside>
 
-          {/* Camp Grid */}
+          {/* Camp Grid - SSR renders both sections, visibility toggled via hidden attribute */}
           <div className="flex-1">
+            {/* Upcoming Camps Section */}
             <div
-              className={`grid ${
-                dateFilter === "completed" ? "md:grid-cols-1 lg:grid-cols-2" : "md:grid-cols-2"
-              } gap-6 lg:gap-8`}
+              role="tabpanel"
+              aria-label="Upcoming Camps"
+              hidden={dateFilter !== "upcoming"}
+              className={dateFilter !== "upcoming" ? "hidden" : undefined}
             >
-              {filteredCamps.map((camp) => (
-                <CampCard key={camp.id} {...camp} />
-              ))}
-              {/* Show Muskoka Hub Card for upcoming camps - Muskoka has camps for all skill levels */}
-              {dateFilter === "upcoming" && 
-                (selectedLocations.length === 0 || selectedLocations.includes("Muskoka")) && 
-                (selectedFormats.length === 0 || selectedFormats.includes("Camp")) && (
-                <MuskokaHubCard />
+              <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+                {filteredUpcomingCamps.map((camp) => (
+                  <CampCard key={camp.id} {...camp} />
+                ))}
+                {/* Show Muskoka Hub Card for upcoming camps - Muskoka has camps for all skill levels */}
+                {(selectedLocations.length === 0 || selectedLocations.includes("Muskoka")) && 
+                  (selectedFormats.length === 0 || selectedFormats.includes("Camp")) && (
+                  <MuskokaHubCard />
+                )}
+              </div>
+              {filteredUpcomingCamps.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No upcoming camps match your selected filters.</p>
+                </div>
               )}
             </div>
-            {filteredCamps.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No camps match your selected filters.</p>
+
+            {/* Completed Camps Section */}
+            <div
+              role="tabpanel"
+              aria-label="Recently Completed Camps"
+              hidden={dateFilter !== "completed"}
+              className={dateFilter !== "completed" ? "hidden" : undefined}
+            >
+              <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                {filteredCompletedCamps.map((camp) => (
+                  <CampCard key={camp.id} {...camp} />
+                ))}
               </div>
-            )}
+              {filteredCompletedCamps.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No completed camps match your selected filters.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

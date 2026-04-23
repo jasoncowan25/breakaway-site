@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.breakawaypickleball.ca"),
+  metadataBase: new URL("https://www.breakawaypickleball.ca"),
   alternates: {
     canonical: "/",
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
     description:
       "Premium pickleball training camps across Toronto, the GTA and Muskoka. Small groups, professional coaching, results-oriented programs for intermediate to advanced players.",
-    url: "/pickleball-camps",
+    url: "/",
     images: [
       {
         url: "/images/screenshot-202025-09-07-20at-2010.png",
@@ -45,6 +45,10 @@ export const metadata: Metadata = {
         alt: "Pickleball player in action at Breakaway camp",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/images/screenshot-202025-09-07-20at-2010.png"],
   },
 }
 

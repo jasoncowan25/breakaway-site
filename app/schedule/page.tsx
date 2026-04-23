@@ -1,7 +1,19 @@
+import { Metadata } from "next"
 import { Navigation } from "@/components/Navigation"
 import { CampCard } from "@/components/CampCard"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Footer } from "@/components/Footer"
+
+export const metadata: Metadata = {
+  title: "Camp Schedule | Breakaway Pickleball",
+  description: "Browse pickleball camps by location and find your perfect dates",
+  alternates: {
+    canonical: "/schedule",
+  },
+  openGraph: {
+    url: "/schedule",
+  },
+}
 
 export default function SchedulePage() {
   const campsByLocation = {

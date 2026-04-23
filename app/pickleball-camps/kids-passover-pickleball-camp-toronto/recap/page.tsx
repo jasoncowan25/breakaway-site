@@ -9,6 +9,12 @@ export const metadata = {
   title: "Kids Passover Camp Recap | Breakaway Pickleball",
   description:
     "Recap of our Kids Passover Pickleball Camp at The Jar PickleBall Club. New skills, new friendships, and lots of fun on the court!",
+  alternates: {
+    canonical: "/pickleball-camps/kids-passover-pickleball-camp-toronto/recap",
+  },
+  openGraph: {
+    url: "/pickleball-camps/kids-passover-pickleball-camp-toronto/recap",
+  },
 }
 
 export default function KidsPassoverCampRecapPage() {
