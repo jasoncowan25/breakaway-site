@@ -97,7 +97,8 @@ function CampsPageContent() {
       image: "/images/toronto-intermediate-april-group.jpg",
       badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
-      // No link - recap doesn't exist yet
+      link: "/pickleball-camps/toronto-intermediate-pickleball-camp/recap",
+      buttonText: "View Recap",
       compact: true,
     },
     {
@@ -129,7 +130,8 @@ function CampsPageContent() {
       image: "/saint-martin-clinic-action-1.jpg",
       badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
-      // No link - recap doesn't exist yet
+      link: "/pickleball-camps/saint-martin-pickleball-clinic/recap",
+      buttonText: "View Recap",
       compact: true,
     },
     {
@@ -143,7 +145,8 @@ function CampsPageContent() {
       image: "/images/screenshot-202026-01-12-20at-204.png",
       badges: [{ text: "Completed", variant: "secondary" as const }],
       coach: "Joey Manchurek",
-      // No link - recap doesn't exist yet
+      link: "/pickleball-camps/toronto-intensive-jan/recap",
+      buttonText: "View Recap",
       compact: true,
     },
   ]
