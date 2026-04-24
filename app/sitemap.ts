@@ -1,9 +1,20 @@
 import type { MetadataRoute } from "next"
 
+// Camp pages with their recap status - single source of truth for sitemap
+const campPages = [
+  // Active camp pages
+  { slug: "toronto-core-skills-pickleball-camp", hasRecap: false, isActive: true },
+  { slug: "kids-passover-pickleball-camp-toronto", hasRecap: true, isActive: false },
+  // Completed camps with recaps
+  { slug: "toronto-intermediate-pickleball-camp", hasRecap: true, isActive: false },
+  { slug: "saint-martin-pickleball-clinic", hasRecap: true, isActive: false },
+  { slug: "toronto-intensive-jan", hasRecap: true, isActive: false },
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.breakawaypickleball.ca"
 
-  return [
+  const staticPages: MetadataRoute.Sitemap = [
     // Main pages
     {
       url: baseUrl,
@@ -42,25 +53,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    // Live camp pages
-    {
-      url: `${baseUrl}/pickleball-camps/toronto-core-skills-pickleball-camp`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/pickleball-camps/kids-passover-pickleball-camp-toronto`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    // Recap pages (only ones that exist)
-    {
-      url: `${baseUrl}/pickleball-camps/kids-passover-pickleball-camp-toronto/recap`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
   ]
+
+  // Generate camp page URLs
+  const campPageUrls: MetadataRoute.Sitemap = campPages
+    .filter((camp) => camp.isActive)
+    .map((camp) => ({
+      url: `${baseUrl}/pickleball-camps/${camp.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    }))
+
+  // Automatically generate recap URLs for camps with hasRecap: true
+  const recapUrls: MetadataRoute.Sitemap = campPages
+    .filter((camp) => camp.hasRecap)
+    .map((camp) => ({
+      url: `${baseUrl}/pickleball-camps/${camp.slug}/recap`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }))
+
+  return [...staticPages, ...campPageUrls, ...recapUrls]
 }
