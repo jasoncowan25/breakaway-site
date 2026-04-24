@@ -38,7 +38,7 @@ export default function TorontoBeginnerCampClient() {
     subtitle: "2-Day Foundation Training • Players (2.5–2.75)",
     location: "Toronto",
     coach: "Joey Manchurek",
-    date: "May 23-24, 2026",
+    date: "May 30-31, 2026",
     price: "$675 CAD",
     spotsLeft: 16,
     venue: "The Jar PickleBall Club",

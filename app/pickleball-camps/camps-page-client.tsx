@@ -62,8 +62,8 @@ function CampsPageContent() {
     {
       id: "toronto-beginner-may",
       title: "Toronto Fundamentals Intensive\n(2.5–2.75)",
-      date: "May 23-24, 2026",
-      sortDate: new Date("2026-05-23"),
+      date: "May 30-31, 2026",
+      sortDate: new Date("2026-05-30"),
       location: "The Jar PickleBall Club",
       locationFilter: "Toronto & GTA",
       format: "Camp",
