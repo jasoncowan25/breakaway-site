@@ -319,8 +319,9 @@ export function MuskokaPageClient() {
                 <Button onClick={scrollToCamps} size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
                   See The Camps
                 </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/pickleball-coaches">Meet Joey</Link>
+                <Button onClick={() => setMapModalOpen(true)} variant="outline" size="lg">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  See the Location
                 </Button>
               </div>
             </div>
@@ -492,8 +493,8 @@ export function MuskokaPageClient() {
                   className="relative rounded-lg aspect-video overflow-hidden w-full cursor-pointer hover:opacity-95 transition-opacity"
                 >
                   <img
-                    src="/muskoka-photos/muskoka-region-map.jpg"
-                    alt="Muskoka region map - click to enlarge"
+                    src="/muskoka-photos/muskoka-facility-location.jpg"
+                    alt="Muskoka facility location map - click to enlarge"
                     className="w-full h-full object-cover"
                   />
                 </button>
@@ -527,11 +528,11 @@ export function MuskokaPageClient() {
       {/* Map Modal */}
       <Dialog open={mapModalOpen} onOpenChange={setMapModalOpen}>
         <DialogContent className="max-w-4xl p-0 overflow-hidden">
-          <DialogTitle className="sr-only">Muskoka Region Map</DialogTitle>
+          <DialogTitle className="sr-only">Muskoka Facility Location</DialogTitle>
           <div className="relative">
             <img
-              src="/muskoka-photos/muskoka-region-map.jpg"
-              alt="Muskoka region map showing Lake Joseph area"
+              src="/muskoka-photos/muskoka-facility-location.jpg"
+              alt="Muskoka facility location map showing area near Mactier and Lake Joseph"
               className="w-full h-auto"
             />
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
