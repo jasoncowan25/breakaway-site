@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Calendar, Clock, Users, Check, MapPin, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { muskokaCamps, type MuskokaCamp } from "@/lib/muskoka-camps"
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -19,127 +20,12 @@ type AvailabilityData = {
   lastUpdated: string
 }
 
-const muskokaCamps = [
-  {
-    id: "muskoka-fundamentals-jul-10",
-    title: "Fundamentals Camp",
-    level: "Fundamentals (Under 3.0)",
-    levelVariant: "secondary" as const,
-    dates: "July 10-12, 2026",
-    time: "9:00 AM - 12:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/28E00j2Vmbz18qy5q2f3a0p",
-    week: 1,
-  },
-  {
-    id: "muskoka-intermediate-jul-10",
-    title: "Intermediate Camp",
-    level: "Intermediate (3.0+)",
-    levelVariant: "secondary" as const,
-    dates: "July 10-12, 2026",
-    time: "1:00 PM - 4:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/dRm8wPeE46eHeOW05If3a0q",
-    week: 1,
-  },
-  {
-    id: "muskoka-intermediate-jul-13-am",
-    title: "Intermediate Camp",
-    level: "Intermediate (3.0+)",
-    levelVariant: "secondary" as const,
-    dates: "July 13-15, 2026",
-    time: "9:00 AM - 12:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/dRmfZhanOcD5bCK8Cef3a0r",
-    week: 2,
-  },
-  {
-    id: "muskoka-intermediate-jul-13",
-    title: "Intermediate Camp",
-    level: "Intermediate (3.0+)",
-    levelVariant: "secondary" as const,
-    dates: "July 13-15, 2026",
-    time: "1:00 PM - 4:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/9B600j7bC5aD22a3hUf3a0s",
-    week: 2,
-  },
-  {
-    id: "muskoka-fundamentals-jul-17",
-    title: "Fundamentals Camp",
-    level: "Fundamentals (Under 3.0)",
-    levelVariant: "secondary" as const,
-    dates: "July 17-19, 2026",
-    time: "9:00 AM - 12:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
-    checkoutUrl: "https://book.stripe.com/3cI5kDanOfPhgX4g4Gf3a0t",
-    week: 3,
-  },
-  {
-    id: "muskoka-intermediate-jul-17",
-    title: "Intermediate Camp",
-    level: "Intermediate (3.0+)",
-    levelVariant: "secondary" as const,
-    dates: "July 17-19, 2026",
-    time: "1:00 PM - 4:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/6oU3cvgMc32v6iqf0Cf3a0u",
-    week: 3,
-  },
-  {
-    id: "muskoka-intermediate-aug-4-am",
-    title: "Intermediate Camp",
-    level: "Intermediate (3.0+)",
-    levelVariant: "secondary" as const,
-    dates: "August 4-6, 2026",
-    time: "9:00 AM - 12:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/bJe00j1Ri6eH4ai4lYf3a0v",
-    week: 4,
-  },
-  {
-    id: "muskoka-intermediate-aug-4-pm",
-    title: "Intermediate Camp",
-    level: "Intermediate (3.0+)",
-    levelVariant: "secondary" as const,
-    dates: "August 4-6, 2026",
-    time: "1:00 PM - 4:00 PM",
-    duration: "3 Days",
-    price: "$800 CAD",
-    maxPlayers: 4,
-    focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "https://book.stripe.com/7sY6oHfI89qTgX405If3a0w",
-    week: 4,
-  },
-]
-
 function CampCard({ 
   camp, 
   availability,
   isLoading 
 }: { 
-  camp: (typeof muskokaCamps)[0]
+  camp: MuskokaCamp
   availability?: { spotsRemaining: number; maxSpots: number }
   isLoading?: boolean
 }) {

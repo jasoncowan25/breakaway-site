@@ -5,12 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { getMuskokaCampDateRanges, getMuskokaCampMinPrice } from "@/lib/muskoka-camps"
 
 interface MuskokaHubCardProps {
   className?: string
 }
 
 export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
+  const dateRanges = getMuskokaCampDateRanges()
+  const minPrice = getMuskokaCampMinPrice()
   return (
     <Link
       href="/pickleball-camps/muskoka"
@@ -48,17 +51,19 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
           {/* Stat chips */}
           
 
-          {/* Date strip */}
-          <p className="text-xs text-muted-foreground">
-            July 10–12 · July 13–15 · July 17–19 · August 4–6
-          </p>
+          {/* Date strip - automatically generated from camp data */}
+          {dateRanges && (
+            <p className="text-xs text-muted-foreground">
+              {dateRanges}
+            </p>
+          )}
         </div>
 
         {/* Bottom row */}
         <div className="flex items-center justify-between mt-4 pt-4 border-t">
           <div>
             <span className="text-sm text-muted-foreground">From </span>
-            <span className="text-xl font-bold text-primary">$800 CAD</span>
+            <span className="text-xl font-bold text-primary">{minPrice}</span>
           </div>
           <Button className="bg-accent text-accent-foreground hover:bg-accent/90 group-hover:bg-accent/90">
             Explore Camps <ArrowRight className="ml-2 h-4 w-4" />
