@@ -335,7 +335,7 @@ export function MuskokaPageClient() {
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-primary mb-2">Muskoka 2026 Camps</h2>
             <p className="text-muted-foreground mb-6">
-              Choose from 6 camps. 4 players per session.
+              Choose from the below camps. 4 players per session.
             </p>
             
             {/* Level Filter */}
