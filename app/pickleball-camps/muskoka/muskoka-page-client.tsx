@@ -115,7 +115,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "",
+    checkoutUrl: "https://book.stripe.com/bJe00j1Ri6eH4ai4lYf3a0v",
     week: 4,
   },
   {
@@ -129,7 +129,7 @@ const muskokaCamps = [
     price: "$800 CAD",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
-    checkoutUrl: "",
+    checkoutUrl: "https://book.stripe.com/7sY6oHfI89qTgX405If3a0w",
     week: 4,
   },
 ]
