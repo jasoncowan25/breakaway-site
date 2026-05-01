@@ -67,6 +67,20 @@ export default function PuntaCanaPage() {
     document.getElementById("registration-form")?.scrollIntoView({ behavior: "smooth" })
   }
 
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digits
+    const digits = value.replace(/\D/g, "")
+    // Format as XXX-XXX-XXXX
+    if (digits.length <= 3) return digits
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value)
+    setFormData({ ...formData, phone: formatted })
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Navigation />
@@ -379,6 +393,7 @@ export default function PuntaCanaPage() {
                           <Label htmlFor="fullName">Full Name *</Label>
                           <Input
                             id="fullName"
+                            tabIndex={1}
                             required
                             value={formData.fullName}
                             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -391,7 +406,7 @@ export default function PuntaCanaPage() {
                             value={formData.roomPreference}
                             onValueChange={(value) => setFormData({ ...formData, roomPreference: value })}
                           >
-                            <SelectTrigger>
+                            <SelectTrigger tabIndex={2}>
                               <SelectValue placeholder="Select your preferred room type" />
                             </SelectTrigger>
                             <SelectContent>
@@ -408,6 +423,7 @@ export default function PuntaCanaPage() {
                           <Label htmlFor="dob">Date of Birth *</Label>
                           <Input
                             id="dob"
+                            tabIndex={3}
                             type="text"
                             required
                             placeholder="MM/DD/YYYY"
@@ -419,6 +435,7 @@ export default function PuntaCanaPage() {
                           <Label htmlFor="email">Email *</Label>
                           <Input
                             id="email"
+                            tabIndex={4}
                             type="email"
                             required
                             value={formData.email}
@@ -433,17 +450,20 @@ export default function PuntaCanaPage() {
                           <Label htmlFor="phone">Phone *</Label>
                           <Input
                             id="phone"
+                            tabIndex={5}
                             type="tel"
                             required
                             value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            onChange={handlePhoneChange}
                             placeholder="416-555-0123"
+                            maxLength={12}
                           />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="guests">Number of Guests</Label>
                           <Input
                             id="guests"
+                            tabIndex={6}
                             type="number"
                             min="0"
                             value={formData.guests}
@@ -457,6 +477,7 @@ export default function PuntaCanaPage() {
                         <Label htmlFor="comments">Comments or Questions</Label>
                         <Textarea
                           id="comments"
+                          tabIndex={7}
                           value={formData.comments}
                           onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
                           placeholder="Anything else we should know?"
@@ -470,6 +491,7 @@ export default function PuntaCanaPage() {
 
                       <Button 
                         type="submit" 
+                        tabIndex={8}
                         size="lg" 
                         className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
                         disabled={isSubmitting}
