@@ -207,9 +207,15 @@ export default function PuntaCanaPage() {
                 TRS Turquesa is the adults-only, all-inclusive section of the Grand Palladium complex on Bávaro Beach — known for its pristine white sand, 
                 multi-pool layout, and elevated dining and drinks.
               </p>
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                  <Image src="/punta-cana-resort-aerial.jpg" alt="TRS Turquesa aerial view with ocean" fill className="object-cover" />
+                </div>
                 <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image src="/punta-cana-resort-pool.jpg" alt="TRS Turquesa pool" fill className="object-cover" />
+                </div>
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                  <Image src="/punta-cana-courts-aerial.jpg" alt="TRS Turquesa pickleball courts" fill className="object-cover" />
                 </div>
                 <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image src="/punta-cana-suite.jpg" alt="TRS Turquesa Junior Suite" fill className="object-cover" />
@@ -233,7 +239,7 @@ export default function PuntaCanaPage() {
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-1">Garden View — Single</h3>
                     <p className="text-sm text-muted-foreground mb-4">King bed, ideal for solo travelers</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$3,179 CAD <span className="text-sm font-normal text-muted-foreground">pp</span></p>
+                    <p className="text-2xl font-bold text-primary mb-2">$3,179 CAD </p>
                     <p className="text-sm text-muted-foreground">3 rooms available</p>
                   </CardContent>
                 </Card>
@@ -241,7 +247,7 @@ export default function PuntaCanaPage() {
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-1">Garden View — Double</h3>
                     <p className="text-sm text-muted-foreground mb-4">King bed, ideal for couples</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$2,420 CAD <span className="text-sm font-normal text-muted-foreground">pp</span></p>
+                    <p className="text-2xl font-bold text-primary mb-2">$2,420 CAD </p>
                     <p className="text-sm text-muted-foreground">4 rooms (8 guests) available</p>
                   </CardContent>
                 </Card>
@@ -249,7 +255,7 @@ export default function PuntaCanaPage() {
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-1">Pool View — Double</h3>
                     <p className="text-sm text-muted-foreground mb-4">2 beds, ideal for friends sharing</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$2,498 CAD <span className="text-sm font-normal text-muted-foreground">pp</span></p>
+                    <p className="text-2xl font-bold text-primary mb-2">$2,498 CAD </p>
                     <p className="text-sm text-muted-foreground">6 rooms (12 guests) available</p>
                   </CardContent>
                 </Card>
@@ -448,7 +454,7 @@ export default function PuntaCanaPage() {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 lg:hidden z-50">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="font-bold text-primary">From $2,420 CAD pp</p>
+            <p className="font-bold text-primary">From $2,420 CAD</p>
             <p className="text-xs text-muted-foreground">+ $800 program fee</p>
           </div>
           <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
