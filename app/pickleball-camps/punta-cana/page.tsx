@@ -408,8 +408,9 @@ export default function PuntaCanaPage() {
                           <Label htmlFor="dob">Date of Birth *</Label>
                           <Input
                             id="dob"
-                            type="date"
+                            type="text"
                             required
+                            placeholder="MM/DD/YYYY"
                             value={formData.dob}
                             onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
                           />
