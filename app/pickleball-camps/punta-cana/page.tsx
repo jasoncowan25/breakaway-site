@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink } from "lucide-react"
+import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -47,7 +47,7 @@ export default function PuntaCanaPage() {
         <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8 max-w-xl">
           <div className="flex gap-2 mb-3">
             <Badge className="bg-accent text-accent-foreground">Just Announced</Badge>
-            <Badge variant="secondary">Destination</Badge>
+            <Badge variant="secondary" className="flex items-center gap-1"><Palmtree className="h-3 w-3" /> Destination</Badge>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-2">Punta Cana Destination Retreat</h1>
           <p className="text-lg text-white/90 mb-4">An All-Inclusive Pickleball Trip at TRS Turquesa</p>
