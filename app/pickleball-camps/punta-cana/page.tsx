@@ -318,11 +318,11 @@ export default function PuntaCanaPage() {
                 <CardContent className="p-8">
                   <p className="text-xl font-semibold mb-6">Lock in your spot with a $150 CAD deposit.</p>
                   <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 mb-6">
-                    <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot — $150 CAD Deposit</Link>
+                    <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot</Link>
                   </Button>
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <p><strong>$150 CAD deposit per person</strong> — due July 24, 2026</p>
-                    <p><strong>Final payment</strong> — due September 17, 2026 (covers the remaining all-inclusive balance, handled by travel agent Joe Dias, plus the $800 CAD Breakaway program fee)</p>
+                    <p><strong>Deposit due July 24, 2026</strong> — Final payment due September 17, 2026</p>
+                    <p>Final payment covers the remaining all-inclusive balance (handled by travel agent Joe Dias) plus the $800 CAD Breakaway program fee</p>
                   </div>
                 </CardContent>
               </Card>
@@ -367,7 +367,7 @@ export default function PuntaCanaPage() {
                 <AccordionItem value="skill">
                   <AccordionTrigger>What skill level is this for?</AccordionTrigger>
                   <AccordionContent>
-                    Intermediate & Advanced — roughly 3.0+. This trip is designed for players who already have a solid foundation and want to take their game to the next level.
+                    Intermediate & Advanced — roughly 3.25+. This trip is designed for players who already have a solid foundation and want to take their game to the next level.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="spouse">
@@ -418,7 +418,7 @@ export default function PuntaCanaPage() {
                     </div>
                   </div>
                   <div className="border-t pt-4">
-                    <p className="text-lg font-bold text-primary">From $2,420 CAD pp</p>
+                    <p className="text-lg font-bold text-primary">From $2,420 CAD</p>
                     <p className="text-sm text-muted-foreground">+ $800 program fee</p>
                   </div>
                   <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
@@ -445,7 +445,7 @@ export default function PuntaCanaPage() {
             <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot — $150 CAD Deposit</Link>
           </Button>
           <p className="text-white/80 text-sm">
-            Questions? Email <a href="mailto:breakawaypickleball@gmail.com" className="underline hover:text-white">breakawaypickleball@gmail.com</a>
+            Questions? <a href="mailto:breakawaypickleball@gmail.com" className="underline hover:text-white">breakawaypickleball@gmail.com</a>
           </p>
         </div>
       </section>
