@@ -6,37 +6,29 @@ export async function POST(req: NextRequest) {
   try {
     const { 
       fullName, 
+      roomPreference,
       dob, 
-      roomPreference, 
+      email,
       phone, 
-      email, 
-      otherGuests, 
+      guests, 
       comments 
     } = await req.json()
     
-    console.log("[v0] Punta Cana registration received:", { fullName, dob, roomPreference, phone, email, otherGuests, comments })
-    
     if (!fullName || !email || !EMAIL_RE.test(email)) {
-      console.log("[v0] Validation failed - missing name or invalid email")
       return new Response(JSON.stringify({ ok: false, error: "Name and valid email are required" }), { status: 400 })
     }
 
-    // Send to Zapier webhook - this will email to breakawaypickleball@gmail.com
-    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/ugfdooi/"
+    // Send to Zapier webhook
+    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/uvqtfp4/"
     const payload = {
-      formType: "Punta Cana Registration",
-      fullName,
-      dob,
-      roomPreference,
-      phone,
+      full_name: fullName,
+      room_preference: roomPreference,
+      date_of_birth: dob,
       email,
-      otherGuests,
+      phone,
+      guests,
       comments,
-      timestamp: new Date().toISOString(),
-      source: "breakawaypickleball.ca - Punta Cana Trip",
     }
-    
-    console.log("[v0] Sending to Zapier:", payload)
     
     const z = await fetch(webhook, {
       method: "POST",
@@ -46,13 +38,9 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(payload),
     })
     
-    console.log("[v0] Zapier response status:", z.status)
-    
     if (!z.ok) {
-      console.log("[v0] Zapier returned error")
       return new Response(JSON.stringify({ ok: false, error: "Upstream error" }), { status: 502 })
     }
-    console.log("[v0] Punta Cana registration successful")
     return new Response(JSON.stringify({ ok: true }), { status: 200 })
   } catch {
     return new Response(JSON.stringify({ ok: false, error: "Unexpected error" }), { status: 500 })

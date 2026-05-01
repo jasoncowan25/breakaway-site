@@ -11,18 +11,18 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree, Loader2 } from "lucide-react"
 import Image from "next/image"
 
 export default function PuntaCanaPage() {
   const [formData, setFormData] = useState({
     fullName: "",
-    dob: "",
     roomPreference: "",
-    phone: "",
+    dob: "",
     email: "",
-    otherGuests: "",
+    phone: "",
+    guests: "",
     comments: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -375,7 +375,7 @@ export default function PuntaCanaPage() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label htmlFor="fullName">Full Name (as on passport) *</Label>
+                          <Label htmlFor="fullName">Full Name *</Label>
                           <Input
                             id="fullName"
                             required
@@ -385,46 +385,25 @@ export default function PuntaCanaPage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="dob">Date of Birth *</Label>
+                          <Label htmlFor="roomPreference">Room Preference</Label>
                           <Input
-                            id="dob"
-                            type="text"
-                            placeholder="YYYY-MM-DD"
-                            required
-                            value={formData.dob}
-                            onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                            id="roomPreference"
+                            value={formData.roomPreference}
+                            onChange={(e) => setFormData({ ...formData, roomPreference: e.target.value })}
+                            placeholder="e.g. Garden View, Pool View"
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="roomPreference">Room Preference *</Label>
-                        <Select
-                          required
-                          value={formData.roomPreference}
-                          onValueChange={(value) => setFormData({ ...formData, roomPreference: value })}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your preferred room type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="garden-single">Garden View — Single ($3,179 CAD)</SelectItem>
-                            <SelectItem value="garden-double">Garden View — Double ($2,420 CAD)</SelectItem>
-                            <SelectItem value="pool-double">Pool View — Double ($2,498 CAD)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label htmlFor="phone">Phone Number *</Label>
+                          <Label htmlFor="dob">Date of Birth *</Label>
                           <Input
-                            id="phone"
-                            type="tel"
+                            id="dob"
+                            type="date"
                             required
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            placeholder="416-555-0123"
+                            value={formData.dob}
+                            onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
                           />
                         </div>
                         <div className="space-y-2">
@@ -440,14 +419,29 @@ export default function PuntaCanaPage() {
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="otherGuests">Other Guests Traveling With You</Label>
-                        <Input
-                          id="otherGuests"
-                          value={formData.otherGuests}
-                          onChange={(e) => setFormData({ ...formData, otherGuests: e.target.value })}
-                          placeholder="Names of spouse, friends, etc."
-                        />
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Phone *</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            placeholder="416-555-0123"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guests">Number of Guests</Label>
+                          <Input
+                            id="guests"
+                            type="number"
+                            min="0"
+                            value={formData.guests}
+                            onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
+                            placeholder="0"
+                          />
+                        </div>
                       </div>
 
                       <div className="space-y-2">
