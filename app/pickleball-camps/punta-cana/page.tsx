@@ -445,7 +445,7 @@ export default function PuntaCanaPage() {
             <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot — $150 CAD Deposit</Link>
           </Button>
           <p className="text-white/80 text-sm">
-            Questions? <a href="mailto:breakawaypickleball@gmail.com" className="underline hover:text-white">breakawaypickleball@gmail.com</a>
+            Questions? <a href="mailto:breakawaypickleball@gmail.com" className="text-white underline hover:text-white/80">breakawaypickleball@gmail.com</a>
           </p>
         </div>
       </section>
