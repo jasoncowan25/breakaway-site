@@ -79,6 +79,26 @@ function CampsPageContent() {
       imageEnhanced: true,
       soldOut: false,
     },
+    {
+      id: "punta-cana-2026",
+      title: "Punta Cana Destination Retreat",
+      date: "Nov 24 – Dec 1, 2026",
+      sortDate: new Date("2026-11-24"),
+      location: "TRS Turquesa, Punta Cana, DR",
+      locationFilter: "Punta Cana",
+      format: "Camp",
+      skillLevel: "3.0,3.5,4.0+",
+      price: "From $2,420 CAD pp",
+      image: "/punta-cana-resort-pool.jpg",
+      badges: [
+        { text: "Just Announced", variant: "accent" as const },
+        { text: "Destination", variant: "secondary" as const },
+      ],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/punta-cana",
+      imageEnhanced: true,
+      soldOut: false,
+    },
   ].sort((a, b) => {
     // Sort by date
     return a.sortDate.getTime() - b.sortDate.getTime()
@@ -201,7 +221,7 @@ function CampsPageContent() {
           <AccordionTrigger className="text-sm font-semibold">Locations</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3">
-              {["Toronto & GTA", "Muskoka"].map((location) => (
+              {["Toronto & GTA", "Muskoka", "Punta Cana"].map((location) => (
                 <div key={location} className="flex items-center space-x-2">
                   <Checkbox
                     id={`location-${location}`}

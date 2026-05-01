@@ -12,31 +12,41 @@ import { ArrowRight, Quote } from "lucide-react"
 import Link from "next/link"
 
 export default function HomePage() {
-  const featuredCamps = [
-    {
-      id: "toronto-beginner-may",
-      title: "Toronto Fundamentals Intensive\n(2.5–2.75)",
-      date: "May 30-31, 2026",
-      sortDate: new Date("2026-05-30"),
-      location: "The Jar PickleBall Club",
-      price: "$675 CAD",
-      image: "/toronto-coaching-instruction.png",
-      badges: [
-        { text: "New", variant: "accent" as const },
-        { text: "Joey Signature", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-core-skills-pickleball-camp",
-      imageEnhanced: true,
-      soldOut: false,
-    },
-  ].sort((a, b) => {
-    // Sort by soldOut status first (available camps first), then by date
-    if (a.soldOut !== b.soldOut) {
-      return a.soldOut ? 1 : -1
-    }
-    return a.sortDate.getTime() - b.sortDate.getTime()
-  })
+  const torontoCamp = {
+    id: "toronto-beginner-may",
+    title: "Toronto Fundamentals Intensive\n(2.5–2.75)",
+    date: "May 30-31, 2026",
+    sortDate: new Date("2026-05-30"),
+    location: "The Jar PickleBall Club",
+    price: "$675 CAD",
+    image: "/toronto-coaching-instruction.png",
+    badges: [
+      { text: "New", variant: "accent" as const },
+      { text: "Joey Signature", variant: "secondary" as const },
+    ],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/toronto-core-skills-pickleball-camp",
+    imageEnhanced: true,
+    soldOut: false,
+  }
+
+  const puntaCanaCamp = {
+    id: "punta-cana-2026",
+    title: "Punta Cana Destination Retreat",
+    date: "Nov 24 – Dec 1, 2026",
+    sortDate: new Date("2026-11-24"),
+    location: "TRS Turquesa, Punta Cana, DR",
+    price: "From $2,420 CAD pp",
+    image: "/punta-cana-resort-pool.jpg",
+    badges: [
+      { text: "Just Announced", variant: "accent" as const },
+      { text: "Destination", variant: "secondary" as const },
+    ],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/punta-cana",
+    imageEnhanced: true,
+    soldOut: false,
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,10 +92,9 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredCamps.map((camp) => (
-              <CampCard key={camp.id} {...camp} />
-            ))}
+            <CampCard {...torontoCamp} />
             <MuskokaHubCard className="md:col-span-2 lg:col-span-2" />
+            <CampCard {...puntaCanaCamp} />
           </div>
         </div>
       </section>

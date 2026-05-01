@@ -4,6 +4,7 @@ import type { MetadataRoute } from "next"
 const campPages = [
   // Active camp pages
   { slug: "toronto-core-skills-pickleball-camp", hasRecap: false, isActive: true },
+  { slug: "punta-cana", hasRecap: false, isActive: true },
   // Evergreen/recurring camps (keep in sitemap for link equity)
   { slug: "kids-passover-pickleball-camp-toronto", hasRecap: true, isActive: true },
   // Completed camps with recaps
