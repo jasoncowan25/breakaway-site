@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -27,6 +28,15 @@ export default function PuntaCanaPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState("")
+  const [galleryImage, setGalleryImage] = useState<string | null>(null)
+
+  const galleryImages = [
+    { src: "/punta-cana-resort-aerial.jpg", alt: "TRS Turquesa aerial view with ocean" },
+    { src: "/punta-cana-resort-pool.jpg", alt: "TRS Turquesa pool" },
+    { src: "/punta-cana-courts-aerial.jpg", alt: "TRS Turquesa pickleball courts" },
+    { src: "/punta-cana-suite.jpg", alt: "TRS Turquesa Junior Suite" },
+    { src: "/punta-cana-spa.jpg", alt: "TRS Turquesa Zentropia Spa" },
+  ]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -251,21 +261,15 @@ export default function PuntaCanaPage() {
                 multi-pool layout, and elevated dining and drinks.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-                  <Image src="/punta-cana-resort-aerial.jpg" alt="TRS Turquesa aerial view with ocean" fill className="object-cover" />
-                </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-                  <Image src="/punta-cana-resort-pool.jpg" alt="TRS Turquesa pool" fill className="object-cover" />
-                </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-                  <Image src="/punta-cana-courts-aerial.jpg" alt="TRS Turquesa pickleball courts" fill className="object-cover" />
-                </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-                  <Image src="/punta-cana-suite.jpg" alt="TRS Turquesa Junior Suite" fill className="object-cover" />
-                </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-                  <Image src="/punta-cana-spa.jpg" alt="TRS Turquesa Zentropia Spa" fill className="object-cover" />
-                </div>
+                {galleryImages.map((img) => (
+                  <button
+                    key={img.src}
+                    onClick={() => setGalleryImage(img.src)}
+                    className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                  >
+                    <Image src={img.src} alt={img.alt} fill className="object-cover" />
+                  </button>
+                ))}
               </div>
               <Button asChild variant="outline" className="bg-transparent">
                 <a href="https://www.palladiumhotelgroup.com/en/hoteles/republicadominicana/puntacana/trs-turquesa-hotel" target="_blank" rel="noopener noreferrer">
@@ -592,6 +596,18 @@ export default function PuntaCanaPage() {
       </div>
 
       <Footer hideNotifySignup={true} />
+
+      {/* Gallery Modal */}
+      <Dialog open={!!galleryImage} onOpenChange={() => setGalleryImage(null)}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          <DialogTitle className="sr-only">Resort Image</DialogTitle>
+          {galleryImage && (
+            <div className="relative aspect-video">
+              <Image src={galleryImage} alt="TRS Turquesa" fill className="object-contain" />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
