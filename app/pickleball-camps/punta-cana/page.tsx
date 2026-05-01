@@ -224,27 +224,27 @@ export default function PuntaCanaPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">A Sample Day in Punta Cana</h2>
               <div className="space-y-4">
                 <div className="flex gap-4">
-                  <div className="w-24 flex-shrink-0 text-sm font-semibold text-primary">7:30 AM</div>
+                  <div className="w-32 flex-shrink-0 text-sm font-semibold text-primary whitespace-nowrap">7:30 AM</div>
                   <div>
                     <p className="font-medium">Coffee + light breakfast at the resort</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="w-24 flex-shrink-0 text-sm font-semibold text-primary">8:00–11:00 AM</div>
+                  <div className="w-32 flex-shrink-0 text-sm font-semibold text-primary whitespace-nowrap">8:00–11:00 AM</div>
                   <div>
                     <p className="font-medium">Pickleball block</p>
                     <p className="text-sm text-muted-foreground">Clinic, drills, match play</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="w-24 flex-shrink-0 text-sm font-semibold text-primary">11:30 AM+</div>
+                  <div className="w-32 flex-shrink-0 text-sm font-semibold text-primary whitespace-nowrap">11:30 AM+</div>
                   <div>
                     <p className="font-medium">Beach, pool, spa, or excursions</p>
                     <p className="text-sm text-muted-foreground">Your time to relax and explore</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="w-24 flex-shrink-0 text-sm font-semibold text-primary">Evening</div>
+                  <div className="w-32 flex-shrink-0 text-sm font-semibold text-primary whitespace-nowrap">Evening</div>
                   <div>
                     <p className="font-medium">Group dinners and optional socials</p>
                   </div>
