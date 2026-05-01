@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree, Loader2 } from "lucide-react"
 import Image from "next/image"
@@ -386,12 +387,19 @@ export default function PuntaCanaPage() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="roomPreference">Room Preference</Label>
-                          <Input
-                            id="roomPreference"
+                          <Select
                             value={formData.roomPreference}
-                            onChange={(e) => setFormData({ ...formData, roomPreference: e.target.value })}
-                            placeholder="e.g. Garden View, Pool View"
-                          />
+                            onValueChange={(value) => setFormData({ ...formData, roomPreference: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your preferred room type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Garden View — Single ($3,179 CAD)">Garden View — Single ($3,179 CAD)</SelectItem>
+                              <SelectItem value="Garden View — Double ($2,420 CAD)">Garden View — Double ($2,420 CAD)</SelectItem>
+                              <SelectItem value="Pool View — Double ($2,498 CAD)">Pool View — Double ($2,498 CAD)</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
 
