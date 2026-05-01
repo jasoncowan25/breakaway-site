@@ -88,7 +88,7 @@ function CampsPageContent() {
       locationFilter: "Punta Cana",
       format: "Camp",
       skillLevel: "3.0,3.5,4.0+",
-      price: "From $2,420 CAD pp",
+      price: "From $2,420 CAD",
       image: "/punta-cana-resort-pool.jpg",
       badges: [
         { text: "Just Announced", variant: "accent" as const },

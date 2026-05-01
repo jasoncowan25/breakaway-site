@@ -211,11 +211,11 @@ export default function PuntaCanaPage() {
                 <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image src="/punta-cana-resort-pool.jpg" alt="TRS Turquesa pool" fill className="object-cover" />
                 </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">Resort gallery</span>
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                  <Image src="/punta-cana-suite.jpg" alt="TRS Turquesa Junior Suite" fill className="object-cover" />
                 </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">Resort gallery</span>
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                  <Image src="/punta-cana-spa.jpg" alt="TRS Turquesa Zentropia Spa" fill className="object-cover" />
                 </div>
               </div>
               <Button asChild variant="outline" className="bg-transparent">

@@ -36,7 +36,7 @@ export default function HomePage() {
     date: "Nov 24 – Dec 1, 2026",
     sortDate: new Date("2026-11-24"),
     location: "TRS Turquesa, Punta Cana, DR",
-    price: "From $2,420 CAD pp",
+    price: "From $2,420 CAD",
     image: "/punta-cana-resort-pool.jpg",
     badges: [
       { text: "Just Announced", variant: "accent" as const },
