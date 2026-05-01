@@ -81,8 +81,8 @@ export default function PuntaCanaPage() {
               <div className="prose prose-lg max-w-none text-muted-foreground">
                 <p>
                   Join us for 7 nights at TRS Turquesa — an adults-only, all-inclusive Caribbean resort on the pristine shores of Bávaro Beach. 
-                  This isn&apos;t just a vacation with pickleball on the side; it&apos;s a focused pickleball retreat designed for Intermediate and Advanced players 
-                  who want to improve their game while enjoying world-class amenities.
+                  This isn&apos;t just a vacation with pickleball on the side; it&apos;s a focused pickleball retreat for players of all levels
+                  who want to improve their game while enjoying world-class amenities. Courts will be organized by skill level to ensure fun, competitive play.
                 </p>
                 <p>
                   With dedicated court time every morning, daily coaching from Joey Manchurek and the Breakaway team, and afternoons free to explore 
@@ -367,7 +367,7 @@ export default function PuntaCanaPage() {
                 <AccordionItem value="skill">
                   <AccordionTrigger>What skill level is this for?</AccordionTrigger>
                   <AccordionContent>
-                    Intermediate & Advanced — roughly 3.25+. This trip is designed for players who already have a solid foundation and want to take their game to the next level.
+                    All levels are welcome! Courts will be organized by skill level to ensure fun, competitive play for everyone.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="spouse">

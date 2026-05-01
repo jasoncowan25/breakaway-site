@@ -87,7 +87,7 @@ function CampsPageContent() {
       location: "TRS Turquesa, Punta Cana, DR",
       locationFilter: "Punta Cana",
       format: "Camp",
-      skillLevel: "3.0,3.5,4.0+",
+      skillLevel: "2.5-2.75,3.0,3.5,4.0+",
       price: "From $2,420 CAD",
       image: "/punta-cana-resort-pool.jpg",
       badges: [
