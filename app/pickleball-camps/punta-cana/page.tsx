@@ -1,18 +1,61 @@
 "use client"
 
+import { useState } from "react"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree, Loader2 } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
-
-const STRIPE_DEPOSIT_URL = "https://buy.stripe.com/REPLACE_ME_PUNTA_CANA_DEPOSIT"
 
 export default function PuntaCanaPage() {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    dob: "",
+    roomPreference: "",
+    phone: "",
+    email: "",
+    otherGuests: "",
+    comments: "",
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError("")
+
+    try {
+      const res = await fetch("/api/punta-cana-register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+
+      if (res.ok) {
+        setIsSubmitted(true)
+      } else {
+        setError("Something went wrong. Please try again or email us directly.")
+      }
+    } catch {
+      setError("Something went wrong. Please try again or email us directly.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const scrollToForm = () => {
+    document.getElementById("registration-form")?.scrollIntoView({ behavior: "smooth" })
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Navigation />
@@ -60,12 +103,12 @@ export default function PuntaCanaPage() {
               <MapPin className="h-4 w-4" /> TRS Turquesa, Punta Cana, DR
             </span>
             <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-sm px-3 py-1.5 rounded-full">
-              <Users className="h-4 w-4" /> Limited to 25 spots
+              <Users className="h-4 w-4" /> Limited to 20 spots
             </span>
           </div>
 
-          <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-            <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot — $150 CAD Deposit</Link>
+          <Button onClick={scrollToForm} size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+            Register Your Interest
           </Button>
         </div>
       </section>
@@ -89,7 +132,7 @@ export default function PuntaCanaPage() {
                   the resort, beach, and local excursions, this trip delivers the perfect balance of skill development and relaxation.
                 </p>
                 <p className="font-medium text-foreground">
-                  Spaces are capped at 25 — this trip is built around a small, focused group.
+                  Spaces are capped at 20 — this trip is built around a small, focused group.
                 </p>
               </div>
             </section>
@@ -311,47 +354,135 @@ export default function PuntaCanaPage() {
               </div>
             </section>
 
-            {/* Reserve Your Spot */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Reserve Your Spot — Payment Schedule</h2>
-              <Card className="text-center">
-                <CardContent className="p-8">
-                  <p className="text-xl font-semibold mb-6">Lock in your spot with a $150 CAD deposit.</p>
-                  <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 mb-6">
-                    <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot</Link>
-                  </Button>
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <p><strong>Deposit due July 24, 2026</strong> — Final payment due September 17, 2026</p>
-                    <p>Final payment covers the remaining all-inclusive balance (handled by travel agent Joe Dias) plus the $800 CAD Breakaway program fee</p>
-                  </div>
+            {/* Registration Form */}
+            <section id="registration-form">
+              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Register Your Interest</h2>
+              <Card>
+                <CardContent className="p-6 md:p-8">
+                  {isSubmitted ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Check className="h-8 w-8 text-accent" />
+                      </div>
+                      <h3 className="text-xl font-bold text-primary mb-2">Thank you for registering!</h3>
+                      <p className="text-muted-foreground">We&apos;ve received your information and will be in touch soon with next steps.</p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="fullName">Full Name (as on passport) *</Label>
+                          <Input
+                            id="fullName"
+                            required
+                            value={formData.fullName}
+                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                            placeholder="John Smith"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="dob">Date of Birth *</Label>
+                          <Input
+                            id="dob"
+                            type="date"
+                            required
+                            value={formData.dob}
+                            onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="roomPreference">Room Preference *</Label>
+                        <Select
+                          required
+                          value={formData.roomPreference}
+                          onValueChange={(value) => setFormData({ ...formData, roomPreference: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your preferred room type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="garden-single">Garden View — Single ($3,179 CAD)</SelectItem>
+                            <SelectItem value="garden-double">Garden View — Double ($2,420 CAD)</SelectItem>
+                            <SelectItem value="pool-double">Pool View — Double ($2,498 CAD)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Phone Number *</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            placeholder="416-555-0123"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="you@example.com"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="otherGuests">Other Guests Traveling With You</Label>
+                        <Input
+                          id="otherGuests"
+                          value={formData.otherGuests}
+                          onChange={(e) => setFormData({ ...formData, otherGuests: e.target.value })}
+                          placeholder="Names of spouse, friends, etc."
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="comments">Comments or Questions</Label>
+                        <Textarea
+                          id="comments"
+                          value={formData.comments}
+                          onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
+                          placeholder="Anything else we should know?"
+                          rows={3}
+                        />
+                      </div>
+
+                      {error && (
+                        <p className="text-red-600 text-sm">{error}</p>
+                      )}
+
+                      <Button 
+                        type="submit" 
+                        size="lg" 
+                        className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          "Register Your Interest"
+                        )}
+                      </Button>
+
+                      <p className="text-xs text-muted-foreground text-center">
+                        We&apos;ll follow up with deposit and payment details.
+                      </p>
+                    </form>
+                  )}
                 </CardContent>
               </Card>
-            </section>
-
-            {/* How It Works */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">How It Works After You Deposit</h2>
-              <ol className="space-y-4">
-                <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</span>
-                  <p className="text-muted-foreground pt-1">You&apos;ll receive a confirmation email</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</span>
-                  <p className="text-muted-foreground pt-1">We&apos;ll follow up to collect your passport details (full name as on passport, DOB, room preference, phone, email)</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">3</span>
-                  <p className="text-muted-foreground pt-1">Travel agent Joe Dias sends a registration form for the all-inclusive package</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">4</span>
-                  <p className="text-muted-foreground pt-1">Final payment due September 17, 2026</p>
-                </li>
-              </ol>
-              <p className="text-sm text-muted-foreground mt-6">
-                Travel logistics: <a href="mailto:jdias@expediacruises.com" className="text-primary hover:underline">jdias@expediacruises.com</a>
-              </p>
             </section>
 
             {/* FAQ */}
@@ -391,7 +522,7 @@ export default function PuntaCanaPage() {
                 <AccordionItem value="payments">
                   <AccordionTrigger>How are payments handled?</AccordionTrigger>
                   <AccordionContent>
-                    The $150 deposit and $800 program fee are paid via the Breakaway website. The remaining all-inclusive balance is invoiced and paid through travel agent Joe Dias.
+                    After you register, we&apos;ll send you deposit and payment details. The $800 program fee is paid via Breakaway. The remaining all-inclusive balance is invoiced and paid through travel agent Joe Dias.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -414,19 +545,16 @@ export default function PuntaCanaPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="h-4 w-4 text-muted-foreground" />
-                      <span>Limited to 25 spots</span>
+                      <span>Limited to 20 spots</span>
                     </div>
                   </div>
                   <div className="border-t pt-4">
                     <p className="text-lg font-bold text-primary">From $2,420 CAD</p>
                     <p className="text-sm text-muted-foreground">+ $800 program fee</p>
                   </div>
-                  <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                    <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot — $150 CAD Deposit</Link>
+                  <Button onClick={scrollToForm} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                    Register Your Interest
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center">
-                    Deposit due July 24, 2026 · Final due September 17, 2026
-                  </p>
                   <p className="text-xs text-muted-foreground text-center">
                     Questions? <a href="mailto:breakawaypickleball@gmail.com" className="text-primary hover:underline">breakawaypickleball@gmail.com</a>
                   </p>
@@ -440,9 +568,9 @@ export default function PuntaCanaPage() {
       {/* Final CTA Banner */}
       <section className="bg-primary py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">25 spots. One unforgettable week.</h2>
-          <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 mb-4">
-            <Link href={STRIPE_DEPOSIT_URL}>Reserve Your Spot — $150 CAD Deposit</Link>
+          <h2 className="text-3xl font-bold text-white mb-6">20 spots. One unforgettable week.</h2>
+          <Button onClick={scrollToForm} size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 mb-4">
+            Register Your Interest
           </Button>
           <p className="text-white/80 text-sm">
             Questions? <a href="mailto:breakawaypickleball@gmail.com" className="text-white underline hover:text-white/80">breakawaypickleball@gmail.com</a>
@@ -457,8 +585,8 @@ export default function PuntaCanaPage() {
             <p className="font-bold text-primary">From $2,420 CAD</p>
             <p className="text-xs text-muted-foreground">+ $800 program fee</p>
           </div>
-          <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-            <Link href={STRIPE_DEPOSIT_URL}>Reserve — $150 Deposit</Link>
+          <Button onClick={scrollToForm} className="bg-accent text-accent-foreground hover:bg-accent/90">
+            Register Interest
           </Button>
         </div>
       </div>
