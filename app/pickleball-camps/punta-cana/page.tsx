@@ -377,31 +377,6 @@ export default function PuntaCanaPage() {
             {/* Registration Form */}
             <section id="registration-form">
               <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Register Your Interest</h2>
-              
-              {/* Test button - remove before deploying */}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mb-4 text-xs border-dashed"
-                onClick={() => {
-                  setFormData({
-                    fullName: "Test User",
-                    roomPreference: "Garden View — Double ($2,420 CAD)",
-                    dob: "01/15/1985",
-                    email: "test@example.com",
-                    phone: "416-555-1234",
-                    numTravellers: "2",
-                    pickleballParticipants: "Test User, Partner Name",
-                    comments: "This is a test submission",
-                  })
-                  setIsSubmitted(false)
-                  setError("")
-                }}
-              >
-                Fill Test Data (Debug)
-              </Button>
-
               <Card>
                 <CardContent className="p-6 md:p-8">
                   {isSubmitted ? (
