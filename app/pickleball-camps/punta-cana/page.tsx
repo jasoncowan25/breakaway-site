@@ -23,7 +23,8 @@ export default function PuntaCanaPage() {
     dob: "",
     email: "",
     phone: "",
-    guests: "",
+    numTravellers: "",
+    pickleballParticipants: "",
     comments: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -168,7 +169,7 @@ export default function PuntaCanaPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <Card className="hover:shadow-md transition-shadow">
                   <CardContent className="flex items-start gap-4 p-5">
-                    <Award className="h-6 w-6 text-primary flex-shrink-0 mt-0.5" />
+                    <Users className="h-6 w-6 text-primary flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-medium">5 days of in-person coaching</p>
                       <p className="text-sm text-muted-foreground">With Head Coach Joey Manchurek and the Breakaway Pickleball Team</p>
@@ -460,24 +461,35 @@ export default function PuntaCanaPage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="guests">Number of Guests</Label>
+                          <Label htmlFor="numTravellers">Number of Travellers</Label>
                           <Input
-                            id="guests"
+                            id="numTravellers"
                             tabIndex={6}
                             type="number"
-                            min="0"
-                            value={formData.guests}
-                            onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                            placeholder="0"
+                            min="1"
+                            value={formData.numTravellers}
+                            onChange={(e) => setFormData({ ...formData, numTravellers: e.target.value })}
+                            placeholder="1"
                           />
                         </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="pickleballParticipants">Which travellers will participate in pickleball?</Label>
+                        <Input
+                          id="pickleballParticipants"
+                          tabIndex={7}
+                          value={formData.pickleballParticipants}
+                          onChange={(e) => setFormData({ ...formData, pickleballParticipants: e.target.value })}
+                          placeholder="e.g. John Smith, Jane Smith"
+                        />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="comments">Comments or Questions</Label>
                         <Textarea
                           id="comments"
-                          tabIndex={7}
+                          tabIndex={8}
                           value={formData.comments}
                           onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
                           placeholder="Anything else we should know?"
@@ -491,7 +503,7 @@ export default function PuntaCanaPage() {
 
                       <Button 
                         type="submit" 
-                        tabIndex={8}
+                        tabIndex={9}
                         size="lg" 
                         className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
                         disabled={isSubmitting}

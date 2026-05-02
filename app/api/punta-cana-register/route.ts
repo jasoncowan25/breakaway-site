@@ -10,7 +10,8 @@ export async function POST(req: NextRequest) {
       dob, 
       email,
       phone, 
-      guests, 
+      numTravellers,
+      pickleballParticipants,
       comments 
     } = await req.json()
     
@@ -19,14 +20,15 @@ export async function POST(req: NextRequest) {
     }
 
     // Send to Zapier webhook
-    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/uvqtfp4/"
+    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/ugfdooi/"
     const payload = {
       full_name: fullName,
       room_preference: roomPreference,
       date_of_birth: dob,
       email,
       phone,
-      guests,
+      num_travellers: numTravellers,
+      pickleball_participants: pickleballParticipants,
       comments,
     }
     
