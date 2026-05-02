@@ -97,9 +97,9 @@ export default function PuntaCanaPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
 
-        {/* Courts inset */}
-        <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 flex flex-col items-end gap-2">
-          <div className="relative h-32 w-32 md:h-44 md:w-44 rounded-full border-4 border-white shadow-2xl overflow-hidden">
+        {/* Courts inset - hidden on mobile to prevent overlap */}
+        <div className="hidden md:flex absolute bottom-8 right-8 flex-col items-end gap-2">
+          <div className="relative h-44 w-44 rounded-full border-4 border-white shadow-2xl overflow-hidden">
             <Image
               src="/punta-cana-pickleball-courts.jpg"
               alt="Dedicated pickleball courts"
