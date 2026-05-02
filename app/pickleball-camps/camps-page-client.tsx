@@ -98,6 +98,7 @@ function CampsPageContent() {
       link: "/pickleball-camps/punta-cana",
       imageEnhanced: true,
       soldOut: false,
+      buttonText: "Learn More",
     },
   ].sort((a, b) => {
     // Sort by date

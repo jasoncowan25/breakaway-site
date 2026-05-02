@@ -46,6 +46,7 @@ export default function HomePage() {
     link: "/pickleball-camps/punta-cana",
     imageEnhanced: true,
     soldOut: false,
+    buttonText: "Learn More",
   }
 
   return (
