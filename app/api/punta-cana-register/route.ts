@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Send to Zapier webhook
-    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/ugfdooi/"
+    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/uvqtfp4/"
     const payload = {
       full_name: fullName,
       room_preference: roomPreference,
