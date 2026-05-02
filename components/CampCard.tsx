@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { MapPin, Calendar, Users } from "lucide-react"
+import { MapPin, Calendar, Users, Palmtree } from "lucide-react"
 import Image from "next/image"
 
 interface CampCardProps {
@@ -46,7 +46,7 @@ export function CampCard({ id, title, date, location, price, image, badges, coac
                   <Badge
                     key={idx}
                     variant={badge.variant === "accent" ? "default" : badge.variant}
-                    className={
+                    className={`flex items-center gap-1 ${
                       badge.variant === "destructive"
                         ? "bg-red-600 text-white"
                         : badge.variant === "secondary"
@@ -54,8 +54,9 @@ export function CampCard({ id, title, date, location, price, image, badges, coac
                           : badge.variant === "accent"
                             ? "bg-accent text-accent-foreground"
                             : ""
-                    }
+                    }`}
                   >
+                    {badge.text === "Destination" && <Palmtree className="h-3 w-3" />}
                     {badge.text}
                   </Badge>
                 ))}
