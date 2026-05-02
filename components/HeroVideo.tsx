@@ -17,10 +17,12 @@ export function HeroVideo() {
         title=""
         aria-hidden="true"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] md:w-[200%] h-[300%] pointer-events-none"
         style={{ border: 0 }}
+        tabIndex={-1}
       />
+      {/* Invisible overlay to block all interactions and hide any controls */}
+      <div className="absolute inset-0 z-10" aria-hidden="true" />
     </div>
   )
 }
