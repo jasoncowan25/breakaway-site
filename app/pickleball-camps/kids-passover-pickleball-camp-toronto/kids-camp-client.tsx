@@ -42,7 +42,7 @@ export default function KidsPassoverCampClient() {
     location: "Toronto",
     coach: "Joey Manchurek",
     date: "April 7\u201310, 2026",
-    price: "$118 CAD",
+    price: "$118 CAD / player",
     priceNote: "per day (4 days)",
     totalPrice: "$472 CAD total",
     venue: "The Jar PickleBall Club",

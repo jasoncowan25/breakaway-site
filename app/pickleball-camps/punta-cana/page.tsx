@@ -165,7 +165,7 @@ export default function PuntaCanaPage() {
 
             {/* Pickleball Program */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">What&apos;s in the Pickleball Program ($800 CAD pp)</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">What&apos;s in the Pickleball Program ($800 CAD / player)</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <Card className="hover:shadow-md transition-shadow">
                   <CardContent className="flex items-start gap-4 p-5">

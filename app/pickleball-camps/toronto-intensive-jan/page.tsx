@@ -38,7 +38,7 @@ export default function TorontoIntensiveJan() {
     location: "Toronto",
     coach: "Joey Manchurek",
     date: "Jan 10-11, 2026",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     spotsLeft: 0, // Updated to sold out (0 spots left)
     venue: "The Jar PickleBall Club",
     checkoutUrl: "https://buy.stripe.com/6oUdR85YJbcc0G8cef57W00",

@@ -39,7 +39,7 @@ export default function TorontoBeginnerCampClient() {
     location: "Toronto",
     coach: "Joey Manchurek",
     date: "May 30-31, 2026",
-    price: "$675 CAD",
+    price: "$675 CAD / player",
     spotsLeft: 16,
     venue: "The Jar PickleBall Club",
     checkoutUrl: "https://book.stripe.com/3cI4gz0Ne32v5em2dQf3a07",
