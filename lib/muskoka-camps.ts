@@ -7,7 +7,7 @@ export const muskokaCamps = [
     dates: "July 10-12, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
     checkoutUrl: "https://book.stripe.com/28E00j2Vmbz18qy5q2f3a0p",
@@ -21,7 +21,7 @@ export const muskokaCamps = [
     dates: "July 10-12, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
     checkoutUrl: "https://book.stripe.com/dRm8wPeE46eHeOW05If3a0q",
@@ -35,7 +35,7 @@ export const muskokaCamps = [
     dates: "July 13-15, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
     checkoutUrl: "https://book.stripe.com/dRmfZhanOcD5bCK8Cef3a0r",
@@ -49,7 +49,7 @@ export const muskokaCamps = [
     dates: "July 13-15, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
     checkoutUrl: "https://book.stripe.com/9B600j7bC5aD22a3hUf3a0s",
@@ -63,7 +63,7 @@ export const muskokaCamps = [
     dates: "July 17-19, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Core shots", "Dinking & control", "Court movement", "Positioning basics", "Game confidence"],
     checkoutUrl: "https://book.stripe.com/3cI5kDanOfPhgX4g4Gf3a0t",
@@ -77,7 +77,7 @@ export const muskokaCamps = [
     dates: "July 17-19, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
     checkoutUrl: "https://book.stripe.com/6oU3cvgMc32v6iqf0Cf3a0u",
@@ -91,7 +91,7 @@ export const muskokaCamps = [
     dates: "August 4-6, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
     checkoutUrl: "https://book.stripe.com/bJe00j1Ri6eH4ai4lYf3a0v",
@@ -105,7 +105,7 @@ export const muskokaCamps = [
     dates: "August 4-6, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
-    price: "$800 CAD",
+    price: "$800 CAD / player",
     maxPlayers: 4,
     focus: ["Drops & resets", "Drives & speed-ups", "Dinking patterns", "Positioning & transitions", "Smart attacking"],
     checkoutUrl: "https://book.stripe.com/7sY6oHfI89qTgX405If3a0w",
@@ -154,7 +154,7 @@ export function getMuskokaCampDateRanges(): string | null {
  * Get the lowest price from all Muskoka camps
  */
 export function getMuskokaCampMinPrice(): string {
-  if (muskokaCamps.length === 0) return "$800 CAD"
+  if (muskokaCamps.length === 0) return "$800 CAD / player"
   
   // All camps currently have the same price, but this will work if they differ
   const prices = muskokaCamps.map(c => {
@@ -163,5 +163,5 @@ export function getMuskokaCampMinPrice(): string {
   })
   
   const minPrice = Math.min(...prices)
-  return `$${minPrice} CAD`
+  return `$${minPrice} CAD / player`
 }
