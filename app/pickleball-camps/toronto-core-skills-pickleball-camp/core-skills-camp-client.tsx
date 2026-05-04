@@ -35,7 +35,7 @@ export default function TorontoBeginnerCampClient() {
 
   const camp = {
     title: "Toronto Fundamentals Intensive",
-    subtitle: "2-Day Foundation Training • Players (2.5–2.75)",
+    subtitle: "2-Day Foundation Training • Players (3.0)",
     location: "Toronto",
     coach: "Joey Manchurek",
     date: "May 30-31, 2026",
