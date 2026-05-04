@@ -53,7 +53,7 @@ export default function PuntaCanaPage() {
       // Add new travellers
       const newTravellers = [...travellers]
       for (let i = travellers.length; i < num; i++) {
-        newTravellers.push({ fullName: "", dob: "", email: "", phone: "", willPlayPickleball: true })
+        newTravellers.push({ fullName: "", dob: "", email: "", phone: "", willPlayPickleball: false })
       }
       setTravellers(newTravellers)
     } else if (num < travellers.length) {
@@ -483,21 +483,21 @@ export default function PuntaCanaPage() {
                             
                             <div className="grid md:grid-cols-2 gap-4">
                               <div className="space-y-2">
-                                <Label htmlFor={`fullName-${index}`}>Full Name {index === 0 && "*"}</Label>
+                                <Label htmlFor={`fullName-${index}`}>Full Name *</Label>
                                 <Input
                                   id={`fullName-${index}`}
-                                  required={index === 0}
+                                  required
                                   value={traveller.fullName}
                                   onChange={(e) => updateTraveller(index, "fullName", e.target.value)}
                                   placeholder="John Smith"
                                 />
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor={`dob-${index}`}>Date of Birth {index === 0 && "*"}</Label>
+                                <Label htmlFor={`dob-${index}`}>Date of Birth *</Label>
                                 <Input
                                   id={`dob-${index}`}
                                   type="text"
-                                  required={index === 0}
+                                  required
                                   placeholder="MM/DD/YYYY"
                                   value={traveller.dob}
                                   onChange={(e) => updateTraveller(index, "dob", e.target.value)}
@@ -507,22 +507,22 @@ export default function PuntaCanaPage() {
                             
                             <div className="grid md:grid-cols-2 gap-4">
                               <div className="space-y-2">
-                                <Label htmlFor={`email-${index}`}>Email {index === 0 && "*"}</Label>
+                                <Label htmlFor={`email-${index}`}>Email *</Label>
                                 <Input
                                   id={`email-${index}`}
                                   type="email"
-                                  required={index === 0}
+                                  required
                                   value={traveller.email}
                                   onChange={(e) => updateTraveller(index, "email", e.target.value)}
                                   placeholder="you@example.com"
                                 />
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor={`phone-${index}`}>Phone {index === 0 && "*"}</Label>
+                                <Label htmlFor={`phone-${index}`}>Phone *</Label>
                                 <Input
                                   id={`phone-${index}`}
                                   type="tel"
-                                  required={index === 0}
+                                  required
                                   value={traveller.phone}
                                   onChange={(e) => updateTraveller(index, "phone", e.target.value)}
                                   placeholder="416-555-0123"
