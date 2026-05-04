@@ -14,7 +14,7 @@ import Link from "next/link"
 export default function HomePage() {
   const torontoCamp = {
     id: "toronto-beginner-may",
-    title: "Toronto Fundamentals Intensive\n(2.5–2.75)",
+    title: "Toronto Fundamentals Intensive\n(2.75–3.0)",
     date: "May 30-31, 2026",
     sortDate: new Date("2026-05-30"),
     location: "The Jar PickleBall Club",
