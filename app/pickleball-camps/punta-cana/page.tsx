@@ -46,7 +46,7 @@ export default function PuntaCanaPage() {
 
   // Update travellers array when numTravellers changes
   const handleNumTravellersChange = (newNum: number) => {
-    const num = Math.max(1, Math.min(10, newNum)) // Limit 1-10 travellers
+    const num = Math.max(1, Math.min(2, newNum)) // Limit 1-2 travellers per submission
     setNumTravellers(num)
     
     if (num > travellers.length) {
@@ -454,7 +454,7 @@ export default function PuntaCanaPage() {
                             tabIndex={2}
                             type="number"
                             min="1"
-                            max="10"
+                            max="2"
                             required
                             value={numTravellers}
                             onChange={(e) => handleNumTravellersChange(parseInt(e.target.value) || 1)}
