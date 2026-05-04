@@ -30,32 +30,32 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ ok: false, error: "Primary traveller name and valid email are required" }), { status: 400 })
     }
 
-    // Format travellers for Zapier - create a readable summary
-    const travellersSummary = travellers.map((t: Traveller, i: number) => {
-      const pickleball = t.willPlayPickleball ? "Yes" : "No"
-      return `Traveller ${i + 1}: ${t.fullName || "N/A"} | DOB: ${t.dob || "N/A"} | Email: ${t.email || "N/A"} | Phone: ${t.phone || "N/A"} | Pickleball: ${pickleball}`
-    }).join("\n")
-
     const pickleballParticipants = travellers
       .filter((t: Traveller) => t.willPlayPickleball && t.fullName)
       .map((t: Traveller) => t.fullName)
       .join(", ")
 
-    // Send to Zapier webhook
-    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/uvqtfp4/"
-    const payload = {
+    // Build payload with individual traveller fields for Zapier
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload: Record<string, any> = {
       room_preference: roomPreference,
       num_travellers: numTravellers,
-      // Primary traveller details for easy access
-      primary_name: primaryTraveller.fullName,
-      primary_email: primaryTraveller.email,
-      primary_phone: primaryTraveller.phone,
-      primary_dob: primaryTraveller.dob,
-      // All travellers summary
-      travellers_details: travellersSummary,
       pickleball_participants: pickleballParticipants,
       comments,
     }
+
+    // Add each traveller's fields individually (up to 10 travellers)
+    travellers.forEach((t: Traveller, i: number) => {
+      const num = i + 1
+      payload[`traveller_${num}_name`] = t.fullName || ""
+      payload[`traveller_${num}_dob`] = t.dob || ""
+      payload[`traveller_${num}_email`] = t.email || ""
+      payload[`traveller_${num}_phone`] = t.phone || ""
+      payload[`traveller_${num}_pickleball`] = t.willPlayPickleball ? "Yes" : "No"
+    })
+
+    // Send to Zapier webhook
+    const webhook = "https://hooks.zapier.com/hooks/catch/22788039/uvqtfp4/"
     
     const z = await fetch(webhook, {
       method: "POST",
