@@ -16,17 +16,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree, Loader2 } from "lucide-react"
 import Image from "next/image"
 
+interface Traveller {
+  fullName: string
+  dob: string
+  email: string
+  phone: string
+  willPlayPickleball: boolean
+}
+
 export default function PuntaCanaPage() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    roomPreference: "",
-    dob: "",
-    email: "",
-    phone: "",
-    numTravellers: "",
-    pickleballParticipants: "",
-    comments: "",
-  })
+  const [roomPreference, setRoomPreference] = useState("")
+  const [numTravellers, setNumTravellers] = useState(1)
+  const [travellers, setTravellers] = useState<Traveller[]>([
+    { fullName: "", dob: "", email: "", phone: "", willPlayPickleball: true }
+  ])
+  const [comments, setComments] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState("")
@@ -40,16 +44,57 @@ export default function PuntaCanaPage() {
     { src: "/punta-cana-spa.jpg", alt: "TRS Turquesa Zentropia Spa" },
   ]
 
+  // Update travellers array when numTravellers changes
+  const handleNumTravellersChange = (newNum: number) => {
+    const num = Math.max(1, Math.min(10, newNum)) // Limit 1-10 travellers
+    setNumTravellers(num)
+    
+    if (num > travellers.length) {
+      // Add new travellers
+      const newTravellers = [...travellers]
+      for (let i = travellers.length; i < num; i++) {
+        newTravellers.push({ fullName: "", dob: "", email: "", phone: "", willPlayPickleball: true })
+      }
+      setTravellers(newTravellers)
+    } else if (num < travellers.length) {
+      // Remove extra travellers
+      setTravellers(travellers.slice(0, num))
+    }
+  }
+
+  const updateTraveller = (index: number, field: keyof Traveller, value: string | boolean) => {
+    const updated = [...travellers]
+    if (field === "phone" && typeof value === "string") {
+      updated[index] = { ...updated[index], [field]: formatPhoneNumber(value) }
+    } else {
+      updated[index] = { ...updated[index], [field]: value }
+    }
+    setTravellers(updated)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setError("")
 
+    // Validate at least first traveller has required fields
+    const firstTraveller = travellers[0]
+    if (!firstTraveller.fullName || !firstTraveller.email) {
+      setError("Please fill in the required fields for at least the primary traveller.")
+      setIsSubmitting(false)
+      return
+    }
+
     try {
       const res = await fetch("/api/punta-cana-register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          roomPreference,
+          numTravellers,
+          travellers,
+          comments,
+        }),
       })
 
       if (res.ok) {
@@ -75,11 +120,6 @@ export default function PuntaCanaPage() {
     if (digits.length <= 3) return digits
     if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
     return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value)
-    setFormData({ ...formData, phone: formatted })
   }
 
   return (
@@ -389,25 +429,15 @@ export default function PuntaCanaPage() {
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
+                      {/* Step 1: Room Preference and Number of Travellers */}
                       <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label htmlFor="fullName">Full Name *</Label>
-                          <Input
-                            id="fullName"
-                            tabIndex={1}
-                            required
-                            value={formData.fullName}
-                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                            placeholder="John Smith"
-                          />
-                        </div>
                         <div className="space-y-2">
                           <Label htmlFor="roomPreference">Room Preference</Label>
                           <Select
-                            value={formData.roomPreference}
-                            onValueChange={(value) => setFormData({ ...formData, roomPreference: value })}
+                            value={roomPreference}
+                            onValueChange={setRoomPreference}
                           >
-                            <SelectTrigger tabIndex={2}>
+                            <SelectTrigger tabIndex={1}>
                               <SelectValue placeholder="Select your preferred room type" />
                             </SelectTrigger>
                             <SelectContent>
@@ -417,81 +447,100 @@ export default function PuntaCanaPage() {
                             </SelectContent>
                           </Select>
                         </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label htmlFor="dob">Date of Birth *</Label>
-                          <Input
-                            id="dob"
-                            tabIndex={3}
-                            type="text"
-                            required
-                            placeholder="MM/DD/YYYY"
-                            value={formData.dob}
-                            onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="email">Email *</Label>
-                          <Input
-                            id="email"
-                            tabIndex={4}
-                            type="email"
-                            required
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            placeholder="you@example.com"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label htmlFor="phone">Phone *</Label>
-                          <Input
-                            id="phone"
-                            tabIndex={5}
-                            type="tel"
-                            required
-                            value={formData.phone}
-                            onChange={handlePhoneChange}
-                            placeholder="416-555-0123"
-                            maxLength={12}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="numTravellers">Number of Travellers</Label>
+                          <Label htmlFor="numTravellers">Number of Travellers *</Label>
                           <Input
                             id="numTravellers"
-                            tabIndex={6}
+                            tabIndex={2}
                             type="number"
                             min="1"
-                            value={formData.numTravellers}
-                            onChange={(e) => setFormData({ ...formData, numTravellers: e.target.value })}
-                            placeholder="1"
+                            max="10"
+                            required
+                            value={numTravellers}
+                            onChange={(e) => handleNumTravellersChange(parseInt(e.target.value) || 1)}
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="pickleballParticipants">Which travellers will participate in pickleball?</Label>
-                        <Input
-                          id="pickleballParticipants"
-                          tabIndex={7}
-                          value={formData.pickleballParticipants}
-                          onChange={(e) => setFormData({ ...formData, pickleballParticipants: e.target.value })}
-                          placeholder="e.g. John Smith, Jane Smith"
-                        />
+                      {/* Step 2: Traveller Details */}
+                      <div className="space-y-6">
+                        {travellers.map((traveller, index) => (
+                          <div key={index} className="border rounded-lg p-4 space-y-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-semibold text-primary">
+                                Traveller {index + 1} {index === 0 && "(Primary Contact)"}
+                              </h4>
+                              <label className="flex items-center gap-2 text-sm">
+                                <input
+                                  type="checkbox"
+                                  checked={traveller.willPlayPickleball}
+                                  onChange={(e) => updateTraveller(index, "willPlayPickleball", e.target.checked)}
+                                  className="h-4 w-4 rounded border-gray-300"
+                                />
+                                Will participate in pickleball
+                              </label>
+                            </div>
+                            
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label htmlFor={`fullName-${index}`}>Full Name {index === 0 && "*"}</Label>
+                                <Input
+                                  id={`fullName-${index}`}
+                                  required={index === 0}
+                                  value={traveller.fullName}
+                                  onChange={(e) => updateTraveller(index, "fullName", e.target.value)}
+                                  placeholder="John Smith"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor={`dob-${index}`}>Date of Birth {index === 0 && "*"}</Label>
+                                <Input
+                                  id={`dob-${index}`}
+                                  type="text"
+                                  required={index === 0}
+                                  placeholder="MM/DD/YYYY"
+                                  value={traveller.dob}
+                                  onChange={(e) => updateTraveller(index, "dob", e.target.value)}
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label htmlFor={`email-${index}`}>Email {index === 0 && "*"}</Label>
+                                <Input
+                                  id={`email-${index}`}
+                                  type="email"
+                                  required={index === 0}
+                                  value={traveller.email}
+                                  onChange={(e) => updateTraveller(index, "email", e.target.value)}
+                                  placeholder="you@example.com"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor={`phone-${index}`}>Phone {index === 0 && "*"}</Label>
+                                <Input
+                                  id={`phone-${index}`}
+                                  type="tel"
+                                  required={index === 0}
+                                  value={traveller.phone}
+                                  onChange={(e) => updateTraveller(index, "phone", e.target.value)}
+                                  placeholder="416-555-0123"
+                                  maxLength={12}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
 
+                      {/* Step 3: Comments */}
                       <div className="space-y-2">
                         <Label htmlFor="comments">Comments or Questions</Label>
                         <Textarea
                           id="comments"
-                          tabIndex={8}
-                          value={formData.comments}
-                          onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
+                          value={comments}
+                          onChange={(e) => setComments(e.target.value)}
                           placeholder="Anything else we should know?"
                           rows={3}
                         />
