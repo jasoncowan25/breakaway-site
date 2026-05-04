@@ -61,13 +61,13 @@ function CampsPageContent() {
   const upcomingCamps = [
     {
       id: "toronto-beginner-may",
-      title: "Toronto Fundamentals Intensive\n(3.0)",
+      title: "Toronto Fundamentals Intensive\n(2.75–3.0)",
       date: "May 30-31, 2026",
       sortDate: new Date("2026-05-30"),
       location: "The Jar PickleBall Club",
       locationFilter: "Toronto & GTA",
       format: "Camp",
-      skillLevel: "3.0",
+      skillLevel: "2.5-2.75,3.0",
       price: "$675 CAD / player",
       image: "/toronto-beginner-intensive-may-2026.png",
       badges: [
