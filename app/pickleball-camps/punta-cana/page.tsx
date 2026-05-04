@@ -66,6 +66,8 @@ export default function PuntaCanaPage() {
     const updated = [...travellers]
     if (field === "phone" && typeof value === "string") {
       updated[index] = { ...updated[index], [field]: formatPhoneNumber(value) }
+    } else if (field === "dob" && typeof value === "string") {
+      updated[index] = { ...updated[index], [field]: formatDateOfBirth(value) }
     } else {
       updated[index] = { ...updated[index], [field]: value }
     }
@@ -120,6 +122,15 @@ export default function PuntaCanaPage() {
     if (digits.length <= 3) return digits
     if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
     return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`
+  }
+
+  const formatDateOfBirth = (value: string) => {
+    // Remove all non-digits
+    const digits = value.replace(/\D/g, "")
+    // Format as MM/DD/YYYY
+    if (digits.length <= 2) return digits
+    if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
+    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`
   }
 
   return (
@@ -501,6 +512,7 @@ export default function PuntaCanaPage() {
                                   placeholder="MM/DD/YYYY"
                                   value={traveller.dob}
                                   onChange={(e) => updateTraveller(index, "dob", e.target.value)}
+                                  maxLength={10}
                                 />
                               </div>
                             </div>
