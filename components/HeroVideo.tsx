@@ -4,14 +4,14 @@ export function HeroVideo() {
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#1e3a8a]">
       {/* Local MP4 video with autoplay, mute, loop for background effect */}
-      {/* Aligned to bottom so the bottom of the video is visible */}
+      {/* Centered vertically to show the main action */}
       <video
         autoPlay
         muted
         loop
         playsInline
         aria-hidden="true"
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 min-w-full min-h-full w-auto h-auto object-cover object-bottom"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto object-cover object-center"
       >
         <source src="/hero-video.mp4" type="video/mp4" />
       </video>
