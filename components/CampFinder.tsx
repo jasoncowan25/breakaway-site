@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useRouter } from "next/navigation"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, X } from "lucide-react"
 
 export function CampFinder() {
   const router = useRouter()
@@ -28,7 +28,7 @@ export function CampFinder() {
       >
         <h2 className="text-xl font-bold text-primary text-center md:text-left flex-1">Find Your Perfect Camp</h2>
         <span className="text-primary ml-2">
-          {isMinimized ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
+          {isMinimized ? <ChevronDown className="h-5 w-5" /> : <X className="h-5 w-5" />}
         </span>
       </button>
       
