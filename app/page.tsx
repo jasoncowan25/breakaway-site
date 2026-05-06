@@ -95,11 +95,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <CampCard {...torontoCamp} />
             <MuskokaHubCard className="md:col-span-2 lg:col-span-2" />
-          </div>
-          
-          {/* Punta Cana - full width on large screens, regular card on small */}
-          <div className="mt-6">
-            <CampCard {...puntaCanaCamp} featured />
+            <CampCard {...puntaCanaCamp} />
           </div>
         </div>
       </section>

@@ -21,18 +21,17 @@ interface CampCardProps {
   spotsRemaining?: number // Number of spots remaining for availability display
   isLoadingAvailability?: boolean // Show skeleton while loading availability
   soldOut?: boolean // Whether the camp is sold out
-  featured?: boolean // Full-width horizontal layout on large screens
 }
 
-export function CampCard({ id, title, date, location, price, image, badges, coach, link, buttonText, imageEnhanced, compact, spotsRemaining, isLoadingAvailability, soldOut, featured }: CampCardProps) {
+export function CampCard({ id, title, date, location, price, image, badges, coach, link, buttonText, imageEnhanced, compact, spotsRemaining, isLoadingAvailability, soldOut }: CampCardProps) {
   const campLink = link || `/pickleball-camps/${id}`
   const showAvailability = spotsRemaining !== undefined || isLoadingAvailability
 
   return (
     <Link href={campLink} scroll={true} className="group">
-      <div className={`bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow ${featured ? "lg:flex lg:flex-row" : ""}`}>
+      <div className="bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
         {/* Image with badges */}
-        <div className={`relative bg-muted ${featured ? "h-48 lg:h-auto lg:w-1/2 lg:min-h-[280px]" : "h-48"}`}>
+        <div className="relative h-48 bg-muted">
           <Image
             src={image || "/placeholder.svg"}
             alt={title}
@@ -88,8 +87,8 @@ export function CampCard({ id, title, date, location, price, image, badges, coac
         </div>
 
         {/* Content */}
-        <div className={`p-4 ${featured ? "lg:w-1/2 lg:p-6 lg:flex lg:flex-col lg:justify-center" : ""}`}>
-          <h3 className={`font-bold text-primary mb-2 group-hover:text-accent transition-colors whitespace-pre-line ${featured ? "text-lg lg:text-2xl" : "text-lg"}`}>{title}</h3>
+        <div className="p-4">
+          <h3 className="text-lg font-bold text-primary mb-2 group-hover:text-accent transition-colors whitespace-pre-line">{title}</h3>
 
           {!compact && coach && <p className="text-sm text-muted-foreground mb-2">with {coach}</p>}
 
