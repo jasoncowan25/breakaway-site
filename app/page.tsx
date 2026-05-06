@@ -54,7 +54,7 @@ export default function HomePage() {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center bg-[#1e3a8a]">
+      <section className="relative h-[690px] flex items-center justify-center bg-[#1e3a8a]">
         <HeroVideo />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40" />
 
