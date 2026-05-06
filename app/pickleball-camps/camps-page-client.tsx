@@ -28,6 +28,7 @@ function CampsPageContent() {
     if (!locationParam) return []
     if (locationParam === "toronto-gta") return ["Toronto & GTA"]
     if (locationParam === "muskoka") return ["Muskoka"]
+    if (locationParam === "punta-cana") return ["Punta Cana"]
     return []
   }
   
