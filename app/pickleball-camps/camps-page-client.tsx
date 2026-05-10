@@ -62,7 +62,7 @@ function CampsPageContent() {
   const upcomingCamps = [
     {
       id: "toronto-beginner-may",
-      title: "Toronto Intermediate Intensive\n(3.5)",
+      title: "Toronto Intermediate Intensive\n(3.0–3.5)",
       date: "June 20-21, 2026",
       sortDate: new Date("2026-06-20"),
       location: "The Jar PickleBall Club",

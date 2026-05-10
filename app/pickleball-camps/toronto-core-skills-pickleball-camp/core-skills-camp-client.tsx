@@ -35,7 +35,7 @@ export default function TorontoBeginnerCampClient() {
 
   const camp = {
     title: "Toronto Intermediate Intensive",
-    subtitle: "2-Day Intermediate Training • Players (3.5)",
+    subtitle: "2-Day Intermediate Training • Players (3.0 to 3.5)",
     location: "Toronto",
     coach: "Joey Manchurek",
     date: "June 20-21, 2026",
