@@ -31,7 +31,7 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
         />
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <Badge className="bg-[#EE964B] text-white hover:bg-[#EE964B]">Selling Fast</Badge>
+          <Badge className="bg-[#EE964B] text-black hover:bg-[#EE964B]">Selling Fast</Badge>
           <Badge variant="default">Joey Signature</Badge>
         </div>
         <div className="absolute bottom-3 left-3">
