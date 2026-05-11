@@ -40,10 +40,14 @@ async function stripeGet(endpoint: string, params?: Record<string, string>) {
   if (params) {
     Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value))
   }
+  // Cache individual Stripe API calls for 5 minutes at the fetch level
+  // This means repeated calls to the same endpoint (e.g. same payment link)
+  // are served from cache instead of hitting Stripe every time.
   const response = await fetch(url.toString(), {
     headers: {
       "Authorization": `Bearer ${process.env.STRIPE_SECRET_KEY}`,
     },
+    next: { revalidate: 300 },
   })
   if (!response.ok) throw new Error(`Stripe API error: ${response.status}`)
   return response.json()
