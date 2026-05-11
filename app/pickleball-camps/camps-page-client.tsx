@@ -76,7 +76,7 @@ function CampsPageContent() {
         { text: "Joey Manchurek Signature", variant: "secondary" as const },
       ],
       coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-core-skills-pickleball-camp",
+      link: "/pickleball-camps/toronto-intermediate-intensive-june-2026",
       imageEnhanced: true,
       soldOut: false,
     },
