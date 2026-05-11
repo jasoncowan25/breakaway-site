@@ -35,7 +35,7 @@ export function Navigation() {
                   <Link href="/pickleball-camps/muskoka">Muskoka Adult Pickleball Camps</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/pickleball-camps/toronto-core-skills-pickleball-camp">Toronto Fundamentals Intensive (2.75–3.0)</Link>
+                  <Link href="/pickleball-camps/toronto-core-skills-pickleball-camp">Toronto Intermediate Intensive (3.0–3.5)</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/pickleball-camps/punta-cana">Punta Cana Destination Retreat</Link>

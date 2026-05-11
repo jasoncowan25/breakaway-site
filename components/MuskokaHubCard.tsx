@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Flame } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { getMuskokaCampDateRanges, getMuskokaCampMinPrice } from "@/lib/muskoka-camps"
 
@@ -31,7 +31,7 @@ export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
         />
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <Badge variant="accent">Just Announced</Badge>
+          <Badge className="bg-red-600 text-white hover:bg-red-600 flex items-center gap-1"><Flame className="h-3 w-3" />Selling Fast</Badge>
           <Badge variant="default">Joey Signature</Badge>
         </div>
         <div className="absolute bottom-3 left-3">

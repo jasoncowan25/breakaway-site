@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server"
 
+// Cache the response for 5 minutes — SWR on the client refreshes every 30s,
+// but the underlying Stripe data only needs to revalidate periodically.
+export const revalidate = 300
+
 // Camp availability API - uses fetch to call Stripe REST API directly (no SDK needed)
 
 // Force these camps to show as sold out (override Stripe data)

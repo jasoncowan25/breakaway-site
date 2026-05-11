@@ -34,15 +34,15 @@ export default function TorontoBeginnerCampClient() {
   }, [])
 
   const camp = {
-    title: "Toronto Fundamentals Intensive",
-    subtitle: "2-Day Foundation Training • Players (2.75–3.0)",
+    title: "Toronto Intermediate Intensive",
+    subtitle: "2-Day Intermediate Training • Players (3.0 to 3.5)",
     location: "Toronto",
     coach: "Joey Manchurek",
-    date: "May 30-31, 2026",
-    price: "$675 CAD / player",
+    date: "June 20-21, 2026",
+    price: "$700 CAD / player",
     spotsLeft: 16,
     venue: "The Jar PickleBall Club",
-    checkoutUrl: "https://book.stripe.com/3cI4gz0Ne32v5em2dQf3a07",
+    checkoutUrl: "https://book.stripe.com/00w00jfI88mPcGOcSuf3a0x",
     coachBio:
       "Former pro hockey player (OHL Oshawa Generals Captain; later ECHL). Grew up playing tennis & table tennis; transitioned quickly to competitive pickleball. Actively competes in tournaments; coaching focus on leadership, skill development, and helping players reach potential.",
     image: "/toronto-beginner-intensive-may-2026.png",
