@@ -659,7 +659,7 @@ export default function PuntaCanaPage() {
                     Register Your Interest
                   </Button>
                   <p className="text-xs text-muted-foreground text-center">
-                    Questions? <a href="mailto:breakawaypickleball@gmail.com" className="text-primary hover:underline">breakawaypickleball@gmail.com</a>
+                    Questions? <a href="mailto:info@breakawaypickleball.ca" className="text-primary hover:underline">info@breakawaypickleball.ca</a>
                   </p>
                 </CardContent>
               </Card>
@@ -676,7 +676,7 @@ export default function PuntaCanaPage() {
             Register Your Interest
           </Button>
           <p className="text-white/80 text-sm">
-            Questions? <a href="mailto:breakawaypickleball@gmail.com" className="text-white underline hover:text-white/80">breakawaypickleball@gmail.com</a>
+            Questions? <a href="mailto:info@breakawaypickleball.ca" className="text-white underline hover:text-white/80">info@breakawaypickleball.ca</a>
           </p>
         </div>
       </section>
