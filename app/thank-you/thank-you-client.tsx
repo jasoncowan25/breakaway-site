@@ -67,8 +67,8 @@ export default function ThankYouClient() {
           <div className="pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-500">
               Questions? Email{" "}
-              <a href="mailto:info@breakawaypickleball.ca" className="text-primary hover:text-accent hover:underline">
-                info@breakawaypickleball.ca
+              <a href="mailto:hello@breakawaypickleball.ca" className="text-primary hover:text-accent hover:underline">
+                hello@breakawaypickleball.ca
               </a>
             </p>
           </div>

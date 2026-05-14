@@ -81,10 +81,10 @@ export default function PrivacyPolicyPage() {
               You have the right to access, correct, or delete your personal information. 
               To make a request, email us at{" "}
               <a 
-                href="mailto:info@breakawaypickleball.ca" 
+                href="mailto:hello@breakawaypickleball.ca" 
                 className="text-gray-900 underline underline-offset-2 hover:text-gray-600"
               >
-                info@breakawaypickleball.ca
+                hello@breakawaypickleball.ca
               </a>
               .
             </p>
@@ -101,10 +101,10 @@ export default function PrivacyPolicyPage() {
             <p className="text-sm text-gray-500">
               Questions? Contact us at{" "}
               <a 
-                href="mailto:info@breakawaypickleball.ca" 
+                href="mailto:hello@breakawaypickleball.ca" 
                 className="text-gray-700 underline underline-offset-2 hover:text-gray-500"
               >
-                info@breakawaypickleball.ca
+                hello@breakawaypickleball.ca
               </a>
             </p>
           </section>
