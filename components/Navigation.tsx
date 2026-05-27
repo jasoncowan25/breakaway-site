@@ -6,7 +6,18 @@ import { ChevronDown } from "lucide-react"
 import Image from "next/image"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-export function Navigation() {
+type NavigationCampItem = {
+  title: string
+  href: string
+}
+
+type NavigationProps = {
+  campItems?: NavigationCampItem[]
+}
+
+const EMPTY_CAMP_ITEMS: NavigationCampItem[] = []
+
+export function Navigation({ campItems = EMPTY_CAMP_ITEMS }: NavigationProps) {
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -37,6 +48,11 @@ export function Navigation() {
                 <DropdownMenuItem asChild>
                   <Link href="/pickleball-camps/punta-cana">Punta Cana Destination Retreat</Link>
                 </DropdownMenuItem>
+                {campItems.map((camp) => (
+                  <DropdownMenuItem key={camp.href} asChild>
+                    <Link href={camp.href}>{camp.title}</Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
