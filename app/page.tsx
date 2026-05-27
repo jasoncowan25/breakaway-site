@@ -111,7 +111,12 @@ export default async function HomePage() {
 
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-primary mb-1">Toronto Intermediate Intensive</h3>
-                <p className="text-sm text-muted-foreground">April 11-12, 2026</p>
+                <p className="text-sm text-muted-foreground mb-4">April 11-12, 2026</p>
+                <Button asChild variant="outline" className="w-full bg-transparent">
+                  <Link href="/pickleball-camps/toronto-intermediate-pickleball-camp/recap" scroll={true}>
+                    View Recap
+                  </Link>
+                </Button>
               </div>
             </div>
 
