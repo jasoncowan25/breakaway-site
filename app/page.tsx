@@ -10,8 +10,14 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Quote } from "lucide-react"
 import Link from "next/link"
+import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [publishedCampCards, navCampItems] = await Promise.all([
+    getPublishedPublicCampCards(),
+    getPublishedPublicCampNavItems(),
+  ])
+
   const puntaCanaCamp = {
     id: "punta-cana-2026",
     title: "Punta Cana Destination Retreat",
@@ -33,7 +39,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Navigation campItems={navCampItems} />
 
       {/* Hero Section */}
       <section className="relative h-[690px] flex items-center justify-center bg-[#1e3a8a]">
@@ -76,6 +82,9 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <MuskokaHubCard className="md:col-span-2 lg:col-span-2" />
+            {publishedCampCards.map((camp) => (
+              <CampCard key={camp.id} {...camp} />
+            ))}
             <CampCard {...puntaCanaCamp} />
           </div>
         </div>

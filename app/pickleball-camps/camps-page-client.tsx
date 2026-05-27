@@ -12,8 +12,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Filter } from "lucide-react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import type { PublicCampCard, PublicCampNavItem } from "@/lib/public-camps"
 
-function CampsPageContent() {
+type CampsPageClientProps = {
+  publishedCampCards?: PublicCampCard[]
+  navCampItems?: PublicCampNavItem[]
+}
+
+function CampsPageContent({ publishedCampCards = [], navCampItems = [] }: CampsPageClientProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [showFilters, setShowFilters] = useState(false)
@@ -60,6 +66,7 @@ function CampsPageContent() {
   }, [dateFilter, searchParams, router])
 
   const upcomingCamps = [
+    ...publishedCampCards,
     {
       id: "punta-cana-2026",
       title: "Punta Cana Destination Retreat",
@@ -83,7 +90,7 @@ function CampsPageContent() {
     },
   ].sort((a, b) => {
     // Sort by date
-    return a.sortDate.getTime() - b.sortDate.getTime()
+    return new Date(a.sortDate).getTime() - new Date(b.sortDate).getTime()
   })
 
   // Only kids passover camp has a recap - other camps show as "Completed" without recap button
@@ -179,6 +186,9 @@ function CampsPageContent() {
 
   const filteredUpcomingCamps = filterCamps(upcomingCamps)
   const filteredCompletedCamps = filterCamps(completedCamps)
+  const showMuskokaHub =
+    (selectedLocations.length === 0 || selectedLocations.includes("Muskoka")) &&
+    (selectedFormats.length === 0 || selectedFormats.includes("Camp"))
 
   const toggleLocation = (location: string) => {
     setSelectedLocations((prev) => (prev.includes(location) ? prev.filter((l) => l !== location) : [...prev, location]))
@@ -279,7 +289,7 @@ function CampsPageContent() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Navigation />
+      <Navigation campItems={navCampItems} />
 
       <div className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -367,12 +377,11 @@ function CampsPageContent() {
                   <CampCard key={camp.id} {...camp} />
                 ))}
                 {/* Show Muskoka Hub Card for upcoming camps - Muskoka has camps for all skill levels */}
-                {(selectedLocations.length === 0 || selectedLocations.includes("Muskoka")) && 
-                  (selectedFormats.length === 0 || selectedFormats.includes("Camp")) && (
+                {showMuskokaHub && (
                   <MuskokaHubCard />
                 )}
               </div>
-              {filteredUpcomingCamps.length === 0 && (
+              {filteredUpcomingCamps.length === 0 && !showMuskokaHub && (
                 <div className="text-center py-12">
                   <p className="text-muted-foreground">No upcoming camps match your selected filters.</p>
                 </div>
@@ -406,10 +415,10 @@ function CampsPageContent() {
   )
 }
 
-export default function CampsPageClient() {
+export default function CampsPageClient(props: CampsPageClientProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <CampsPageContent />
+      <CampsPageContent {...props} />
     </Suspense>
   )
 }

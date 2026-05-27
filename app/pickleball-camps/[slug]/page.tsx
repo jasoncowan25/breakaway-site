@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import {
   Calendar,
+  Clock,
   MapPin,
   Users,
   ArrowRight,
@@ -21,7 +22,7 @@ import { Footer } from "@/components/Footer"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { getPublicCampBySlug, publicBadgeText } from "@/lib/public-camps"
+import { getPublicCampBySlug, getPublishedPublicCampNavItems, publicBadgeText } from "@/lib/public-camps"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -40,7 +41,10 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
     searchParams ?? Promise.resolve({} as { preview?: string }),
   ])
   const preview = canPreview(query.preview)
-  const camp = await getPublicCampBySlug(slug, { preview })
+  const [camp, navCampItems] = await Promise.all([
+    getPublicCampBySlug(slug, { preview }),
+    getPublishedPublicCampNavItems(),
+  ])
 
   if (!camp) notFound()
 
@@ -54,7 +58,7 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Navigation campItems={navCampItems} />
 
       {preview && (
         <div className="border-b bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
@@ -91,6 +95,16 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
                 {camp.dateLabel}
               </span>
               <span className="inline-flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                {camp.schedule.dailyTimeLabel}
+              </span>
+              {camp.schedule.lunchBreakLabel ? (
+                <span className="inline-flex items-center gap-2">
+                  <UtensilsCrossed className="h-4 w-4" />
+                  Lunch {camp.schedule.lunchBreakLabel}
+                </span>
+              ) : null}
+              <span className="inline-flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
                 {camp.venue}
               </span>
@@ -125,6 +139,35 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
             </div>
           </section>
 
+          {camp.schedule.days.length > 0 ? (
+            <section>
+              <h2 className="mb-6 text-3xl font-bold text-primary">Daily Schedule</h2>
+              <div className="grid gap-4 md:grid-cols-3">
+                {camp.schedule.days.map((day) => (
+                  <div key={day.dateLabel} className="rounded-lg border border-border bg-card p-4">
+                    <div className="font-semibold text-primary">{day.dateLabel}</div>
+                    <div className="mt-3 grid gap-3 text-sm text-muted-foreground">
+                      <div>
+                        <div>Start</div>
+                        <div className="font-medium text-foreground">{day.startTime}</div>
+                      </div>
+                      <div>
+                        <div>Finish</div>
+                        <div className="font-medium text-foreground">{day.endTime}</div>
+                      </div>
+                      {day.lunchBreakLabel ? (
+                        <div className="border-t border-border pt-3">
+                          <div>Lunch</div>
+                          <div className="font-medium text-foreground">{day.lunchBreakLabel}</div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
           {camp.coach && (
             <section>
               <h2 className="mb-6 text-3xl font-bold text-primary">Meet Your Coach</h2>
@@ -141,9 +184,9 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
                     <div className="mb-3 flex flex-wrap items-center gap-3">
                       <h3 className="text-2xl font-bold text-primary">{camp.coach.name}</h3>
                       {camp.coach.duprRating ? (
-                        <Badge variant="secondary" className="gap-1">
+                        <Badge variant="secondary" className="gap-1.5 text-xs font-semibold">
                           <Trophy className="h-3.5 w-3.5" />
-                          {camp.coach.duprRating.toFixed(2)} DUPR
+                          Lead pro · DUPR {camp.coach.duprRating.toFixed(2)}
                         </Badge>
                       ) : null}
                     </div>
@@ -217,10 +260,35 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
                   <span>{camp.dateLabel}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span>{camp.schedule.dailyTimeLabel}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span>{camp.venue}</span>
                 </div>
               </div>
+
+              {camp.schedule.days.length > 0 ? (
+                <div className="rounded-lg border border-border bg-muted/20 p-3">
+                  <div className="mb-2 text-sm font-semibold text-primary">Daily schedule</div>
+                  <div className="space-y-2">
+                    {camp.schedule.days.map((day) => (
+                      <div key={day.dateLabel} className="text-sm">
+                        <div className="font-medium text-foreground">{day.dateLabel}</div>
+                        <div className="mt-0.5 text-muted-foreground">
+                          Start {day.startTime} · Finish {day.endTime}
+                        </div>
+                        {day.lunchBreakLabel ? (
+                          <div className="mt-0.5 text-muted-foreground">
+                            Lunch {day.lunchBreakLabel}
+                          </div>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
               {showSpotsLeft ? (
                 <div className="rounded-lg bg-accent/10 p-3">
@@ -271,7 +339,7 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
               <div className="space-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <UtensilsCrossed className="h-4 w-4" />
-                  <span>Lunch included both days</span>
+                  <span>{camp.schedule.lunchBreakLabel ? `Lunch ${camp.schedule.lunchBreakLabel}` : "Lunch included"}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
