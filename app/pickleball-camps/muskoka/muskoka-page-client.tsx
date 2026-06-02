@@ -30,8 +30,14 @@ function CampCard({
   isLoading?: boolean
 }) {
   const hasCheckout = camp.checkoutUrl && camp.checkoutUrl.length > 0
-  const spotsRemaining = availability?.spotsRemaining ?? camp.maxPlayers
-  const isSoldOut = !isLoading && spotsRemaining === 0
+  // Prefer live availability (SWR, keyed by checkout link) when present; fall
+  // back to the DB feed's own spotsRemaining — sold-out camps have no active
+  // Stripe link, so no availability entry — then to capacity for the hardcoded
+  // list. isSoldOut honours the feed (covers override + no-active-link camps).
+  const spotsRemaining =
+    availability?.spotsRemaining ?? camp.spotsRemaining ?? camp.maxPlayers
+  const isSoldOut =
+    !isLoading && ((camp.isSoldOut ?? false) || spotsRemaining === 0)
 
   return (
     <Card className="overflow-hidden h-full flex flex-col">

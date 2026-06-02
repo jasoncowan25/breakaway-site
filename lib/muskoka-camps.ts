@@ -113,7 +113,11 @@ export const muskokaCamps = [
   },
 ]
 
-export type MuskokaCamp = (typeof muskokaCamps)[number]
+export type MuskokaCamp = (typeof muskokaCamps)[number] & {
+  /** Live availability from the DB Camp Event feed (absent for the hardcoded fallback). */
+  spotsRemaining?: number | null
+  isSoldOut?: boolean
+}
 
 /**
  * Get unique date ranges from Muskoka camps, formatted for display

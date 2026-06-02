@@ -55,12 +55,29 @@ function priceLabel(basePriceCents: number | null): string {
   return `$${Math.round(basePriceCents / 100).toLocaleString()} CAD / player`
 }
 
+/** "9:00 AM - 12:00 PM" → 540 (minutes since midnight). Unknown → end of day. */
+function sessionStartMinutes(label: string | null): number {
+  if (!label) return 24 * 60
+  const m = label.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i)
+  if (!m) return 24 * 60
+  let hour = parseInt(m[1], 10) % 12
+  if (/PM/i.test(m[3])) hour += 12
+  return hour * 60 + parseInt(m[2], 10)
+}
+
 export function mapEventCampsToMuskoka(camps: ApiCampEventCamp[]): MuskokaCamp[] {
+  // Chronological order including time of day, so AM camps render before PM
+  // within the same dates.
+  const ordered = [...camps].sort((a, b) => {
+    if (a.startDate !== b.startDate) return a.startDate < b.startDate ? -1 : 1
+    return sessionStartMinutes(a.sessionLabel) - sessionStartMinutes(b.sessionLabel)
+  })
+
   // week = chronological rank of the camp's start date among unique start dates.
-  const uniqueStarts = Array.from(new Set(camps.map((c) => c.startDate))).sort()
+  const uniqueStarts = Array.from(new Set(ordered.map((c) => c.startDate))).sort()
   const weekByStart = new Map(uniqueStarts.map((s, i) => [s, i + 1]))
 
-  return camps.map((c) => {
+  return ordered.map((c) => {
     // Strip the redundant "Muskoka " prefix — the cards live on the Muskoka
     // page, so the DB's "Muskoka Fundamentals Camp" reads as just
     // "Fundamentals Camp" here (matches the prior hardcoded copy).
@@ -80,6 +97,12 @@ export function mapEventCampsToMuskoka(camps: ApiCampEventCamp[]): MuskokaCamp[]
       focus: c.focus,
       checkoutUrl: c.checkoutUrl ?? "",
       week: weekByStart.get(c.startDate) ?? 1,
+      // Carry the feed's own availability so the card never has to infer
+      // sold-out state from a missing checkout link (sold-out camps have no
+      // active Stripe link → no availability entry → would otherwise fall back
+      // to capacity and show "N Spots Left / Coming Soon").
+      spotsRemaining: c.spotsLeft,
+      isSoldOut: c.isSoldOut,
     }
   })
 }
