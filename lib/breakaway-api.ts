@@ -82,6 +82,7 @@ export interface ApiCamp {
   thumbnailMediaAssetId: string | null
   includeTestimonials: boolean
   moduleIds: string[]
+  eventId: string | null
   registeredCount: number
   spotsLeft: number | null
   isSoldOut: boolean
@@ -103,10 +104,14 @@ interface FetchOptions {
 
 async function apiGet<T>(path: string, options: FetchOptions = {}): Promise<T | null> {
   const url = `${API_BASE}${path}`
+  // In local/preview dev we want the page to mirror the database immediately so
+  // admin edits (add/remove/publish a camp) are visible on the next refresh.
+  // Production keeps ISR caching for performance.
+  const liveInDev = process.env.NODE_ENV !== "production"
   try {
     const res = await fetch(url, {
       headers: { accept: "application/json" },
-      ...(options.preview
+      ...(options.preview || liveInDev
         ? { cache: "no-store" as const }
         : { next: { revalidate: options.revalidate ?? PUBLIC_CAMP_REVALIDATE_SECONDS } }),
     })
@@ -141,4 +146,40 @@ export async function fetchPublicCampBySlug(
     options,
   )
   return data?.camp ?? null
+}
+
+// ── Camp Events ────────────────────────────────────────────────────────────
+// A Camp Event groups bookable camps under one facility. The landing page is
+// custom-coded on the marketing site; this feeds its camps grid.
+
+export interface ApiCampEventFacility {
+  id: string
+  name: string
+  city: string | null
+  address: string | null
+  courtCount: number | null
+  notes: string | null
+}
+
+/** A camp in an event feed, with its focus list resolved from training modules. */
+export type ApiCampEventCamp = ApiCamp & { focus: string[] }
+
+export interface ApiCampEvent {
+  id: string
+  slug: string
+  title: string
+  facility: ApiCampEventFacility | null
+  camps: ApiCampEventCamp[]
+}
+
+/** A Camp Event + its camps feed, or null if not found / not public. */
+export async function fetchPublicCampEvent(
+  slug: string,
+  options: FetchOptions = {},
+): Promise<ApiCampEvent | null> {
+  const data = await apiGet<{ event: ApiCampEvent }>(
+    `/api/v1/public/camp-events/${encodeURIComponent(slug)}`,
+    options,
+  )
+  return data?.event ?? null
 }

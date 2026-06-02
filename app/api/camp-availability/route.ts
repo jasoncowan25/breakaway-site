@@ -13,7 +13,10 @@ import { fetchPublicCamps } from "@/lib/breakaway-api"
 // admin) simply won't appear in the map; the consuming pages fall back to the
 // camp's own maxPlayers, exactly as before when data was missing.
 
-export const revalidate = 300
+// Availability changes with every signup, and the consuming pages poll this via
+// SWR every 30s — keep it fresh (was 300s, which left spots up to 5 min stale in
+// production). Dev reads live (the API client is no-store outside production).
+export const revalidate = 30
 
 interface Availability {
   spotsRemaining: number
@@ -21,7 +24,7 @@ interface Availability {
 }
 
 export async function GET() {
-  const camps = await fetchPublicCamps({ revalidate: 300 })
+  const camps = await fetchPublicCamps({ revalidate: 30 })
 
   const availability: Record<string, Availability> = {}
   for (const camp of camps) {

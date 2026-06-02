@@ -114,7 +114,7 @@ function CampCard({
 
 type LevelFilter = "all" | "under3" | "3plus"
 
-export function MuskokaPageClient() {
+export function MuskokaPageClient({ camps = muskokaCamps }: { camps?: MuskokaCamp[] }) {
   const [mapModalOpen, setMapModalOpen] = useState(false)
   const [levelFilter, setLevelFilter] = useState<LevelFilter>("all")
   
@@ -253,69 +253,36 @@ export function MuskokaPageClient() {
             </div>
           </div>
 
-          {/* Week 1 */}
-          {filterCampsByLevel(muskokaCamps).filter((c) => c.week === 1).length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-                July 10-12
-              </h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filterCampsByLevel(muskokaCamps)
-                  .filter((c) => c.week === 1)
-                  .map((camp) => (
-                    <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} isLoading={isLoadingAvailability} />
-                  ))}
-              </div>
-            </div>
-          )}
-
-          {/* Week 2 */}
-          {filterCampsByLevel(muskokaCamps).filter((c) => c.week === 2).length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-                July 13-15
-              </h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filterCampsByLevel(muskokaCamps)
-                  .filter((c) => c.week === 2)
-                  .map((camp) => (
-                    <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} isLoading={isLoadingAvailability} />
-                  ))}
-              </div>
-            </div>
-          )}
-
-          {/* Week 3 */}
-          {filterCampsByLevel(muskokaCamps).filter((c) => c.week === 3).length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-                July 17-19
-              </h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filterCampsByLevel(muskokaCamps)
-                  .filter((c) => c.week === 3)
-                  .map((camp) => (
-                    <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} isLoading={isLoadingAvailability} />
-                  ))}
-              </div>
-            </div>
-          )}
-
-          {/* Week 4 */}
-          {filterCampsByLevel(muskokaCamps).filter((c) => c.week === 4).length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-                August 4-6
-              </h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filterCampsByLevel(muskokaCamps)
-                  .filter((c) => c.week === 4)
-                  .map((camp) => (
-                    <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} isLoading={isLoadingAvailability} />
-                  ))}
-              </div>
-            </div>
-          )}
+          {/* Camp groups — one block per week (a "week" = camps sharing a start
+              date). Both the grouping and the heading come from the actual camp
+              data, so headings always match the cards and any number of weeks
+              renders. (Previously these blocks + headings were hardcoded, which
+              broke as soon as the camp set changed.) */}
+          {(() => {
+            const visible = filterCampsByLevel(camps)
+            const weeks = Array.from(new Set(visible.map((c) => c.week))).sort(
+              (a, b) => a - b,
+            )
+            return weeks.map((week) => {
+              const group = visible.filter((c) => c.week === week)
+              // Heading = the group's date range without the year (e.g.
+              // "July 10-12, 2026" → "July 10-12"). Derived from a real card,
+              // so it can never drift from what's shown below it.
+              const heading = group[0].dates.replace(/,\s*\d{4}\s*$/, "")
+              return (
+                <div key={week} className="mb-8">
+                  <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                    {heading}
+                  </h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {group.map((camp) => (
+                      <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} isLoading={isLoadingAvailability} />
+                    ))}
+                  </div>
+                </div>
+              )
+            })
+          })()}
 
           {/* Booking note */}
           <p className="text-sm text-muted-foreground text-center mt-8">
