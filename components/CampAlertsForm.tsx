@@ -142,7 +142,13 @@ export function CampAlertsForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate>
+    <>
+      <span className={styles.eyebrow}>Breakaway Pickleball</span>
+      <h1 className={styles.headline}>Our Camps Fill Fast — Get First Notice</h1>
+      <p className={styles.subtitle}>
+        We&apos;ll only email you when a camp matching your level goes live. No spam.
+      </p>
+      <form onSubmit={onSubmit} noValidate>
       <div className={`${styles.field} ${styles.row}`}>
         <div>
           <label className={styles.lbl} htmlFor="firstName">
@@ -263,6 +269,7 @@ export function CampAlertsForm() {
         </button>
         <p className={styles.footnote}>No spam, ever. Unsubscribe anytime in one tap.</p>
       </div>
-    </form>
+      </form>
+    </>
   )
 }

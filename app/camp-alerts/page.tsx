@@ -13,11 +13,6 @@ export default function CampAlertsPage() {
   return (
     <main className={styles.page}>
       <div className={styles.inner}>
-        <span className={styles.eyebrow}>Breakaway Pickleball</span>
-        <h1 className={styles.headline}>Our Camps Fill Fast — Get First Notice</h1>
-        <p className={styles.subtitle}>
-          We&apos;ll only email you when a camp matching your level goes live. No spam.
-        </p>
         <CampAlertsForm />
       </div>
     </main>
