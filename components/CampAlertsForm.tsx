@@ -6,8 +6,8 @@ import styles from "@/app/camp-alerts/camp-alerts.module.css"
 const SKILLS = [
   { id: "beginner", label: "Beginner (2.5–3.0)" },
   { id: "intermediate", label: "Intermediate (3.0–3.5)" },
-  { id: "advanced", label: "Advanced (4.0+)" },
-  { id: "kids", label: "Kids Camps (Ages 8–16)" },
+  { id: "advanced", label: "Advanced (3.75+)" },
+  { id: "kids", label: "Kids Camps (all levels)" },
 ]
 
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
