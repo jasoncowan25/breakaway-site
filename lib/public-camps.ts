@@ -32,6 +32,8 @@ type CampRow = {
   public_modules_intro: string | null
   hero_media_asset_id: string | null
   thumbnail_media_asset_id: string | null
+  hero_image_url: string | null
+  thumbnail_image_url: string | null
   facility_id: string | null
   featured_coach_id: string | null
   include_testimonials: boolean | null
@@ -619,7 +621,7 @@ async function getPublishedCampRows(limit: number, options: SupabaseRestOptions 
     "camps",
     {
       select:
-        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,facility_id,featured_coach_id,include_testimonials,breaks",
+        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,hero_image_url,thumbnail_image_url,facility_id,featured_coach_id,include_testimonials,breaks",
       public_visibility: "eq.published",
       slug: "not.is.null",
       start_date: `gte.${todayIso()}`,
@@ -762,7 +764,11 @@ function publicCampRowToCard(
   const spotsLeft = row.is_sold_out_override ? 0 : Math.max(0, capacity - registeredCount)
   const badge = badgeForCamp(row, spotsLeft, capacity)
   const badgeLabel = publicBadgeText(badge)
-  const heroImageUrl = facilityPhotosForCamp(facility, "/toronto-coaching-instruction.png")[0]
+  // Card thumbnail: admin-chosen thumbnail/hero image wins, else facility photo.
+  const heroImageUrl =
+    row.thumbnail_image_url ||
+    row.hero_image_url ||
+    facilityPhotosForCamp(facility, "/toronto-coaching-instruction.png")[0]
 
   return {
     id: row.slug!,
@@ -852,7 +858,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
     "camps",
     {
       select:
-        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,facility_id,featured_coach_id,include_testimonials,breaks",
+        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,hero_image_url,thumbnail_image_url,facility_id,featured_coach_id,include_testimonials,breaks",
       slug: `eq.${slug}`,
       limit: "1",
     },
@@ -953,7 +959,10 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
   const facility = facilityRows?.[0] ?? null
   const coach = coachRows?.[0] ?? null
   const facilityPhotos = facilityPhotosForCamp(facility, "/toronto-coaching-instruction.png")
-  const heroImageUrl = facilityPhotos[0] ?? "/toronto-coaching-instruction.png"
+  // A banner image chosen/uploaded in admin wins; otherwise fall back to the
+  // facility's photos, then the hardcoded default.
+  const heroImageUrl =
+    row.hero_image_url || facilityPhotos[0] || "/toronto-coaching-instruction.png"
   const testimonialById = new Map((testimonialRows ?? []).map((testimonial) => [testimonial.id, testimonial]))
   const campBreaks = parseBreaks(row.breaks)
   const schedule = scheduleForCamp(row.start_date, row.end_date, row.session_label, campBreaks)
