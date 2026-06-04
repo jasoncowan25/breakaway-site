@@ -338,7 +338,7 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
 
               <div className="space-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
                 {camp.lunchType === "catered" ? (
-                  <div className="flex items-center gap-2 font-medium text-accent">
+                  <div className="flex items-center gap-2 font-medium">
                     <UtensilsCrossed className="h-4 w-4" />
                     <span>Catered Lunch Included</span>
                   </div>
