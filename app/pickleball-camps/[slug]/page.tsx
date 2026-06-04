@@ -337,10 +337,17 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
               )}
 
               <div className="space-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <UtensilsCrossed className="h-4 w-4" />
-                  <span>{camp.schedule.lunchBreakLabel ? `Lunch ${camp.schedule.lunchBreakLabel}` : "Lunch included"}</span>
-                </div>
+                {camp.lunchType === "catered" ? (
+                  <div className="flex items-center gap-2 font-medium text-accent">
+                    <UtensilsCrossed className="h-4 w-4" />
+                    <span>Catered Lunch Included</span>
+                  </div>
+                ) : camp.lunchType === "byo" ? (
+                  <div className="flex items-center gap-2">
+                    <UtensilsCrossed className="h-4 w-4" />
+                    <span>Bring your own lunch</span>
+                  </div>
+                ) : null}
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
                   <span>{camp.capacity >= 8 ? "4:1 small group instruction" : `${camp.capacity}-player cap`}</span>

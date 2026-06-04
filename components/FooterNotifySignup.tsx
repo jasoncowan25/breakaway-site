@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,15 +14,51 @@ interface FooterNotifySignupProps {
   showViewCampsButton?: boolean
 }
 
+// Canonical camp-alert skill bands — kept in sync with /camp-alerts and the API.
+const SKILLS = [
+  { id: "beginner", label: "Beginner (2.5–3.0)" },
+  { id: "intermediate", label: "Intermediate (3.0–3.5)" },
+  { id: "advanced", label: "Advanced (3.75+)" },
+  { id: "kids", label: "Kids Camps (all levels)" },
+]
+
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
+
+function isEmail(v: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+}
+
 export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotifySignupProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
-  const [postalCode, setPostalCode] = useState("")
+  const [phone, setPhone] = useState("")
   const [skillLevels, setSkillLevels] = useState<string[]>([])
+  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
+  const utm = useRef<Record<string, string>>({})
+  const referrer = useRef<string>("")
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const captured: Record<string, string> = {}
+      for (const k of UTM_KEYS) {
+        const v = params.get(k)
+        if (v) captured[k] = v
+      }
+      utm.current = captured
+      referrer.current = document.referrer || ""
+    } catch {
+      /* no-op */
+    }
+  }, [])
+
   const handleSkillLevelChange = (level: string, checked: boolean) => {
+    setError(null)
     if (checked) {
       setSkillLevels([...skillLevels, level])
     } else {
@@ -30,27 +66,52 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
     }
   }
 
+  const handlePhoneChange = (value: string) => {
+    const d = value.replace(/\D/g, "").slice(0, 10)
+    let out = ""
+    if (d.length > 0) out = "(" + d.slice(0, 3)
+    if (d.length >= 4) out += ") " + d.slice(3, 6)
+    if (d.length >= 7) out += "-" + d.slice(6, 10)
+    setPhone(out)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
 
+    if (!firstName.trim()) {
+      setError("Please enter your first name.")
+      return
+    }
+    if (!isEmail(email)) {
+      setError("Enter a valid email so we can reach you.")
+      return
+    }
+    if (skillLevels.length === 0) {
+      setError("Pick at least one skill level so we can match you.")
+      return
+    }
+
+    setError(null)
     setIsSubmitting(true)
 
     try {
-      await fetch("/api/waitlist", {
+      await fetch("/api/camp-alerts", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
-          postalCode,
-          skillLevels: skillLevels.join(", "),
-          timestamp: new Date().toISOString(),
+          firstName: firstName.trim(),
+          lastName: lastName.trim() || null,
+          email: email.trim(),
+          phone: phone.replace(/\D/g, "").length === 10 ? phone : null,
+          skillLevels,
+          source: utm.current.utm_source || "footer_notify",
+          utm: utm.current,
+          referrer: referrer.current || null,
         }),
       })
-    } catch (error) {
-      console.error("Failed to submit to waitlist:", error)
+    } catch (err) {
+      // Best-effort: still confirm to the visitor; the API dedupes on retry.
+      console.error("Failed to submit camp alert:", err)
     }
 
     setIsSubmitting(false)
@@ -61,12 +122,14 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
       setIsExpanded(false)
       // Reset form after collapse animation
       setTimeout(() => {
+        setFirstName("")
+        setLastName("")
         setEmail("")
-        setPostalCode("")
+        setPhone("")
         setSkillLevels([])
         setIsSuccess(false)
       }, 300)
-    }, 2000)
+    }, 2500)
   }
 
   return (
@@ -101,16 +164,57 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
         {/* Expanded State */}
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+            isExpanded ? "max-h-[900px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           {isSuccess ? (
             <div className="py-6 text-center">
-              <p className="text-[#1e3a8a] font-semibold text-lg">You're on the list.</p>
+              <p className="text-[#1e3a8a] font-semibold text-lg">You&apos;re on the list.</p>
+              <p className="text-[#6B7280] text-sm mt-1">
+                {phone.replace(/\D/g, "").length === 10
+                  ? "We'll text or email you the moment a matching camp goes live."
+                  : "We'll email you the moment a matching camp goes live."}
+              </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="pt-4 border-t border-[#E5E7EB]">
+            <form onSubmit={handleSubmit} noValidate className="pt-4 border-t border-[#E5E7EB]">
               <div className="grid gap-4 md:grid-cols-2">
+                {/* First Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="notify-first" className="text-sm text-[#374151]">
+                    First name <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="notify-first"
+                    type="text"
+                    autoComplete="given-name"
+                    placeholder="Jordan"
+                    value={firstName}
+                    onChange={(e) => {
+                      setFirstName(e.target.value)
+                      setError(null)
+                    }}
+                    required
+                    className="border-[#D1D5DB] focus:border-[#1e3a8a] focus:ring-[#1e3a8a]"
+                  />
+                </div>
+
+                {/* Last Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="notify-last" className="text-sm text-[#374151]">
+                    Last name <span className="text-[#9CA3AF]">(optional)</span>
+                  </Label>
+                  <Input
+                    id="notify-last"
+                    type="text"
+                    autoComplete="family-name"
+                    placeholder="Lee"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="border-[#D1D5DB] focus:border-[#1e3a8a] focus:ring-[#1e3a8a]"
+                  />
+                </div>
+
                 {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="notify-email" className="text-sm text-[#374151]">
@@ -119,42 +223,47 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
                   <Input
                     id="notify-email"
                     type="email"
+                    inputMode="email"
+                    autoComplete="email"
                     placeholder="you@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value)
+                      setError(null)
+                    }}
                     required
                     className="border-[#D1D5DB] focus:border-[#1e3a8a] focus:ring-[#1e3a8a]"
                   />
                 </div>
 
-                {/* Postal Code */}
+                {/* Cell Phone */}
                 <div className="space-y-2">
-                  <Label htmlFor="notify-postal" className="text-sm text-[#374151]">
-                    Postal code <span className="text-[#9CA3AF]">(optional)</span>
+                  <Label htmlFor="notify-phone" className="text-sm text-[#374151]">
+                    Cell phone <span className="text-[#9CA3AF]">(optional)</span>
                   </Label>
                   <Input
-                    id="notify-postal"
-                    type="text"
-                    placeholder="M6S"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
+                    id="notify-phone"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="(416) 555-0142"
+                    maxLength={14}
+                    value={phone}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
                     className="border-[#D1D5DB] focus:border-[#1e3a8a] focus:ring-[#1e3a8a]"
                   />
+                  <p className="text-xs text-[#6B7280]">Optional — for text alerts when camps open.</p>
                 </div>
               </div>
 
               {/* Skill Level */}
               <div className="mt-4 space-y-3">
                 <Label className="text-sm text-[#374151]">
-                  Skill level <span className="text-[#9CA3AF]">(select all that apply)</span>
+                  Skill level <span className="text-red-500">*</span>{" "}
+                  <span className="text-[#9CA3AF]">(select all that apply)</span>
                 </Label>
-                <div className="flex flex-col gap-3">
-                  {[
-                    { id: "beginner", label: "Beginner (2.5–3.0)" },
-                    { id: "intermediate", label: "Intermediate (3.0–3.5)" },
-                    { id: "advanced", label: "Advanced (4.0+)" },
-                    { id: "kids", label: "Kids Camps (Ages 8-16)" },
-                  ].map((level) => (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {SKILLS.map((level) => (
                     <div key={level.id} className="flex items-center space-x-3">
                       <Checkbox
                         id={`skill-${level.id}`}
@@ -170,11 +279,14 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
                 </div>
               </div>
 
+              {/* Error */}
+              {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+
               {/* Submit Button */}
               <div className="mt-6">
                 <Button
                   type="submit"
-                  disabled={!email || isSubmitting}
+                  disabled={isSubmitting}
                   className="w-full md:w-auto bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Submitting..." : "Notify Me"}
@@ -183,7 +295,7 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
 
               {/* Microcopy */}
               <p className="mt-4 text-xs text-[#6B7280]">
-                We'll only email you when a camp matching your level goes live. No spam.
+                We&apos;ll only email you when a camp matching your level goes live. No spam.
               </p>
             </form>
           )}
