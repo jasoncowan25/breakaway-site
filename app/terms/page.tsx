@@ -51,18 +51,18 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-gray-900 mb-3">Cancellations &amp; Refunds</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-3">Cancellations &amp; Transfers</h2>
             <p>
-              The cancellation and refund policy that applies to your booking is the one presented at the time of
-              registration. If Breakaway cancels or reschedules a camp, you will be offered a transfer to another camp or
-              a refund of amounts paid for that camp. To request a change, email{" "}
+              Registrations are <strong>non-refundable but fully transferable</strong>. If your plans change, you can
+              move your spot to another Breakaway camp, or transfer it to another player, up to{" "}
+              <strong>7 days before the camp starts</strong>. To arrange a transfer, email{" "}
               <a
                 href="mailto:hello@breakawaypickleball.ca"
                 className="text-gray-900 underline underline-offset-2 hover:text-gray-600"
               >
                 hello@breakawaypickleball.ca
               </a>
-              .
+              . If Breakaway cancels or reschedules a camp, we&apos;ll work with you to rebook into another camp.
             </p>
           </section>
 
