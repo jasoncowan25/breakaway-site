@@ -53,6 +53,13 @@ export interface ApiCampTestimonial {
   sortOrder: number
 }
 
+export interface ApiCampBreak {
+  type: "snack" | "hydration" | "byo_lunch" | "catered_lunch"
+  start: string
+  durationMinutes: number
+  windowLabel: string
+}
+
 export interface ApiCamp {
   id: string
   slug: string | null
@@ -83,6 +90,8 @@ export interface ApiCamp {
   includeTestimonials: boolean
   moduleIds: string[]
   eventId: string | null
+  breaks: ApiCampBreak[]
+  lunchType: "catered" | "byo" | null
   registeredCount: number
   spotsLeft: number | null
   isSoldOut: boolean
