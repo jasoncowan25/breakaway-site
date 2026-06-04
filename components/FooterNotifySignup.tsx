@@ -16,11 +16,14 @@ interface FooterNotifySignupProps {
 
 export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotifySignupProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [postalCode, setPostalCode] = useState("")
   const [skillLevels, setSkillLevels] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("")
 
   const handleSkillLevelChange = (level: string, checked: boolean) => {
     if (checked) {
@@ -35,22 +38,35 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
     if (!email) return
 
     setIsSubmitting(true)
+    setErrorMsg("")
 
     try {
-      await fetch("/api/waitlist", {
+      const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          firstName,
+          lastName,
           email,
           postalCode,
-          skillLevels: skillLevels.join(", "),
+          skillLevels, // array of selected ids (beginner/intermediate/advanced/kids)
           timestamp: new Date().toISOString(),
         }),
       })
+
+      if (!res.ok) {
+        // Only show success when the submission actually succeeded.
+        setIsSubmitting(false)
+        setErrorMsg("Something went wrong — please try again.")
+        return
+      }
     } catch (error) {
       console.error("Failed to submit to waitlist:", error)
+      setIsSubmitting(false)
+      setErrorMsg("Couldn't reach the server — please try again.")
+      return
     }
 
     setIsSubmitting(false)
@@ -61,6 +77,8 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
       setIsExpanded(false)
       // Reset form after collapse animation
       setTimeout(() => {
+        setFirstName("")
+        setLastName("")
         setEmail("")
         setPostalCode("")
         setSkillLevels([])
@@ -111,6 +129,36 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
           ) : (
             <form onSubmit={handleSubmit} className="pt-4 border-t border-[#E5E7EB]">
               <div className="grid gap-4 md:grid-cols-2">
+                {/* First name */}
+                <div className="space-y-2">
+                  <Label htmlFor="notify-first-name" className="text-sm text-[#374151]">
+                    First name <span className="text-[#9CA3AF]">(optional)</span>
+                  </Label>
+                  <Input
+                    id="notify-first-name"
+                    type="text"
+                    placeholder="Jane"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="border-[#D1D5DB] focus:border-[#1e3a8a] focus:ring-[#1e3a8a]"
+                  />
+                </div>
+
+                {/* Last name */}
+                <div className="space-y-2">
+                  <Label htmlFor="notify-last-name" className="text-sm text-[#374151]">
+                    Last name <span className="text-[#9CA3AF]">(optional)</span>
+                  </Label>
+                  <Input
+                    id="notify-last-name"
+                    type="text"
+                    placeholder="Doe"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="border-[#D1D5DB] focus:border-[#1e3a8a] focus:ring-[#1e3a8a]"
+                  />
+                </div>
+
                 {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="notify-email" className="text-sm text-[#374151]">
@@ -179,6 +227,11 @@ export function FooterNotifySignup({ showViewCampsButton = false }: FooterNotify
                 >
                   {isSubmitting ? "Submitting..." : "Notify Me"}
                 </Button>
+                {errorMsg && (
+                  <p className="mt-2 text-sm text-red-600" role="alert">
+                    {errorMsg}
+                  </p>
+                )}
               </div>
 
               {/* Microcopy */}
