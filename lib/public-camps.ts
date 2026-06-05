@@ -266,7 +266,7 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     locationFilter: "Toronto & GTA",
     format: "Camp",
     skillLevel: "3.0-3.5",
-    price: "From $700 CAD",
+    price: "$700 CAD",
     image: "/jar3.png",
     badges: [{ text: "Just Announced", variant: "accent" }],
     coach: "Joey Manchurek",
@@ -624,6 +624,10 @@ async function getPublishedCampRows(limit: number, options: SupabaseRestOptions 
         "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,hero_image_url,thumbnail_image_url,facility_id,featured_coach_id,include_testimonials,breaks",
       public_visibility: "eq.published",
       slug: "not.is.null",
+      // Camps that belong to a Camp Event (e.g. Muskoka Summer) are surfaced
+      // through their event hub card, not as standalone cards in the main
+      // grid — otherwise publishing them double-lists alongside the hub.
+      event_id: "is.null",
       start_date: `gte.${todayIso()}`,
       status: "in.(upcoming,in_progress)",
       order: "start_date.asc",
@@ -782,7 +786,9 @@ function publicCampRowToCard(
     }),
     format: row.title.toLowerCase().includes("clinic") ? "Clinic" : "Camp",
     skillLevel: skillLabel(row),
-    price: priceCardLabel(priceLabel(row.base_price_cad)),
+    // Admin-managed standalone camps have one exact price, so show it as-is
+    // (no "From" — that prefix is for the event hubs with per-player ranges).
+    price: priceLabel(row.base_price_cad),
     image: heroImageUrl ?? "/toronto-coaching-instruction.png",
     badges: badgeLabel ? [{ text: titleCaseBadge(badgeLabel), variant: badgeVariant(badge) }] : [],
     coach: coach?.display_name ?? "Breakaway coach",
@@ -835,6 +841,8 @@ export async function getPublishedPublicCampNavItems(limit = 12): Promise<Public
       select: "slug,title,start_date",
       public_visibility: "eq.published",
       slug: "not.is.null",
+      // Event-member camps live under their hub card, not the nav list.
+      event_id: "is.null",
       start_date: `gte.${todayIso()}`,
       status: "in.(upcoming,in_progress)",
       order: "start_date.asc",
