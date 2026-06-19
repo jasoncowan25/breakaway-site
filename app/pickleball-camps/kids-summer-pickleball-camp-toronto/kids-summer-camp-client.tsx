@@ -40,7 +40,7 @@ export default function KidsSummerCampClient() {
     title: "Baseline x Breakaway Kids Summer Pickleball Camp",
     subtitle: "3-Week Youth Camp \u2022 Ages 8\u201314 \u2022 All Skill Levels \u2022 No Experience Required",
     location: "Toronto",
-    coach: "Joey Manchurek",
+    coach: "Joey Manchurek and the Breakaway x Baseline team",
     date: "August 17 \u2013 September 4, 2026",
     price: "$625 CAD / week",
     priceNote: "per week (5 days)",

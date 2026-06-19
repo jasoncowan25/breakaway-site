@@ -75,7 +75,7 @@ function CampsPageContent() {
         { text: "Just Announced", variant: "accent" as const },
         { text: "Ages 8-14", variant: "secondary" as const },
       ],
-      coach: "Joey Manchurek",
+      coach: "Joey Manchurek and the Breakaway x Baseline team",
       link: "/pickleball-camps/kids-summer-pickleball-camp-toronto",
       imageEnhanced: true,
       soldOut: false,
