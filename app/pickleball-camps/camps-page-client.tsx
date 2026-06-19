@@ -61,6 +61,27 @@ function CampsPageContent() {
 
   const upcomingCamps = [
     {
+      id: "kids-summer-camp-2026",
+      title: "Kids Summer Pickleball Camp\n(Ages 8-14)",
+      date: "Aug 17 – Sept 4, 2026",
+      sortDate: new Date("2026-08-17"),
+      location: "The Jar PickleBall Club",
+      locationFilter: "Toronto & GTA",
+      format: "Camp",
+      skillLevel: "2.5-2.75,3.0,3.5,4.0+",
+      price: "From $625 CAD / week",
+      image: "/images/kids-camp-group-photo.png",
+      badges: [
+        { text: "Just Announced", variant: "accent" as const },
+        { text: "Ages 8-14", variant: "secondary" as const },
+      ],
+      coach: "Joey Manchurek",
+      link: "/pickleball-camps/kids-summer-pickleball-camp-toronto",
+      imageEnhanced: true,
+      soldOut: false,
+      buttonText: "Learn More",
+    },
+    {
       id: "punta-cana-2026",
       title: "Punta Cana Destination Retreat",
       date: "Nov 24 – Dec 1, 2026",

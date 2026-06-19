@@ -37,6 +37,9 @@ export function Navigation() {
                 <DropdownMenuItem asChild>
                   <Link href="/pickleball-camps/punta-cana">Punta Cana Destination Retreat</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/pickleball-camps/kids-summer-pickleball-camp-toronto">Kids Summer Pickleball Camp</Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
