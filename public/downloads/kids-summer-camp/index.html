@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-navy">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Baseline x Breakaway Kids Summer Pickleball Camp | Toronto (Ages 8-14)</title>
+  <meta name="description" content="A 3-week youth pickleball summer camp in Toronto for ages 8-14, August 17 - September 4, 2026, at The Jar PickleBall Club. All skill levels welcome, no experience required." />
+  <style>
+    :root {
+      --navy: #1e3a8a;
+      --lime: #a3e635;
+      --orange: #EE964B;
+      --white: #ffffff;
+      --light-gray: #f8f9fa;
+      --text-dark: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { background: var(--navy); }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-dark);
+      background: var(--white);
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+    .wrap { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Header */
+    header.nav {
+      background: var(--navy);
+      color: var(--white);
+      padding: 1rem 0;
+    }
+    header.nav .wrap { display: flex; align-items: center; justify-content: space-between; }
+    header.nav .brand { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; }
+    header.nav .brand span { color: var(--lime); }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 460px;
+      background: linear-gradient(135deg, var(--navy), rgba(30,58,138,0.85));
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero .bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; opacity: 0.30;
+    }
+    .hero .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    }
+    .hero .content { position: relative; padding: 2rem 0; width: 100%; }
+    .hero h1 { color: var(--white); font-size: 2.5rem; line-height: 1.1; margin-bottom: 0.5rem; text-wrap: balance; }
+    .hero p.sub { color: rgba(255,255,255,0.9); font-size: 1.125rem; }
+    .hero .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; color: rgba(255,255,255,0.8); font-size: 0.95rem; }
+    .hero .meta span { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+    .badge {
+      display: inline-block;
+      background: var(--lime); color: var(--text-dark);
+      font-size: 0.8rem; font-weight: 700;
+      padding: 0.25rem 0.7rem; border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+    .badge.muted { background: rgba(255,255,255,0.2); color: var(--white); margin-left: 0.5rem; }
+
+    /* Layout */
+    .layout { display: flex; flex-direction: column; gap: 2rem; padding: 2rem 0; }
+    @media (min-width: 1024px) { .layout { flex-direction: row; } .main { flex: 1; } .aside { width: 20rem; flex-shrink: 0; } }
+    .main > section { margin-bottom: 2rem; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+    .card.collab { border: 2px solid rgba(30,58,138,0.1); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .card.collab .logo { width: 100px; height: 100px; object-fit: contain; flex-shrink: 0; }
+    .eyebrow { font-size: 0.8rem; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    h2.section-title { color: var(--navy); font-size: 1.875rem; margin-bottom: 1.25rem; margin-top: 0.5rem; }
+    p.lede { color: var(--muted); }
+    .lede a { color: var(--navy); text-decoration: underline; }
+
+    /* Schedule */
+    .sched-item { display: flex; gap: 1rem; }
+    .sched-item + .sched-item { margin-top: 1rem; }
+    .sched-dot { background: rgba(163,230,53,0.25); border-radius: 9999px; width: 2.25rem; height: 2.25rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .sched-body { border-left: 2px solid var(--border); padding-left: 1rem; padding-bottom: 0.5rem; }
+    .sched-time { font-weight: 700; color: var(--navy); }
+    .sched-act { color: var(--muted); }
+
+    /* Included grid */
+    .incl-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+    @media (min-width: 768px) { .incl-grid { grid-template-columns: 1fr 1fr; } }
+    .incl-item { display: flex; gap: 0.75rem; }
+    .incl-icon { color: var(--orange); font-size: 1.1rem; flex-shrink: 0; line-height: 1.4; }
+    .incl-title { font-weight: 700; color: var(--navy); margin-bottom: 0.2rem; }
+    .incl-desc { font-size: 0.9rem; color: var(--muted); }
+
+    /* Coach */
+    .coach { display: flex; flex-direction: column; gap: 1.5rem; }
+    @media (min-width: 768px) { .coach { flex-direction: row; } }
+    .coach .photo { width: 12rem; height: 12rem; border-radius: 0.5rem; object-fit: cover; flex-shrink: 0; }
+    .coach h3 { color: var(--navy); font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .coach p { color: var(--muted); }
+
+    /* Venue */
+    .venue-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 768px) { .venue-grid { grid-template-columns: 1fr 1fr; } }
+    .venue-tile { position: relative; height: 16rem; border-radius: 0.5rem; overflow: hidden; }
+    .venue-tile img { width: 100%; height: 100%; object-fit: cover; }
+    .venue-video { position: relative; display: block; }
+    .venue-video .vid-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; }
+    .play-btn { background: var(--white); border-radius: 9999px; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+    .play-btn span { color: var(--navy); font-size: 1.1rem; }
+    .venue-video .label { color: var(--white); font-weight: 700; }
+    .venue-loc { margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--muted); }
+
+    /* Booking widget */
+    .book-card { border: 2px solid rgba(30,58,138,0.2); border-radius: 0.75rem; padding: 1.5rem; background: var(--white); }
+    .price { font-size: 1.875rem; font-weight: 800; color: var(--navy); }
+    .price-note { font-size: 0.9rem; color: var(--muted); }
+    .price-total { font-size: 0.9rem; font-weight: 700; color: var(--orange); margin-top: 0.2rem; }
+    .book-meta { margin: 1rem 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; }
+    .book-meta div { display: flex; align-items: center; gap: 0.5rem; }
+    .btn {
+      display: block; width: 100%; text-align: center;
+      background: var(--lime); color: var(--text-dark);
+      font-weight: 700; font-size: 1.1rem;
+      padding: 0.9rem 1rem; border-radius: 0.5rem;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .fine { font-size: 0.75rem; text-align: center; color: var(--muted); margin-top: 0.75rem; }
+    .feature-list { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--muted); }
+    .feature-list div { display: flex; align-items: center; gap: 0.5rem; }
+    .collab-mini { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .collab-mini img { width: 40px; height: 40px; object-fit: contain; }
+    .collab-mini span { font-size: 0.75rem; color: var(--muted); }
+    .collab-mini a { color: var(--navy); text-decoration: underline; }
+
+    /* Footer */
+    footer.site { background: var(--navy); color: rgba(255,255,255,0.85); padding: 2.5rem 0; margin-top: 2rem; }
+    footer.site .brand { font-size: 1.25rem; font-weight: 800; color: var(--white); margin-bottom: 0.5rem; }
+    footer.site .brand span { color: var(--lime); }
+    footer.site a { color: var(--white); text-decoration: underline; }
+    footer.site .row { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between; align-items: center; }
+    footer.site .small { font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap">
+      <div class="brand">Breakaway<span>.</span></div>
+      <nav class="small" style="font-size:0.9rem;">Pickleball Camps</nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <img class="bg" src="images/kids-passover-camp-hero.webp" alt="Kids playing pickleball at Breakaway Camp" />
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="wrap">
+        <span class="badge">Ages 8-14</span>
+        <h1>Baseline x Breakaway Kids Summer Pickleball Camp</h1>
+        <p class="sub">3-Week Youth Camp &bull; Ages 8&ndash;14 &bull; All Skill Levels &bull; No Experience Required</p>
+        <div class="meta">
+          <span>&#128197; August 17 &ndash; September 4, 2026</span>
+          <span>&#128205; The Jar PickleBall Club</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="layout">
+      <!-- Main -->
+      <div class="main">
+        <!-- Collaboration -->
+        <section>
+          <div class="card collab">
+            <a href="https://baselinerec.com" target="_blank" rel="noopener noreferrer">
+              <img class="logo" src="images/baseline-rec-league-logo.webp" alt="Baseline Rec Pickleball League logo" />
+            </a>
+            <div>
+              <p class="eyebrow">In Collaboration With</p>
+              <p style="font-size:1.125rem;font-weight:800;color:var(--navy);">Baseline Rec Pickleball League</p>
+              <p class="incl-desc">Bringing community-driven pickleball programming to young players across Toronto</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- About -->
+        <section>
+          <h2 class="section-title">About the Camp</h2>
+          <p class="lede">
+            Breakaway Pickleball Camps and <a href="https://baselinerec.com" target="_blank" rel="noopener noreferrer">Baseline Rec Pickleball League</a> are teaming up for a summer camp like no other &mdash; a 3-week youth program running August 17 to September 4 at The Jar PickleBall Club in Toronto. Designed for ages 8-14, all skill levels are welcome and no experience is required. This isn&rsquo;t babysitting with paddles &mdash; it&rsquo;s structured, skill-based development led by experienced youth coaches in a high-energy, inclusive environment. With just 36 campers per day across 6 dedicated courts, your child gets real attention, real reps, and real growth. Choose the days and weeks that work best for your family&rsquo;s schedule &mdash; spots are limited and will fill quickly.
+          </p>
+        </section>
+
+        <!-- Daily Schedule -->
+        <section>
+          <h2 class="section-title">Daily Schedule</h2>
+          <div class="card">
+            <div class="sched-item">
+              <div class="sched-dot">&#9201;</div>
+              <div class="sched-body"><div class="sched-time">9:00 &ndash; 10:30 AM</div><div class="sched-act">Warmup Games &mdash; high-energy group activities to get moving and build camaraderie</div></div>
+            </div>
+            <div class="sched-item">
+              <div class="sched-dot">&#9201;</div>
+              <div class="sched-body"><div class="sched-time">10:30 AM &ndash; 12:30 PM</div><div class="sched-act">Pickleball Clinic &mdash; skill-based drills, strategy, and live play across all 6 courts</div></div>
+            </div>
+            <div class="sched-item">
+              <div class="sched-dot">&#9201;</div>
+              <div class="sched-body"><div class="sched-time">12:30 &ndash; 1:30 PM</div><div class="sched-act">Lunch + Movie &mdash; a midday reset to recharge with a packed lunch</div></div>
+            </div>
+            <div class="sched-item">
+              <div class="sched-dot">&#9201;</div>
+              <div class="sched-body"><div class="sched-time">1:30 &ndash; 3:00 PM</div><div class="sched-act">Daily Tournament &mdash; friendly bracket-style play to close each day</div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- What's Included -->
+        <section>
+          <h2 class="section-title">What&rsquo;s Included</h2>
+          <div class="card">
+            <div class="incl-grid">
+              <div class="incl-item"><div class="incl-icon">&#127942;</div><div><div class="incl-title">Professional Instruction</div><div class="incl-desc">Led by experienced Breakaway + Baseline youth coaches</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#127993;</div><div><div class="incl-title">Equipment Provided</div><div class="incl-desc">All paddles and balls provided, just show up and play</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#128737;</div><div><div class="incl-title">Safe Environment</div><div class="incl-desc">Fully supervised facility with certified staff on-site at all times</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#128101;</div><div><div class="incl-title">Skill-Based Groups</div><div class="incl-desc">Players placed in groups by ability for personalized training</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#127918;</div><div><div class="incl-title">Daily Tournament</div><div class="incl-desc">Afternoon bracket-style tournament play to close each day</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#127869;</div><div><div class="incl-title">Lunch + Movie Reset</div><div class="incl-desc">Midday break with a movie. On-site fridges available &mdash; please pack lunch, snacks, and a water bottle</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#128203;</div><div><div class="incl-title">Flexible Scheduling</div><div class="incl-desc">Choose single weeks, the full 3-week program, or single-day drop-ins</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#128247;</div><div><div class="incl-title">Community Energy</div><div class="incl-desc">A warm, inclusive environment where kids improve fast and make friends</div></div></div>
+              <div class="incl-item"><div class="incl-icon">&#10084;</div><div><div class="incl-title">Activities &amp; Fun</div><div class="incl-desc">Team-building games, on and off court activities, and tons of fun</div></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Meet Your Coach -->
+        <section>
+          <h2 class="section-title">Meet Your Coach</h2>
+          <div class="card">
+            <div class="coach">
+              <img class="photo" src="images/coach-joey.jpg" alt="Joey Manchurek and the Breakaway x Baseline team" />
+              <div>
+                <h3>Joey Manchurek and the Breakaway x Baseline team</h3>
+                <p>Former pro hockey player (OHL Oshawa Generals Captain; later ECHL). Grew up playing tennis &amp; table tennis; transitioned quickly to competitive pickleball and now competes at an elite 5.0 level. His coaching focus is on leadership, skill development, and helping every player reach their potential while having a blast.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- The Venue -->
+        <section>
+          <h2 class="section-title">The Venue</h2>
+          <div class="venue-grid">
+            <a class="venue-tile venue-video" href="https://www.youtube.com/watch?v=pvRbB-JDsIA" target="_blank" rel="noopener noreferrer">
+              <img src="images/see-the-camp-space-thumb.png" alt="See the Camp Space at The Jar PickleBall Club" />
+              <div class="vid-overlay">
+                <div class="play-btn"><span>&#9654;</span></div>
+                <span class="label">See the Camp Space</span>
+              </div>
+            </a>
+            <div class="venue-tile"><img src="images/jar3.png" alt="The Jar PickleBall Club venue photo 1" /></div>
+            <div class="venue-tile"><img src="images/jar4.png" alt="The Jar PickleBall Club venue photo 2" /></div>
+            <div class="venue-tile"><img src="images/jar1.png" alt="The Jar PickleBall Club venue photo 3" /></div>
+            <div class="venue-tile"><img src="images/jar2.png" alt="The Jar PickleBall Club venue photo 4" /></div>
+          </div>
+          <div class="venue-loc">&#128205; The Jar PickleBall Club</div>
+        </section>
+      </div>
+
+      <!-- Booking Widget -->
+      <aside class="aside">
+        <div class="book-card">
+          <div>
+            <div class="price">$625 CAD / week</div>
+            <div class="price-note">per week (5 days)</div>
+            <div class="price-total">Full 15-day program also available</div>
+          </div>
+          <div class="book-meta">
+            <div>&#128197; August 17 &ndash; September 4, 2026</div>
+            <div>&#9201; 9:00 AM &ndash; 3:00 PM</div>
+            <div>&#128205; The Jar PickleBall Club</div>
+          </div>
+          <a class="btn" href="https://baselinerec.com/products/youth-summer-camp" target="_blank" rel="noopener noreferrer">Register Now</a>
+          <p class="fine">Single weeks, full 3-week program, and single-day drop-ins available at checkout</p>
+          <div class="feature-list">
+            <div>&#127869; Lunch + movie break daily</div>
+            <div>&#127918; Activities on/off court</div>
+            <div>&#128101; 36 kids max per day</div>
+            <div>&#127993; Equipment provided</div>
+            <div>&#127942; Daily tournament</div>
+          </div>
+          <div class="collab-mini">
+            <a href="https://baselinerec.com" target="_blank" rel="noopener noreferrer"><img src="images/baseline-rec-league-logo.webp" alt="Baseline Rec Pickleball League" /></a>
+            <span>In collaboration with <a href="https://baselinerec.com" target="_blank" rel="noopener noreferrer">Baseline Rec League</a></span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="row">
+        <div>
+          <div class="brand">Breakaway<span>.</span></div>
+          <p class="small">Pickleball camps across Toronto, the GTA &amp; now Muskoka</p>
+        </div>
+        <div class="small">Contact: <a href="mailto:hello@breakawaypickleball.ca">hello@breakawaypickleball.ca</a></div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
