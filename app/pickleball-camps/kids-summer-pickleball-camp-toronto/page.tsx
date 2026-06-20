@@ -1,5 +1,10 @@
 import { Metadata } from "next"
+import { notFound } from "next/navigation"
 import KidsSummerCampClient from "./kids-summer-client"
+
+// Temporarily hidden until the launch is coordinated. Remove this flag (and
+// restore the card in lib/public-camps.ts) to bring the page back live.
+const KIDS_SUMMER_CAMP_HIDDEN = true
 
 export const metadata: Metadata = {
   title: "Baseline x Breakaway Kids Summer Pickleball Camp | Ages 8-14 | Toronto",
@@ -32,5 +37,8 @@ export const metadata: Metadata = {
 }
 
 export default function KidsSummerCampPage() {
+  if (KIDS_SUMMER_CAMP_HIDDEN) {
+    notFound()
+  }
   return <KidsSummerCampClient />
 }
