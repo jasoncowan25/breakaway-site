@@ -11,6 +11,8 @@ import {
   Move,
   Send,
   TrendingUp,
+  Shield,
+  Compass,
   Award,
   UtensilsCrossed,
   MessageSquare,
@@ -23,6 +25,15 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { getPublicCampBySlug, getPublishedPublicCampNavItems, publicBadgeText } from "@/lib/public-camps"
+import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
+
+// Fixed family → icon map (migration 0076). Every shot inherits its family's
+// icon — no per-shot icons.
+const familyIcons: Record<ApiShotFamily, typeof Target> = {
+  shots: Target,
+  defense: Shield,
+  strategy_positioning: Compass,
+}
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -41,9 +52,10 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
     searchParams ?? Promise.resolve({} as { preview?: string }),
   ])
   const preview = canPreview(query.preview)
-  const [camp, navCampItems] = await Promise.all([
+  const [camp, navCampItems, campShots] = await Promise.all([
     getPublicCampBySlug(slug, { preview }),
     getPublishedPublicCampNavItems(),
+    fetchPublicCampShots(slug, { preview }),
   ])
 
   if (!camp) notFound()
@@ -121,22 +133,43 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
             <p className="mb-6 max-w-3xl leading-relaxed text-muted-foreground">
               {camp.modulesIntro}
             </p>
-            <div className="grid gap-4 md:grid-cols-2">
-              {camp.modules.map((module, index) => {
-                const Icon = moduleIcons[index] ?? Target
-                return (
-                <div key={module.id} className="flex gap-4 rounded-lg border border-border bg-card p-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10">
-                    <Icon className="h-5 w-5 text-accent" />
-                  </div>
-                  <div>
-                    <div className="mb-1 font-semibold text-primary">{module.name}</div>
-                    <div className="text-sm leading-6 text-muted-foreground">{module.publicBullet}</div>
-                  </div>
+            {campShots.length > 0 ? (
+              <div className="rounded-2xl border border-border p-5">
+                <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+                  {campShots.map((shot) => {
+                    const Icon = familyIcons[shot.family] ?? Target
+                    return (
+                      <div
+                        key={shot.id}
+                        className="flex items-center gap-3.5 rounded-xl border border-border bg-card p-4"
+                      >
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent/10">
+                          <Icon className="h-[22px] w-[22px] text-[#6EA626]" />
+                        </div>
+                        <div className="font-semibold text-primary">{shot.title}</div>
+                      </div>
+                    )
+                  })}
                 </div>
-                )
-              })}
-            </div>
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                {camp.modules.map((module, index) => {
+                  const Icon = moduleIcons[index] ?? Target
+                  return (
+                  <div key={module.id} className="flex gap-4 rounded-lg border border-border bg-card p-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10">
+                      <Icon className="h-5 w-5 text-accent" />
+                    </div>
+                    <div>
+                      <div className="mb-1 font-semibold text-primary">{module.name}</div>
+                      <div className="text-sm leading-6 text-muted-foreground">{module.publicBullet}</div>
+                    </div>
+                  </div>
+                  )
+                })}
+              </div>
+            )}
           </section>
 
           {camp.schedule.days.length > 0 ? (

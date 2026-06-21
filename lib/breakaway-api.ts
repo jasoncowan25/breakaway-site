@@ -157,6 +157,31 @@ export async function fetchPublicCampBySlug(
   return data?.camp ?? null
 }
 
+// ── Camp shots ───────────────────────────────────────────────────────────────
+// A camp's "What You'll Master" list, resolved from camp_shots → shots, each
+// tagged with its family (Shots / Defense / Strategy & Positioning) so the site
+// can render the fixed family icon.
+
+export type ApiShotFamily = "shots" | "defense" | "strategy_positioning"
+
+export interface ApiCampShot {
+  id: string
+  title: string
+  family: ApiShotFamily
+}
+
+/** A camp's published shots in declared order, or [] if none / not found. */
+export async function fetchPublicCampShots(
+  slug: string,
+  options: FetchOptions = {},
+): Promise<ApiCampShot[]> {
+  const data = await apiGet<{ shots: ApiCampShot[] }>(
+    `/api/v1/public/camps/${encodeURIComponent(slug)}/shots`,
+    options,
+  )
+  return data?.shots ?? []
+}
+
 // ── Camp Events ────────────────────────────────────────────────────────────
 // A Camp Event groups bookable camps under one facility. The landing page is
 // custom-coded on the marketing site; this feeds its camps grid.
