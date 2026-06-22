@@ -155,7 +155,7 @@ export function SuccessView({
                 {players.length - 1 === 1
                   ? "other player"
                   : `other ${players.length - 1} players`}{" "}
-                their camp details and a link to set up their Breakaway account.
+                their own gate pass &amp; a link to set up their Breakaway account.
               </span>
             </div>
           )}

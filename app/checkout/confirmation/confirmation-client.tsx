@@ -11,6 +11,8 @@ type ConfirmationStatus = {
   status: string | null
   paymentStatus: string | null
   customerEmail: string | null
+  payerFirstName?: string | null
+  playerCount?: number | null
   amountTotal: number | null
   currency: string | null
   checkoutMode?: "adult" | "kids" | string | null
@@ -98,7 +100,7 @@ function successCamp(status: ConfirmationStatus | null): Camp {
     isKidsCamp: false,
     collectTshirtSizes: false,
     lunchType: null,
-    maxPlayers: 1,
+    maxPlayers: Math.max(1, status?.playerCount ?? 1),
     coachRatio: "4:1",
   }
 }
@@ -189,6 +191,17 @@ export function ConfirmationClient() {
 
   const camp = useMemo(() => successCamp(status), [status])
   const payerEmail = status?.customerEmail ?? null
+  // Reconstruct one entry per registered seat so the success card shows the
+  // right "N players registered" copy and the multi-player emails note. We only
+  // know the payer's name + email; the heading personalizes off players[0].
+  const players = useMemo<Player[]>(() => {
+    const count = Math.max(1, status?.playerCount ?? 1)
+    return Array.from({ length: count }, (_, i) =>
+      i === 0
+        ? { ...primaryPlayer(payerEmail), first: status?.payerFirstName ?? "" }
+        : { ...primaryPlayer(null), id: `confirmed-player-${i}` },
+    )
+  }, [status?.playerCount, status?.payerFirstName, payerEmail])
   const kidsMode = status?.checkoutMode === "kids"
   const portalUrl = kidsMode ? null : status?.portalUrl ?? null
   const portalEligible = !kidsMode && Boolean(status?.portalEligible || portalUrl)
@@ -241,7 +254,7 @@ export function ConfirmationClient() {
         <SuccessView
           camp={camp}
           kidsMode={kidsMode}
-          players={[primaryPlayer(payerEmail)]}
+          players={players}
           guardian={{ ...guardian, email: kidsMode ? payerEmail ?? "" : "" }}
           prefill={false}
           acct={account(payerEmail)}

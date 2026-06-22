@@ -77,7 +77,7 @@ function DetailsSummary({
 
   const playerSub = (p: Player) => {
     const pieces = kidsMode ? [p.age ? `Age ${p.age}` : null] : [p.email || null];
-    if (collectTshirtSizes && p.tee) pieces.push(`Tee ${p.tee}`);
+    if (collectTshirtSizes && p.tee) pieces.push(`${p.tee} Tee`);
     return pieces.filter(Boolean).join(" · ");
   };
 
