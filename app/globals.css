@@ -42,6 +42,137 @@
   --radius: 0.5rem;
 }
 
+.cal-pop-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 590;
+}
+
+.cal-pop {
+  position: fixed;
+  z-index: 600;
+  width: 256px;
+  padding: 7px;
+  border: 1px solid var(--neutral-200, var(--border));
+  border-radius: 14px;
+  background: var(--neutral-0, var(--card));
+  box-shadow: var(--shadow-lg, 0 18px 40px -12px rgba(30, 58, 138, 0.2), 0 6px 14px -8px rgba(0, 0, 0, 0.08));
+  transform-origin: top left;
+  animation: calPopIn 0.16s cubic-bezier(0.22, 0.68, 0, 1.1);
+}
+
+@keyframes calPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cal-pop-head {
+  padding: 7px 10px 10px;
+  border-bottom: 1px solid var(--neutral-200, var(--border));
+  margin-bottom: 5px;
+}
+
+.cal-pop-ttl {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--brand-navy, var(--color-navy));
+  letter-spacing: 0;
+}
+
+.cal-pop-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--neutral-500, var(--muted-foreground));
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.cal-pop-sub svg {
+  width: 13px;
+  height: 13px;
+  color: var(--brand-lime, var(--color-lime));
+  flex-shrink: 0;
+}
+
+.cal-pop-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.cal-pop-item:hover {
+  background: var(--neutral-50, var(--muted));
+}
+
+.cal-pop-ic {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--brand-navy, var(--color-navy)) 8%, #fff);
+  color: var(--brand-navy, var(--color-navy));
+  transition: background 0.12s, color 0.12s;
+}
+
+.cal-pop-ic svg,
+.cal-pop-arr svg {
+  width: 16px;
+  height: 16px;
+}
+
+.cal-pop-item:hover .cal-pop-ic {
+  background: var(--color-navy);
+  color: #fff;
+}
+
+.cal-pop-lbl {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--neutral-900, var(--foreground));
+}
+
+.cal-pop-isub {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--neutral-500, var(--muted-foreground));
+  margin-top: 2px;
+}
+
+.cal-pop-arr {
+  color: var(--neutral-400, var(--muted-foreground));
+  flex-shrink: 0;
+  transition: transform 0.14s, color 0.12s;
+}
+
+.cal-pop-item:hover .cal-pop-arr {
+  color: var(--brand-navy, var(--color-navy));
+  transform: translateX(2px);
+}
+
 /* Breakaway checkout design port. Scoped so the public site keeps its current system. */
 .ba-checkout {
   --ba-navy: #124a7a;

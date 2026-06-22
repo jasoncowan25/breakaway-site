@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Icon } from "../Icon";
 import { Field } from "./primitives";
 import { AccountInline } from "./AccountTask";
 import type { Player } from "../../lib/types";
+import { nextTeeOptionIndex, teeOptionIndex } from "../../lib/tee-select";
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
@@ -22,17 +23,116 @@ function TeeSelect({
   onChange: (value: string) => void;
   options: string[];
 }) {
+  const listId = useId();
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(() => teeOptionIndex(value, options));
+  const selectedIndex = teeOptionIndex(value, options);
+  const resolvedActiveIndex = activeIndex >= 0 ? activeIndex : selectedIndex;
+
+  const openList = useCallback(() => {
+    setOpen(true);
+    setActiveIndex((current) => {
+      if (current >= 0) return current;
+      if (selectedIndex >= 0) return selectedIndex;
+      return options.length > 0 ? 0 : -1;
+    });
+  }, [options.length, selectedIndex]);
+
+  const closeList = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const selectOption = useCallback(
+    (index: number) => {
+      const option = options[index];
+      if (!option) return;
+      onChange(option);
+      setActiveIndex(index);
+      setOpen(false);
+      requestAnimationFrame(() => buttonRef.current?.focus());
+    },
+    [onChange, options],
+  );
+
+  useEffect(() => {
+    if (!open) setActiveIndex(selectedIndex);
+  }, [open, selectedIndex]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      setOpen(true);
+      setActiveIndex((current) =>
+        nextTeeOptionIndex(event.key, current >= 0 ? current : selectedIndex, options),
+      );
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (!open) {
+        openList();
+        return;
+      }
+      selectOption(resolvedActiveIndex >= 0 ? resolvedActiveIndex : 0);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeList();
+    }
+  };
+
   return (
-    <select className={"inp" + (value ? "" : " placeholder")} value={value} onChange={(e) => onChange(e.target.value)}>
-      <option value="" disabled>
-        Select size
-      </option>
-      {options.map((o) => (
-        <option key={o} value={o}>
-          {o}
-        </option>
-      ))}
-    </select>
+    <div
+      className={"tee-select" + (open ? " open" : "")}
+      onBlur={(event) => {
+        const nextTarget = event.relatedTarget;
+        if (!nextTarget || !event.currentTarget.contains(nextTarget)) closeList();
+      }}
+    >
+      <button
+        ref={buttonRef}
+        type="button"
+        className={"inp tee-combobox" + (value ? "" : " placeholder")}
+        role="combobox"
+        aria-controls={listId}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-activedescendant={
+          open && resolvedActiveIndex >= 0 ? `${listId}-${resolvedActiveIndex}` : undefined
+        }
+        onFocus={openList}
+        onClick={() => {
+          if (open) closeList();
+          else openList();
+        }}
+        onKeyDown={handleKeyDown}
+      >
+        <span className={value ? "tee-value" : "tee-placeholder"}>{value || "Select size"}</span>
+        <span className="tee-caret" aria-hidden="true" />
+      </button>
+      {open && (
+        <div className="tee-list" id={listId} role="listbox" aria-label="T-shirt size">
+          {options.map((option, index) => (
+            <button
+              key={option}
+              id={`${listId}-${index}`}
+              type="button"
+              className={"tee-option" + (index === resolvedActiveIndex ? " active" : "")}
+              role="option"
+              aria-selected={option === value}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => selectOption(index)}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 

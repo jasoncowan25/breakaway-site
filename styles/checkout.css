@@ -200,6 +200,60 @@
 .co-scope .inp:focus { border-color: var(--brand-navy); box-shadow: 0 0 0 3px rgba(18,74,122,0.15); }
 .co-scope .inp.prefilled { background: var(--neutral-50); }
 .co-scope select.inp.placeholder { color: var(--neutral-400); }
+.co-scope .tee-select { position: relative; width: 100%; }
+.co-scope .tee-combobox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+.co-scope .tee-combobox.placeholder,
+.co-scope .tee-placeholder { color: var(--neutral-400); }
+.co-scope .tee-caret {
+  width: 8px;
+  height: 8px;
+  border-right: 1.8px solid currentColor;
+  border-bottom: 1.8px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  color: var(--neutral-500);
+  flex: none;
+}
+.co-scope .tee-select.open .tee-caret { transform: rotate(225deg) translateY(-1px); }
+.co-scope .tee-list {
+  position: absolute;
+  z-index: 30;
+  inset: calc(100% + 6px) 0 auto 0;
+  max-height: 220px;
+  overflow: auto;
+  padding: 4px;
+  border: 1.5px solid var(--neutral-300);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow-lg);
+}
+.co-scope .tee-option {
+  width: 100%;
+  min-height: 38px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--neutral-800);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  padding: 8px 11px;
+}
+.co-scope .tee-option:hover,
+.co-scope .tee-option.active {
+  background: var(--navy-50);
+  color: var(--brand-navy);
+}
+.co-scope .tee-option[aria-selected="true"] {
+  background: var(--brand-navy);
+  color: #fff;
+}
 .co-scope .hint { display: block; font-size: 0.78rem; color: var(--neutral-400); margin-top: 6px; }
 .co-scope .inp-wrap { position: relative; }
 .co-scope .inp-wrap .lead { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--neutral-400); pointer-events: none; }
@@ -322,6 +376,7 @@
 .co-scope .you-confirmed .yc-tee { display: flex; align-items: center; gap: 10px; margin-top: 11px; max-width: 260px; }
 .co-scope .you-confirmed .yc-tee-lbl { font-size: 0.82rem; font-weight: 600; color: var(--neutral-700); flex: none; }
 .co-scope .you-confirmed .yc-tee .inp { height: 42px; font-size: 0.92rem; }
+.co-scope .you-confirmed .yc-tee .tee-select { min-width: 128px; }
 .co-scope .you-confirmed .yc-edit { flex: none; font-size: 0.82rem; font-weight: 600; color: var(--brand-navy); background: none; border: none; cursor: pointer; padding: 6px 8px; border-radius: var(--radius); }
 .co-scope .you-confirmed .yc-edit:hover { text-decoration: underline; }
 .co-scope .player-card .editor-done { font-size: 0.84rem; font-weight: 600; color: var(--brand-navy); background: none; border: none; cursor: pointer; padding: 8px 0 0; }
@@ -674,8 +729,9 @@
 .co-scope .ticket-btns .b {
   flex: 1; height: 46px; border-radius: var(--radius-lg); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-size: 0.9rem; font-weight: 600; transition: all 130ms ease;
+  font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 130ms ease;
 }
+.co-scope .ticket-btns .b:disabled { cursor: not-allowed; opacity: 0.58; }
 .co-scope .ticket-btns .b svg { width: 16px; height: 16px; }
 .co-scope .ticket-btns .b.dark { background: var(--neutral-900); color: #fff; border: 1.5px solid var(--neutral-900); }
 .co-scope .ticket-btns .b.dark:hover { background: #000; }

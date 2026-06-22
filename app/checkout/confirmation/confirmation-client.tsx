@@ -193,6 +193,20 @@ export function ConfirmationClient() {
   const portalUrl = kidsMode ? null : status?.portalUrl ?? null
   const portalEligible = !kidsMode && Boolean(status?.portalEligible || portalUrl)
   const orderLabel = confirmationId ? confirmationId.slice(-8).toUpperCase() : undefined
+  const calendarEvent = useMemo(() => {
+    if (!status?.camp?.startDate) return null
+    return {
+      id: status.id,
+      title: status.camp.title,
+      startDate: status.camp.startDate,
+      endDate: status.camp.endDate,
+      venue: status.camp.venue,
+      datesLabel: dateLabel(status.camp.startDate, status.camp.endDate),
+      description: "Breakaway Pickleball camp registration.",
+      startHour: 9,
+      endHour: 15,
+    }
+  }, [status])
 
   async function openPortal() {
     if (portalUrl) {
@@ -244,6 +258,7 @@ export function ConfirmationClient() {
           acctOptIn={portalEligible}
           orderLabel={orderLabel}
           isResolving={isResolving || isOpeningPortal}
+          calendarEvent={calendarEvent}
           onBack={openPortal}
         />
       </div>

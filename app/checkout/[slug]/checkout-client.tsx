@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   Elements,
   PaymentElement,
@@ -148,14 +148,17 @@ function playerPayload(players: Player[], checkoutMode: CheckoutMode) {
 function CheckoutPayment({
   onError,
   onCompletionChange,
+  onAutofillComplete,
   onReady,
 }: {
   onError: (message: string) => void
   onCompletionChange: (complete: boolean) => void
+  onAutofillComplete: () => void
   onReady: (stripe: Stripe | null, elements: StripeElements | null) => void
 }) {
   const stripe = useStripe()
   const elements = useElements()
+  const wasCompleteRef = useRef(false)
 
   useEffect(() => {
     onReady(stripe, elements)
@@ -177,6 +180,10 @@ function CheckoutPayment({
         }}
         onChange={(event) => {
           onCompletionChange(event.complete)
+          if (event.complete && !wasCompleteRef.current) {
+            window.setTimeout(onAutofillComplete, 0)
+          }
+          wasCompleteRef.current = event.complete
         }}
       />
     </div>
@@ -241,6 +248,7 @@ function CheckoutClientInner({
     stripe: Stripe | null
     elements: StripeElements | null
   }>({ stripe: null, elements: null })
+  const bookingButtonRef = useRef<HTMLButtonElement | null>(null)
 
   const subtotal = players.length * designCamp.pricePerPlayer
   const payer: LivePayer = kidsMode
@@ -440,6 +448,13 @@ function CheckoutClientInner({
   const handleStripeReady = useCallback((stripe: Stripe | null, elements: StripeElements | null) => {
     setPaymentHandles({ stripe, elements })
   }, [])
+  const handleStripeAutofillComplete = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      const activeElement = document.activeElement
+      if (activeElement instanceof HTMLElement) activeElement.blur()
+      bookingButtonRef.current?.focus({ preventScroll: true })
+    })
+  }, [])
 
   const paymentContent = !stripePublishableKey ? (
     <div className="payment-waiting">
@@ -456,6 +471,7 @@ function CheckoutClientInner({
       <CheckoutPayment
         onError={setError}
         onCompletionChange={setPaymentComplete}
+        onAutofillComplete={handleStripeAutofillComplete}
         onReady={handleStripeReady}
       />
     </Elements>
@@ -523,6 +539,7 @@ function CheckoutClientInner({
             !paymentHandles.stripe ||
             !paymentHandles.elements
           }
+          bookingButtonRef={bookingButtonRef}
         />
       </div>
     </div>

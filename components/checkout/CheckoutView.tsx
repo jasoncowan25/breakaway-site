@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Icon } from "../Icon";
 import { Field, Visa } from "./primitives";
 import { PlayerCard, YouCard } from "./PlayerCard";
@@ -41,6 +41,7 @@ export interface CheckoutViewProps {
   continuePaymentDisabled?: boolean;
   payButtonLabel?: React.ReactNode;
   payButtonDisabled?: boolean;
+  bookingButtonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 function looksLikeEmail(value: string) {
@@ -178,8 +179,11 @@ export function CheckoutView(props: CheckoutViewProps) {
     continuePaymentDisabled,
     payButtonLabel,
     payButtonDisabled,
+    bookingButtonRef,
   } = props;
 
+  const fallbackBookingButtonRef = useRef<HTMLButtonElement | null>(null);
+  const resolvedBookingButtonRef = bookingButtonRef ?? fallbackBookingButtonRef;
   const PRICE = camp.pricePerPlayer;
   const collectTshirtSizes = Boolean(camp.collectTshirtSizes);
   const hasCateredLunch = camp.lunchType === "catered";
@@ -649,7 +653,12 @@ export function CheckoutView(props: CheckoutViewProps) {
                 </span>
               </div>
               {revealed ? (
-                <button className="pay-btn" onClick={onPay} disabled={payButtonDisabled ?? !detailsOk}>
+                <button
+                  ref={resolvedBookingButtonRef}
+                  className="pay-btn"
+                  onClick={onPay}
+                  disabled={payButtonDisabled ?? !detailsOk}
+                >
                   {payButtonLabel ??
                     `Book ${players.length} ${players.length === 1 ? "Spot" : "Spots"} — $${money(
                       subtotal,

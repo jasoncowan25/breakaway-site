@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Calendar, Share2, Download, ExternalLink, Copy, MessageCircle, Mail } from "lucide-react"
-import { toGoogleCalendarUrl, buildICS } from "@/lib/calendar"
+import { Share2, ExternalLink, Copy, MessageCircle, Mail } from "lucide-react"
+import { AddToCalendar } from "@/components/AddToCalendar"
 import { EVENT_TITLE, REGISTRATION_OPEN_AT, SITE_URL } from "@/lib/launch"
 
 interface ActionRowProps {
@@ -12,34 +12,22 @@ interface ActionRowProps {
 }
 
 export function ActionRow({ className }: ActionRowProps) {
-  const [showCalendarMenu, setShowCalendarMenu] = useState(false)
   const [showShareMenu, setShowShareMenu] = useState(false)
+  const registrationEnd = new Date(REGISTRATION_OPEN_AT.getTime() + 30 * 60 * 1000)
 
   const calendarEvent = {
+    id: "registration-opens",
     title: EVENT_TITLE,
-    start: REGISTRATION_OPEN_AT,
+    startAt: REGISTRATION_OPEN_AT,
+    endAt: registrationEnd,
     description: `${SITE_URL} - Limited to 16 spots. First come, first serve.`,
     url: SITE_URL,
-  }
-
-  const handleGoogleCalendar = () => {
-    const url = toGoogleCalendarUrl(calendarEvent)
-    window.open(url, "_blank")
-    setShowCalendarMenu(false)
-  }
-
-  const handleDownloadICS = () => {
-    const icsContent = buildICS(calendarEvent)
-    const blob = new Blob([icsContent], { type: "text/calendar" })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = "breakaway-pickleball-camp.ics"
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-    setShowCalendarMenu(false)
+    datesLabel: "Registration opens",
+    timeLabel: REGISTRATION_OPEN_AT.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      timeZoneName: "short",
+    }),
   }
 
   const handleShare = async () => {
@@ -79,42 +67,10 @@ export function ActionRow({ className }: ActionRowProps) {
   return (
     <div className={`flex flex-col sm:flex-row gap-3 ${className}`}>
       <div className="relative">
-        <Button
-          variant="outline"
-          onClick={() => setShowCalendarMenu(!showCalendarMenu)}
-          aria-label="Add registration reminder to calendar"
-          className="w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary"
-        >
-          <Calendar className="w-4 h-4 mr-2" />
-          Add to Calendar
-        </Button>
-
-        {showCalendarMenu && (
-          <Card className="absolute top-full mt-2 z-10 w-48 shadow-lg">
-            <CardContent className="p-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleGoogleCalendar}
-                className="w-full justify-start"
-                aria-label="Add to Google Calendar"
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Google Calendar
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleDownloadICS}
-                className="w-full justify-start"
-                aria-label="Download calendar file"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Download .ics
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+        <AddToCalendar
+          event={calendarEvent}
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-primary ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 sm:w-auto"
+        />
       </div>
 
       <div className="relative">
@@ -186,11 +142,10 @@ export function ActionRow({ className }: ActionRowProps) {
       </div>
 
       {/* Click outside to close menus */}
-      {(showCalendarMenu || showShareMenu) && (
+      {showShareMenu && (
         <div
           className="fixed inset-0 z-0"
           onClick={() => {
-            setShowCalendarMenu(false)
             setShowShareMenu(false)
           }}
         />

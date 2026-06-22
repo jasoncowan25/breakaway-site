@@ -4,6 +4,8 @@ import React from "react";
 import { Icon } from "../Icon";
 import { joinNames } from "../../lib/format";
 import type { Account, Camp, Guardian as GuardianModel, Player } from "../../lib/types";
+import type { CampCalendarInput } from "../../lib/calendar";
+import { AddToCalendar } from "../AddToCalendar";
 
 /* ==========================================================================
    SuccessView — post-payment confirmation. Ported 1:1 from the source app.
@@ -22,6 +24,7 @@ export interface SuccessViewProps {
   acctOptIn: boolean;
   orderLabel?: string;
   isResolving?: boolean;
+  calendarEvent?: CampCalendarInput | null;
   /** CTA: in the source this returns to checkout; in production route to the
    *  My Breakaway portal. INTEGRATION: replace with router.push("/portal"). */
   onBack: () => void;
@@ -37,6 +40,7 @@ export function SuccessView({
   acctOptIn,
   orderLabel,
   isResolving = false,
+  calendarEvent,
   onBack,
 }: SuccessViewProps) {
   const recipientEmail = kidsMode
@@ -136,9 +140,7 @@ export function SuccessView({
           </div>
 
           <div className="ticket-btns">
-            <button className="b ghost">
-              <Icon name="cal" size={16} /> Add to Calendar
-            </button>
+            <AddToCalendar event={isResolving ? null : calendarEvent ?? null} />
           </div>
 
           {!kidsMode && players.length > 1 && (
