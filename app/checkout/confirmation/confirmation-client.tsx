@@ -24,6 +24,7 @@ type ConfirmationStatus = {
     startDate: string | null
     endDate: string | null
     venue: string | null
+    coachLead?: string | null
   } | null
 }
 
@@ -87,7 +88,7 @@ function successCamp(status: ConfirmationStatus | null): Camp {
   return {
     eyebrow: "Breakaway Pickleball",
     title: status?.camp?.title ?? "Your Breakaway camp",
-    coachLead: "Breakaway coaching team",
+    coachLead: status?.camp?.coachLead ?? "Breakaway",
     coachPhoto: "/assets/breakaway-monogram.png",
     photo: "/jar3.png",
     date: dateLabel(status?.camp?.startDate ?? null, status?.camp?.endDate ?? null),
