@@ -195,17 +195,21 @@ export function ConfirmationClient() {
   const orderLabel = confirmationId ? confirmationId.slice(-8).toUpperCase() : undefined
 
   async function openPortal() {
+    // Show the button's loading state immediately on click (covers both the
+    // instant-redirect and the async portal-handoff paths) instead of flashing
+    // the whole account card to a skeleton.
+    setIsOpeningPortal(true)
+    setError("")
     if (portalUrl) {
       window.location.href = portalUrl
       return
     }
     if (!paymentIntentId || !paymentIntentClientSecret) {
       setError("Your account link is not ready yet. Use the emailed sign-in link or refresh this page.")
+      setIsOpeningPortal(false)
       return
     }
 
-    setIsOpeningPortal(true)
-    setError("")
     try {
       const response = await fetch(
         `${breakawayApiBase}/api/checkout/payment-intents/${encodeURIComponent(paymentIntentId)}/portal-handoff`,
@@ -243,7 +247,8 @@ export function ConfirmationClient() {
           acct={account(payerEmail)}
           acctOptIn={portalEligible}
           orderLabel={orderLabel}
-          isResolving={isResolving || isOpeningPortal}
+          isResolving={isResolving}
+          opening={isOpeningPortal}
           onBack={openPortal}
         />
       </div>
