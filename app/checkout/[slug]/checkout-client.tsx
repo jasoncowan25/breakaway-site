@@ -12,6 +12,7 @@ import type { Stripe, StripeElements } from "@stripe/stripe-js"
 
 import { CheckoutView } from "@/components/checkout/CheckoutView"
 import { Icon } from "@/components/Icon"
+import { checkoutAmount } from "@/lib/checkout-amount"
 import type {
   Account,
   Agreements,
@@ -469,7 +470,7 @@ function CheckoutClientInner({
   const checkoutError = error ? <div className="checkout-error">{error}</div> : null
   const payButtonLabel = isPaying
     ? "Booking..."
-    : `Book ${players.length} ${players.length === 1 ? "Spot" : "Spots"} — $${money(subtotal)} CAD`
+    : `Book ${players.length} ${players.length === 1 ? "Spot" : "Spots"} — $${money(checkoutAmount(subtotal).total)} CAD`
 
   return (
     <div className="co-scope">
