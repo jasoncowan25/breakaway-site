@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { getPublicCampBySlug, getPublishedPublicCampNavItems, publicBadgeText } from "@/lib/public-camps"
 import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
+import { isNewCheckoutEnabled } from "@/lib/checkout-rollout"
 
 // Fixed family → icon map (migration 0076). Every shot inherits its family's
 // icon — no per-shot icons.
@@ -67,7 +68,7 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
   const availabilityLabel = showSpotsLeft
     ? `Only ${camp.spotsLeft} ${camp.spotsLeft === 1 ? "spot" : "spots"}`
     : `Only ${camp.capacity} spots`
-  const newCheckoutEnabled = process.env.NEXT_PUBLIC_ENABLE_BREAKAWAY_CHECKOUT === "true"
+  const newCheckoutEnabled = isNewCheckoutEnabled(camp.slug)
   const checkoutHref = newCheckoutEnabled ? camp.checkoutPath ?? camp.checkoutUrl : camp.checkoutUrl
   const checkoutIsExternal = Boolean(checkoutHref && /^https?:\/\//i.test(checkoutHref))
 
