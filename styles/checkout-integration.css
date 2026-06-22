@@ -1,0 +1,67 @@
+.co-scope .payment-waiting {
+  border: 1.5px solid var(--neutral-200);
+  border-radius: var(--radius-xl);
+  background: var(--neutral-50);
+}
+
+.co-scope .payment-waiting {
+  min-height: 92px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--neutral-600);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.co-scope .payment-waiting svg {
+  color: var(--brand-navy);
+  flex: none;
+}
+
+.co-scope .stripe-box {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.co-scope .confirm-pay {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--brand-navy);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+}
+
+.co-scope .confirm-pay:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px -14px rgba(18, 74, 122, 0.9);
+}
+
+.co-scope .confirm-pay:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.co-scope .checkout-error {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 0.86rem;
+  font-weight: 650;
+}

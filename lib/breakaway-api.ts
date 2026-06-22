@@ -88,6 +88,8 @@ export interface ApiCamp {
   heroMediaAssetId: string | null
   thumbnailMediaAssetId: string | null
   includeTestimonials: boolean
+  collectTshirtSizes: boolean
+  childrenEligible: boolean
   moduleIds: string[]
   eventId: string | null
   breaks: ApiCampBreak[]
@@ -109,6 +111,7 @@ interface Envelope<T> {
 interface FetchOptions {
   revalidate?: number
   preview?: boolean
+  noStore?: boolean
 }
 
 async function apiGet<T>(path: string, options: FetchOptions = {}): Promise<T | null> {
@@ -120,7 +123,7 @@ async function apiGet<T>(path: string, options: FetchOptions = {}): Promise<T | 
   try {
     const res = await fetch(url, {
       headers: { accept: "application/json" },
-      ...(options.preview || liveInDev
+      ...(options.noStore || options.preview || liveInDev
         ? { cache: "no-store" as const }
         : { next: { revalidate: options.revalidate ?? PUBLIC_CAMP_REVALIDATE_SECONDS } }),
     })

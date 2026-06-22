@@ -67,6 +67,9 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
   const availabilityLabel = showSpotsLeft
     ? `Only ${camp.spotsLeft} ${camp.spotsLeft === 1 ? "spot" : "spots"}`
     : `Only ${camp.capacity} spots`
+  const newCheckoutEnabled = process.env.NEXT_PUBLIC_ENABLE_BREAKAWAY_CHECKOUT === "true"
+  const checkoutHref = newCheckoutEnabled ? camp.checkoutPath ?? camp.checkoutUrl : camp.checkoutUrl
+  const checkoutIsExternal = Boolean(checkoutHref && /^https?:\/\//i.test(checkoutHref))
 
   return (
     <div className="min-h-screen bg-background">
@@ -356,9 +359,13 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
                 <Button disabled className="w-full py-6 text-lg">
                   Sold out
                 </Button>
-              ) : camp.checkoutUrl ? (
+              ) : checkoutHref ? (
                 <Button asChild className="w-full bg-primary py-6 text-lg text-white hover:bg-primary/90">
-                  <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={checkoutHref}
+                    target={checkoutIsExternal ? "_blank" : undefined}
+                    rel={checkoutIsExternal ? "noopener noreferrer" : undefined}
+                  >
                     Book Now
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
@@ -411,13 +418,17 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
                 : availabilityLabel}
             </div>
           </div>
-          {camp.isSoldOut || !camp.checkoutUrl ? (
+          {camp.isSoldOut || !checkoutHref ? (
             <Button disabled className="px-8">
               {camp.isSoldOut ? "Sold out" : "Coming soon"}
             </Button>
           ) : (
             <Button asChild className="bg-primary px-8 text-white hover:bg-primary/90">
-              <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                href={checkoutHref}
+                target={checkoutIsExternal ? "_blank" : undefined}
+                rel={checkoutIsExternal ? "noopener noreferrer" : undefined}
+              >
                 Book Now
               </a>
             </Button>

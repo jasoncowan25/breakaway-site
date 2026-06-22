@@ -194,6 +194,7 @@ export type PublicCamp = {
   venue: string
   priceLabel: string
   checkoutUrl: string | null
+  checkoutPath: string | null
   capacity: number
   registeredCount: number
   spotsLeft: number
@@ -1011,6 +1012,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
     venue: row.venue ?? row.location ?? "Breakaway",
     priceLabel: priceLabel(row.base_price_cad),
     checkoutUrl: linkMap.get(linkIds[0] ?? "") ?? null,
+    checkoutPath: row.slug ? `/checkout/${row.slug}` : null,
     capacity,
     registeredCount,
     spotsLeft,
