@@ -39,19 +39,26 @@ test("tee select opens on focus and exposes combobox/listbox semantics", async (
   assert.match(source, /onFocus=.*openList/s)
 })
 
-test("camp calendar helper builds a stable all-day ics download", () => {
+test("camp calendar helper builds timed events for each camp day", () => {
   const ics = buildCampCalendarIcs({
     id: "reg_123",
     title: "Toronto Intermediate Intensive",
     startDate: "2026-09-12",
     endDate: "2026-09-13",
     venue: "The Jar Pickleball Club",
+    startHour: 9,
+    endHour: 15,
   })
 
   assert.match(ics, /^BEGIN:VCALENDAR\r\nVERSION:2\.0\r\n/)
   assert.match(ics, /UID:breakaway-reg_123-20260912@breakawaypickleball\.ca/)
-  assert.match(ics, /DTSTART;VALUE=DATE:20260912/)
-  assert.match(ics, /DTEND;VALUE=DATE:20260914/)
+  assert.match(ics, /DTSTART;TZID=America\/Toronto:20260912T090000/)
+  assert.match(ics, /DTEND;TZID=America\/Toronto:20260912T150000/)
+  assert.match(ics, /UID:breakaway-reg_123-20260913@breakawaypickleball\.ca/)
+  assert.match(ics, /DTSTART;TZID=America\/Toronto:20260913T090000/)
+  assert.match(ics, /DTEND;TZID=America\/Toronto:20260913T150000/)
+  assert.equal(ics.match(/BEGIN:VEVENT/g)?.length, 2)
+  assert.doesNotMatch(ics, /VALUE=DATE/)
   assert.match(ics, /SUMMARY:Toronto Intermediate Intensive/)
   assert.match(ics, /LOCATION:The Jar Pickleball Club/)
 
@@ -61,6 +68,8 @@ test("camp calendar helper builds a stable all-day ics download", () => {
     startDate: "2026-09-12",
     endDate: "2026-09-13",
     venue: "The Jar Pickleball Club",
+    startHour: 9,
+    endHour: 15,
   })
 
   assert.equal(download.filename, "breakaway-toronto-intermediate-intensive.ics")
@@ -73,6 +82,8 @@ test("camp calendar helper builds a stable all-day ics download", () => {
     startDate: "2026-09-12",
     endDate: "2026-09-13",
     venue: "The Jar Pickleball Club",
+    startHour: 9,
+    endHour: 15,
   }), /^https:\/\/calendar\.google\.com\/calendar\/render\?/)
   assert.match(buildOutlookCalendarUrl({
     id: "reg_123",
@@ -80,7 +91,22 @@ test("camp calendar helper builds a stable all-day ics download", () => {
     startDate: "2026-09-12",
     endDate: "2026-09-13",
     venue: "The Jar Pickleball Club",
+    startHour: 9,
+    endHour: 15,
   }), /^https:\/\/outlook\.live\.com\/calendar\/0\/deeplink\/compose\?/)
+})
+
+test("adult player details tab from last name reaches T-shirt before email", async () => {
+  const source = await readFile(new URL("../components/checkout/PlayerCard.tsx", import.meta.url), "utf8")
+
+  const adultBranch = source.slice(source.indexOf(") : ("), source.indexOf("</>\\n      )}\\n    </div>"))
+  assert.ok(adultBranch.indexOf('label="T-shirt size"') < adultBranch.indexOf('label="Email"'))
+  assert.match(source, /onPointerDown=\{\(event\) => event\.preventDefault\(\)\}/)
+  assert.match(source, /onMouseDown=\{\(event\) => event\.preventDefault\(\)\}/)
+  assert.match(source, /requestAnimationFrame\(\(\) => buttonRef\.current\?\.focus\(\)\)/)
+  assert.match(source, /focusTeeOnTab/)
+  assert.match(source, /event\.key !== "Tab"/)
+  assert.match(source, /teeSelectRef\.current\.focus\(\)/)
 })
 
 test("confirmation and payment views wire calendar download and Stripe autofill blur", async () => {

@@ -117,6 +117,16 @@ function localIsoTimed(value: string, hour: number) {
   return `${value}T${String(hour).padStart(2, "0")}:00:00`
 }
 
+function eachDateInclusive(startDate: string, endDate: string) {
+  const dates: string[] = []
+  let cursor = startDate
+  while (cursor <= endDate) {
+    dates.push(cursor)
+    cursor = addDays(cursor, 1)
+  }
+  return dates
+}
+
 function formatUtcDateTime(value: Date) {
   return value.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")
 }
@@ -167,10 +177,8 @@ function calendarDates(event: AddToCalendarEvent) {
 
   const startDate = isIsoDate(event.startDate) ? event.startDate : new Date().toISOString().slice(0, 10)
   const endDate = isIsoDate(event.endDate) ? event.endDate : startDate
-  const multiDay = startDate !== endDate
-
   return {
-    kind: multiDay ? ("all-day" as const) : ("local-time" as const),
+    kind: "local-time" as const,
     startDate,
     endDate,
     startHour: event.startHour ?? 9,
@@ -185,32 +193,13 @@ export function buildCampCalendarIcs(event: AddToCalendarEvent) {
   const summary = escapeIcsText(event.title || "Breakaway Pickleball Camp")
   const description = escapeIcsText(calendarDescription(event))
   const location = calendarLocation(event)
+  const eventDates =
+    dates.kind === "timed" ? [] : eachDateInclusive(dates.startDate, dates.endDate)
   const dateUid = dates.kind === "timed" ? formatUtcDateTime(dates.startAt) : compactDate(dates.startDate)
 
-  let dateLines: string[]
-  if (dates.kind === "timed") {
-    dateLines = [`DTSTART:${formatUtcDateTime(dates.startAt)}`, `DTEND:${formatUtcDateTime(dates.endAt)}`]
-  } else if (dates.kind === "all-day") {
-    dateLines = [
-      `DTSTART;VALUE=DATE:${compactDate(dates.startDate)}`,
-      `DTEND;VALUE=DATE:${compactDate(addDays(dates.endDate, 1))}`,
-    ]
-  } else {
-    dateLines = [
-      `DTSTART:${localTimed(dates.startDate, dates.startHour)}`,
-      `DTEND:${localTimed(dates.startDate, dates.endHour)}`,
-    ]
-  }
-
-  return [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Breakaway Pickleball//Add to Calendar//EN",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "X-WR-CALNAME:Breakaway Pickleball",
+  const eventBlock = (uidSuffix: string, dateLines: string[]) => [
     "BEGIN:VEVENT",
-    `UID:breakaway-${uidId}-${dateUid}@breakawaypickleball.ca`,
+    `UID:breakaway-${uidId}-${uidSuffix}@breakawaypickleball.ca`,
     `DTSTAMP:${dateStamp}`,
     ...dateLines,
     `SUMMARY:${summary}`,
@@ -220,6 +209,29 @@ export function buildCampCalendarIcs(event: AddToCalendarEvent) {
     "STATUS:CONFIRMED",
     "TRANSP:OPAQUE",
     "END:VEVENT",
+  ]
+
+  let events: string[][]
+  if (dates.kind === "timed") {
+    events = [eventBlock(dateUid, [`DTSTART:${formatUtcDateTime(dates.startAt)}`, `DTEND:${formatUtcDateTime(dates.endAt)}`])]
+  } else {
+    events = eventDates.map((date) =>
+      eventBlock(compactDate(date), [
+        `DTSTART;TZID=America/Toronto:${localTimed(date, dates.startHour)}`,
+        `DTEND;TZID=America/Toronto:${localTimed(date, dates.endHour)}`,
+      ]),
+    )
+  }
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Breakaway Pickleball//Add to Calendar//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "X-WR-CALNAME:Breakaway Pickleball",
+    "X-WR-TIMEZONE:America/Toronto",
+    ...events.flat(),
     "END:VCALENDAR",
   ]
     .filter(Boolean)
@@ -245,11 +257,11 @@ export function buildGoogleCalendarUrl(event: AddToCalendarEvent) {
 
   if (dates.kind === "timed") {
     params.set("dates", `${formatUtcDateTime(dates.startAt)}/${formatUtcDateTime(dates.endAt)}`)
-  } else if (dates.kind === "all-day") {
-    params.set("dates", `${compactDate(dates.startDate)}/${compactDate(addDays(dates.endDate, 1))}`)
   } else {
     params.set("dates", `${localTimed(dates.startDate, dates.startHour)}/${localTimed(dates.startDate, dates.endHour)}`)
     params.set("ctz", "America/Toronto")
+    const count = eachDateInclusive(dates.startDate, dates.endDate).length
+    if (count > 1) params.set("recur", `RRULE:FREQ=DAILY;COUNT=${count}`)
   }
 
   return `https://calendar.google.com/calendar/render?${params.toString()}`
@@ -268,13 +280,13 @@ export function buildOutlookCalendarUrl(event: AddToCalendarEvent) {
   if (dates.kind === "timed") {
     params.set("startdt", dates.startAt.toISOString())
     params.set("enddt", dates.endAt.toISOString())
-  } else if (dates.kind === "all-day") {
-    params.set("startdt", dates.startDate)
-    params.set("enddt", addDays(dates.endDate, 1))
-    params.set("allday", "true")
   } else {
     params.set("startdt", localIsoTimed(dates.startDate, dates.startHour))
     params.set("enddt", localIsoTimed(dates.startDate, dates.endHour))
+    const count = eachDateInclusive(dates.startDate, dates.endDate).length
+    if (count > 1) {
+      params.set("body", `${calendarDescription(event)}\n\nThis camp runs ${dates.startHour}:00-${dates.endHour}:00 each day through ${dates.endDate}.`)
+    }
   }
 
   return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`

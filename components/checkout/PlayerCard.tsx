@@ -14,15 +14,15 @@ function isValidEmail(value: string) {
 const TEE_ADULT = ["XS", "S", "M", "L", "XL", "XXL"];
 const TEE_YOUTH = ["Youth S", "Youth M", "Youth L"];
 
-function TeeSelect({
-  value,
-  onChange,
-  options,
-}: {
+const TeeSelect = React.forwardRef<HTMLButtonElement, {
   value: string;
   onChange: (value: string) => void;
   options: string[];
-}) {
+}>(function TeeSelect({
+  value,
+  onChange,
+  options,
+}, forwardedRef) {
   const listId = useId();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState(false);
@@ -44,13 +44,13 @@ function TeeSelect({
   }, []);
 
   const selectOption = useCallback(
-    (index: number) => {
+    (index: number, { refocus = true }: { refocus?: boolean } = {}) => {
       const option = options[index];
       if (!option) return;
       onChange(option);
       setActiveIndex(index);
       setOpen(false);
-      requestAnimationFrame(() => buttonRef.current?.focus());
+      if (refocus) requestAnimationFrame(() => buttonRef.current?.focus());
     },
     [onChange, options],
   );
@@ -58,6 +58,15 @@ function TeeSelect({
   useEffect(() => {
     if (!open) setActiveIndex(selectedIndex);
   }, [open, selectedIndex]);
+
+  const assignButtonRef = useCallback(
+    (node: HTMLButtonElement | null) => {
+      buttonRef.current = node;
+      if (typeof forwardedRef === "function") forwardedRef(node);
+      else if (forwardedRef) forwardedRef.current = node;
+    },
+    [forwardedRef],
+  );
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
@@ -94,7 +103,7 @@ function TeeSelect({
       }}
     >
       <button
-        ref={buttonRef}
+        ref={assignButtonRef}
         type="button"
         className={"inp tee-combobox" + (value ? "" : " placeholder")}
         role="combobox"
@@ -124,8 +133,9 @@ function TeeSelect({
               className={"tee-option" + (index === resolvedActiveIndex ? " active" : "")}
               role="option"
               aria-selected={option === value}
+              onPointerDown={(event) => event.preventDefault()}
               onMouseDown={(event) => event.preventDefault()}
-              onClick={() => selectOption(index)}
+              onClick={() => selectOption(index, { refocus: false })}
             >
               {option}
             </button>
@@ -134,7 +144,7 @@ function TeeSelect({
       )}
     </div>
   );
-}
+});
 
 /* ==========================================================================
    PlayerCard + YouCard — a single registrant row in the checkout.
@@ -180,6 +190,15 @@ export function PlayerCard({
   const emailError =
     !validEmailLive && committedEmail.trim().length > 0 && !isValidEmail(committedEmail);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
+  const teeSelectRef = useRef<HTMLButtonElement | null>(null);
+  const focusTeeOnTab = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key !== "Tab" || event.shiftKey || child || !tshirts || !teeSelectRef.current) return;
+      event.preventDefault();
+      teeSelectRef.current.focus();
+    },
+    [child, tshirts],
+  );
   useEffect(() => {
     if (!p.email) setCommittedEmail("");
   }, [p.email]);
@@ -251,6 +270,7 @@ export function PlayerCard({
               placeholder={lph}
               value={p.last}
               onChange={(e) => onChange({ last: e.target.value })}
+              onKeyDown={focusTeeOnTab}
             />
             {lastValid && (
               <span className="valid-check" aria-label="Looks good">
@@ -292,7 +312,7 @@ export function PlayerCard({
         <>
           {tshirts && (
             <Field label="T-shirt size" req hint="Every player gets a Breakaway camp tee.">
-              <TeeSelect value={p.tee} options={TEE_ADULT} onChange={(tee) => onChange({ tee })} />
+              <TeeSelect ref={teeSelectRef} value={p.tee} options={TEE_ADULT} onChange={(tee) => onChange({ tee })} />
             </Field>
           )}
           <Field label="Email" req>
