@@ -25,6 +25,9 @@ export interface SuccessViewProps {
   orderLabel?: string;
   isResolving?: boolean;
   calendarEvent?: CampCalendarInput | null;
+  /** True once the user taps the CTA and we're routing to the portal — drives
+   *  the button's own loading state instead of flashing the card to a skeleton. */
+  opening?: boolean;
   /** CTA: in the source this returns to checkout; in production route to the
    *  My Breakaway portal. INTEGRATION: replace with router.push("/portal"). */
   onBack: () => void;
@@ -41,6 +44,7 @@ export function SuccessView({
   orderLabel,
   isResolving = false,
   calendarEvent,
+  opening = false,
   onBack,
 }: SuccessViewProps) {
   const recipientEmail = kidsMode
@@ -153,7 +157,7 @@ export function SuccessView({
                 {players.length - 1 === 1
                   ? "other player"
                   : `other ${players.length - 1} players`}{" "}
-                their camp details and a link to set up their Breakaway account.
+                their own gate pass &amp; a link to set up their Breakaway account.
               </span>
             </div>
           )}
@@ -192,9 +196,23 @@ export function SuccessView({
                   {isResolving ? (
                     <span className="an-cta-skel" aria-hidden="true" />
                   ) : (
-                    <button className="an-cta" onClick={onBack}>
-                      Go To My Account{" "}
-                      <Icon name="arrow" size={16} strokeWidth={2.5} />
+                    <button
+                      className={`an-cta${opening ? " is-loading" : ""}`}
+                      onClick={onBack}
+                      disabled={opening}
+                      aria-busy={opening}
+                    >
+                      {opening ? (
+                        <>
+                          <span className="an-cta-spinner" aria-hidden="true" />
+                          Opening your account…
+                        </>
+                      ) : (
+                        <>
+                          Go To My Account{" "}
+                          <Icon name="arrow" size={16} strokeWidth={2.5} />
+                        </>
+                      )}
                     </button>
                   )}
                 </div>

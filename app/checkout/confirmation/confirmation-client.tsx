@@ -11,6 +11,8 @@ type ConfirmationStatus = {
   status: string | null
   paymentStatus: string | null
   customerEmail: string | null
+  payerFirstName?: string | null
+  playerCount?: number | null
   amountTotal: number | null
   currency: string | null
   checkoutMode?: "adult" | "kids" | string | null
@@ -22,6 +24,7 @@ type ConfirmationStatus = {
     startDate: string | null
     endDate: string | null
     venue: string | null
+    coachLead?: string | null
   } | null
 }
 
@@ -85,7 +88,7 @@ function successCamp(status: ConfirmationStatus | null): Camp {
   return {
     eyebrow: "Breakaway Pickleball",
     title: status?.camp?.title ?? "Your Breakaway camp",
-    coachLead: "Breakaway coaching team",
+    coachLead: status?.camp?.coachLead ?? "Breakaway",
     coachPhoto: "/assets/breakaway-monogram.png",
     photo: "/jar3.png",
     date: dateLabel(status?.camp?.startDate ?? null, status?.camp?.endDate ?? null),
@@ -98,7 +101,7 @@ function successCamp(status: ConfirmationStatus | null): Camp {
     isKidsCamp: false,
     collectTshirtSizes: false,
     lunchType: null,
-    maxPlayers: 1,
+    maxPlayers: Math.max(1, status?.playerCount ?? 1),
     coachRatio: "4:1",
   }
 }
@@ -189,6 +192,17 @@ export function ConfirmationClient() {
 
   const camp = useMemo(() => successCamp(status), [status])
   const payerEmail = status?.customerEmail ?? null
+  // Reconstruct one entry per registered seat so the success card shows the
+  // right "N players registered" copy and the multi-player emails note. We only
+  // know the payer's name + email; the heading personalizes off players[0].
+  const players = useMemo<Player[]>(() => {
+    const count = Math.max(1, status?.playerCount ?? 1)
+    return Array.from({ length: count }, (_, i) =>
+      i === 0
+        ? { ...primaryPlayer(payerEmail), first: status?.payerFirstName ?? "" }
+        : { ...primaryPlayer(null), id: `confirmed-player-${i}` },
+    )
+  }, [status?.playerCount, status?.payerFirstName, payerEmail])
   const kidsMode = status?.checkoutMode === "kids"
   const portalUrl = kidsMode ? null : status?.portalUrl ?? null
   const portalEligible = !kidsMode && Boolean(status?.portalEligible || portalUrl)
@@ -209,17 +223,21 @@ export function ConfirmationClient() {
   }, [status])
 
   async function openPortal() {
+    // Show the button's loading state immediately on click (covers both the
+    // instant-redirect and the async portal-handoff paths) instead of flashing
+    // the whole account card to a skeleton.
+    setIsOpeningPortal(true)
+    setError("")
     if (portalUrl) {
       window.location.href = portalUrl
       return
     }
     if (!paymentIntentId || !paymentIntentClientSecret) {
       setError("Your account link is not ready yet. Use the emailed sign-in link or refresh this page.")
+      setIsOpeningPortal(false)
       return
     }
 
-    setIsOpeningPortal(true)
-    setError("")
     try {
       const response = await fetch(
         `${breakawayApiBase}/api/checkout/payment-intents/${encodeURIComponent(paymentIntentId)}/portal-handoff`,
@@ -251,14 +269,15 @@ export function ConfirmationClient() {
         <SuccessView
           camp={camp}
           kidsMode={kidsMode}
-          players={[primaryPlayer(payerEmail)]}
+          players={players}
           guardian={{ ...guardian, email: kidsMode ? payerEmail ?? "" : "" }}
           prefill={false}
           acct={account(payerEmail)}
           acctOptIn={portalEligible}
           orderLabel={orderLabel}
-          isResolving={isResolving || isOpeningPortal}
+          isResolving={isResolving}
           calendarEvent={calendarEvent}
+          opening={isOpeningPortal}
           onBack={openPortal}
         />
       </div>

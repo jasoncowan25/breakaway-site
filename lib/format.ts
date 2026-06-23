@@ -31,7 +31,12 @@ export function joinNames(names: string[]): string {
   return names.slice(0, -1).join(", ") + " & " + names[names.length - 1];
 }
 
-/** Locale thousands grouping, e.g. 1600 → "1,600". */
+/**
+ * Locale thousands grouping. Whole dollars render clean ("1,600"); any amount
+ * with cents always shows two decimal places ("11.30", not "11.3").
+ */
 export function money(n: number): string {
-  return n.toLocaleString();
+  return Number.isInteger(n)
+    ? n.toLocaleString("en-CA")
+    : n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }

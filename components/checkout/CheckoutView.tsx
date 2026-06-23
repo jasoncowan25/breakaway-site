@@ -6,6 +6,7 @@ import { Field, Visa } from "./primitives";
 import { PlayerCard, YouCard } from "./PlayerCard";
 import { Guardian } from "./Guardian";
 import { money } from "../../lib/format";
+import { checkoutAmount } from "../../lib/checkout-amount";
 import type { Account, Agreements, Camp, Guardian as GuardianModel, Player } from "../../lib/types";
 
 /* ==========================================================================
@@ -77,7 +78,7 @@ function DetailsSummary({
 
   const playerSub = (p: Player) => {
     const pieces = kidsMode ? [p.age ? `Age ${p.age}` : null] : [p.email || null];
-    if (collectTshirtSizes && p.tee) pieces.push(`Tee ${p.tee}`);
+    if (collectTshirtSizes && p.tee) pieces.push(`${p.tee} Tee`);
     return pieces.filter(Boolean).join(" · ");
   };
 
@@ -185,6 +186,8 @@ export function CheckoutView(props: CheckoutViewProps) {
   const fallbackBookingButtonRef = useRef<HTMLButtonElement | null>(null);
   const resolvedBookingButtonRef = bookingButtonRef ?? fallbackBookingButtonRef;
   const PRICE = camp.pricePerPlayer;
+  // 13% HST added on top — mirrors the API charge exactly (cent-accurate).
+  const { tax, total } = checkoutAmount(subtotal);
   const collectTshirtSizes = Boolean(camp.collectTshirtSizes);
   const hasCateredLunch = camp.lunchType === "catered";
   const [policyOpen, setPolicyOpen] = useState(false);
@@ -640,15 +643,15 @@ export function CheckoutView(props: CheckoutViewProps) {
                     <span className="free">Included</span>
                   </div>
                 )}
-                <div className="pr muted">
-                  <span>Taxes</span>
-                  <span>Calculated at confirm</span>
+                <div className="pr">
+                  <span>HST (13%)</span>
+                  <span>${money(tax)}</span>
                 </div>
               </div>
               <div className="total-row">
                 <span className="k">Total</span>
-                <span className="v" key={subtotal}>
-                  ${money(subtotal)}
+                <span className="v" key={total}>
+                  ${money(total)}
                   <small>CAD</small>
                 </span>
               </div>
@@ -661,7 +664,7 @@ export function CheckoutView(props: CheckoutViewProps) {
                 >
                   {payButtonLabel ??
                     `Book ${players.length} ${players.length === 1 ? "Spot" : "Spots"} — $${money(
-                      subtotal,
+                      total,
                     )} CAD`}{" "}
                   <Icon name="arrow" size={20} strokeWidth={2.5} />
                 </button>

@@ -9,6 +9,9 @@ import {
   buildCampCalendarIcs,
 } from "../lib/calendar.ts"
 import {
+  checkoutAmount,
+} from "../lib/checkout-amount.ts"
+import {
   nextTeeOptionIndex,
   teeOptionIndex,
 } from "../lib/tee-select.ts"
@@ -103,4 +106,21 @@ test("confirmation and payment views wire calendar download and Stripe autofill 
   assert.match(confirmationClient, /calendarEvent/)
   assert.match(checkoutClient, /onAutofillComplete/)
   assert.match(checkoutView, /bookingButtonRef/)
+})
+
+test("checkout summary shows HST and uses the tax-inclusive total", async () => {
+  assert.deepEqual(checkoutAmount(5), { subtotal: 5, tax: 0.65, total: 5.65 })
+  assert.deepEqual(checkoutAmount(10), { subtotal: 10, tax: 1.3, total: 11.3 })
+
+  const checkoutView = await readFile(new URL("../components/checkout/CheckoutView.tsx", import.meta.url), "utf8")
+  const checkoutClient = await readFile(
+    new URL("../app/checkout/[slug]/checkout-client.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(checkoutView, /HST \(13%\)/)
+  assert.match(checkoutView, /money\(tax\)/)
+  assert.match(checkoutView, /money\(total\)/)
+  assert.doesNotMatch(checkoutView, /Calculated at confirm/)
+  assert.match(checkoutClient, /checkoutAmount\(subtotal\)\.total/)
 })
