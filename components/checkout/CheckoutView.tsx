@@ -635,7 +635,7 @@ export function CheckoutView(props: CheckoutViewProps) {
                   <span>
                     ${PRICE} CAD × {players.length} {players.length === 1 ? unit : units}
                   </span>
-                  <span>${money(subtotal)}</span>
+                  <span className="amount">${money(subtotal, { fixed: true })}</span>
                 </div>
                 {hasCateredLunch && (
                   <div className="pr">
@@ -645,13 +645,13 @@ export function CheckoutView(props: CheckoutViewProps) {
                 )}
                 <div className="pr">
                   <span>HST (13%)</span>
-                  <span>${money(tax)}</span>
+                  <span className="amount">${money(tax, { fixed: true })}</span>
                 </div>
               </div>
               <div className="total-row">
                 <span className="k">Total</span>
                 <span className="v" key={total}>
-                  ${money(total)}
+                  ${money(total, { fixed: true })}
                   <small>CAD</small>
                 </span>
               </div>
@@ -665,6 +665,7 @@ export function CheckoutView(props: CheckoutViewProps) {
                   {payButtonLabel ??
                     `Book ${players.length} ${players.length === 1 ? "Spot" : "Spots"} — $${money(
                       total,
+                      { fixed: true },
                     )} CAD`}{" "}
                   <Icon name="arrow" size={20} strokeWidth={2.5} />
                 </button>

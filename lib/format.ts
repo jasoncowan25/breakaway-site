@@ -35,8 +35,8 @@ export function joinNames(names: string[]): string {
  * Locale thousands grouping. Whole dollars render clean ("1,600"); any amount
  * with cents always shows two decimal places ("11.30", not "11.3").
  */
-export function money(n: number): string {
-  return Number.isInteger(n)
+export function money(n: number, options: { fixed?: boolean } = {}): string {
+  return Number.isInteger(n) && !options.fixed
     ? n.toLocaleString("en-CA")
     : n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }

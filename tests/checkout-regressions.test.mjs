@@ -12,6 +12,9 @@ import {
   checkoutAmount,
 } from "../lib/checkout-amount.ts"
 import {
+  money,
+} from "../lib/format.ts"
+import {
   nextTeeOptionIndex,
   teeOptionIndex,
 } from "../lib/tee-select.ts"
@@ -137,16 +140,21 @@ test("confirmation and payment views wire calendar download and Stripe autofill 
 test("checkout summary shows HST and uses the tax-inclusive total", async () => {
   assert.deepEqual(checkoutAmount(5), { subtotal: 5, tax: 0.65, total: 5.65 })
   assert.deepEqual(checkoutAmount(10), { subtotal: 10, tax: 1.3, total: 11.3 })
+  assert.equal(money(5, { fixed: true }), "5.00")
+  assert.equal(money(5), "5")
 
   const checkoutView = await readFile(new URL("../components/checkout/CheckoutView.tsx", import.meta.url), "utf8")
   const checkoutClient = await readFile(
     new URL("../app/checkout/[slug]/checkout-client.tsx", import.meta.url),
     "utf8",
   )
+  const checkoutCss = await readFile(new URL("../styles/checkout.css", import.meta.url), "utf8")
 
   assert.match(checkoutView, /HST \(13%\)/)
-  assert.match(checkoutView, /money\(tax\)/)
-  assert.match(checkoutView, /money\(total\)/)
+  assert.match(checkoutView, /money\(subtotal,\s*\{\s*fixed: true\s*\}\)/)
+  assert.match(checkoutView, /money\(tax,\s*\{\s*fixed: true\s*\}\)/)
+  assert.match(checkoutView, /money\(total,\s*\{\s*fixed: true\s*\}\)/)
   assert.doesNotMatch(checkoutView, /Calculated at confirm/)
   assert.match(checkoutClient, /checkoutAmount\(subtotal\)\.total/)
+  assert.match(checkoutCss, /font-variant-numeric:\s*tabular-nums/)
 })

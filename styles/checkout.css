@@ -610,6 +610,8 @@
 .co-scope .price-rows .pr { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--neutral-600); }
 .co-scope .price-rows .pr.muted { color: var(--neutral-400); }
 .co-scope .price-rows .pr .free { color: var(--brand-olive); font-weight: 600; }
+.co-scope .price-rows .amount,
+.co-scope .total-row .v { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
 .co-scope .total-row { display: flex; align-items: baseline; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--neutral-200); }
 .co-scope .total-row .k { font-size: 1rem; font-weight: 700; color: var(--neutral-900); }
 .co-scope .total-row .v { font-size: 1.7rem; font-weight: 800; color: var(--brand-navy); letter-spacing: -0.02em; }
