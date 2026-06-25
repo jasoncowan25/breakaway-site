@@ -154,7 +154,7 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
             {/* Hero text */}
             <div className="max-w-xl">
               <div className="flex gap-2 mb-3">
-                <Badge className="bg-accent text-accent-foreground">Just Announced</Badge>
+                <Badge variant="destructive" className="bg-red-600 text-white">Few spots left</Badge>
                 <Badge variant="secondary" className="flex items-center gap-1"><Palmtree className="h-3 w-3" /> Destination</Badge>
               </div>
               <h1 className="text-3xl md:text-5xl font-bold text-white mb-2">Punta Cana Destination Retreat</h1>

@@ -33,7 +33,7 @@ export default async function SchedulePage() {
     price: "From $2,420 CAD",
     image: "/punta-cana-resort-pool.jpg",
     badges: [
-      { text: "Just Announced", variant: "accent" as const },
+      { text: "Few spots left", variant: "destructive" as const },
       { text: "Destination", variant: "secondary" as const },
     ],
     coach: "Joey Manchurek",

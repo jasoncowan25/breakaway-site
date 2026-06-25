@@ -291,7 +291,7 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     skillLevel: "3.0-3.5",
     price: "$700 CAD",
     image: "/jar3.png",
-    badges: [{ text: "Just Announced", variant: "accent" }],
+    badges: [{ text: "New", variant: "accent" }],
     coach: "Joey Manchurek",
     link: "/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3",
     imageEnhanced: false,
