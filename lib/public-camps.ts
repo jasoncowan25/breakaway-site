@@ -258,28 +258,28 @@ export type PublicCampNavItem = {
 }
 
 const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
-  // Temporarily hidden until the launch is coordinated. Restoring this entry
-  // brings the Kids Summer Camp back to the nav, the home page, and the camps
-  // listing (nav items are derived from these cards). The landing page itself
-  // is also gated — see app/pickleball-camps/kids-summer-pickleball-camp-toronto/page.tsx.
-  // {
-  //   id: "kids-summer-pickleball-camp-toronto",
-  //   title: "Baseline x Breakaway Kids Summer Camp",
-  //   date: "August 17 – September 4, 2026",
-  //   sortDate: "2026-08-17",
-  //   location: "The JAR Pickleball Club",
-  //   locationFilter: "Toronto & GTA",
-  //   format: "Camp",
-  //   skillLevel: "All Levels",
-  //   price: "From $625 CAD",
-  //   image: "/kids-passover-camp-hero.webp",
-  //   badges: [{ text: "Just Announced", variant: "accent" }],
-  //   coach: "Joey Manchurek",
-  //   link: "/pickleball-camps/kids-summer-pickleball-camp-toronto",
-  //   imageEnhanced: false,
-  //   soldOut: false,
-  //   buttonText: "Learn More",
-  // },
+  // Launched 2026-06-25. Surfaces the Kids Summer Camp on the nav, the home
+  // page, and the camps listing (nav items are derived from these cards). The
+  // landing page gate is also lifted — see
+  // app/pickleball-camps/kids-summer-pickleball-camp-toronto/page.tsx.
+  {
+    id: "kids-summer-pickleball-camp-toronto",
+    title: "Baseline x Breakaway Kids Summer Camp",
+    date: "August 17 – September 4, 2026",
+    sortDate: "2026-08-17",
+    location: "The JAR Pickleball Club",
+    locationFilter: "Toronto & GTA",
+    format: "Camp",
+    skillLevel: "All Levels",
+    price: "From $625 CAD",
+    image: "/kids-passover-camp-hero.webp",
+    badges: [{ text: "Just Announced", variant: "accent" }],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/kids-summer-pickleball-camp-toronto",
+    imageEnhanced: false,
+    soldOut: false,
+    buttonText: "Learn More",
+  },
   {
     id: "toronto-intermediate-intensive-sep-12-2026-3",
     title: "Toronto Intermediate Intensive",
