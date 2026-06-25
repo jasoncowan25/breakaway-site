@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "Terms of Service | Breakaway Pickleball Camps",
   description:
     "Terms of Service for Breakaway Pickleball Camps Inc. — registration, payment, cancellations, conduct, and participation terms.",
+  alternates: { canonical: "/terms" },
+  openGraph: { url: "/terms" },
 }
 
 export default function TermsPage() {

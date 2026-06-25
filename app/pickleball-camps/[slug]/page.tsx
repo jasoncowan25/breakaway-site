@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import {
   Calendar,
@@ -19,6 +20,7 @@ import {
   Trophy,
 } from "lucide-react"
 
+import { JsonLd } from "@/components/JsonLd"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { Badge } from "@/components/ui/badge"
@@ -27,6 +29,7 @@ import { Card } from "@/components/ui/card"
 import { getPublicCampBySlug, getPublishedPublicCampNavItems, publicBadgeText } from "@/lib/public-camps"
 import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
 import { isNewCheckoutEnabled } from "@/lib/checkout-rollout"
+import { breadcrumbJsonLd, campEventJsonLd } from "@/lib/seo"
 
 // Fixed family → icon map (migration 0076). Every shot inherits its family's
 // icon — no per-shot icons.
@@ -45,6 +48,52 @@ function canPreview(token: string | undefined) {
   if (!token) return false
   if (process.env.NODE_ENV !== "production" && token === "local") return true
   return Boolean(process.env.PUBLIC_CAMP_PREVIEW_TOKEN && token === process.env.PUBLIC_CAMP_PREVIEW_TOKEN)
+}
+
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
+  const [{ slug }, query] = await Promise.all([
+    params,
+    searchParams ?? Promise.resolve({} as { preview?: string }),
+  ])
+  const preview = canPreview(query.preview)
+  const camp = await getPublicCampBySlug(slug, { preview })
+
+  if (!camp) {
+    return {
+      title: "Pickleball Camp | Breakaway Pickleball",
+      robots: { index: false, follow: false },
+    }
+  }
+
+  const path = `/pickleball-camps/${camp.slug}`
+  const title = `${camp.title} | ${camp.location} Pickleball Camp | Breakaway`
+  const description = `${camp.dateLabel} at ${camp.venue}. ${camp.summary} ${camp.priceLabel}.`
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: path,
+    },
+    openGraph: {
+      title,
+      description,
+      url: path,
+      images: [
+        {
+          url: camp.heroImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${camp.title} at ${camp.venue}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [camp.heroImageUrl],
+    },
+    robots: preview ? { index: false, follow: false } : undefined,
+  }
 }
 
 export default async function DynamicCampPage({ params, searchParams }: PageProps) {
@@ -74,6 +123,16 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
 
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Pickleball Camps", path: "/pickleball-camps" },
+            { name: camp.title, path: `/pickleball-camps/${camp.slug}` },
+          ]),
+          campEventJsonLd(camp),
+        ]}
+      />
       <Navigation campItems={navCampItems} />
 
       {preview && (

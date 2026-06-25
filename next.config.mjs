@@ -73,6 +73,16 @@ const nextConfig = {
         destination: '/pickleball-coaches',
         permanent: true,
       },
+      {
+        source: '/experience',
+        destination: '/pickleball-camp-experience',
+        permanent: true,
+      },
+      {
+        source: '/pickleball-camps/toronto-intermediate-intensive-oct-17-2026',
+        destination: '/pickleball-camps/toronto-intermediate-intensive-oct-24-2026',
+        permanent: true,
+      },
       
     ]
   },

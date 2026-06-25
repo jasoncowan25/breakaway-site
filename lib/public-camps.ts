@@ -299,6 +299,25 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     spotsRemaining: 16,
     buttonText: "Learn More",
   },
+  {
+    id: "toronto-intermediate-intensive-oct-24-2026",
+    title: "Toronto Intermediate Intensive",
+    date: "October 24-25, 2026",
+    sortDate: "2026-10-24",
+    location: "The JAR Pickleball Club",
+    locationFilter: "Toronto & GTA",
+    format: "Camp",
+    skillLevel: "3.0-3.5",
+    price: "$700 CAD",
+    image: "/toronto-coaching-instruction.png",
+    badges: [{ text: "New", variant: "accent" }],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
+    imageEnhanced: false,
+    soldOut: false,
+    spotsRemaining: 14,
+    buttonText: "Learn More",
+  },
 ]
 
 const RESTORED_PUBLIC_CAMP_NAV_ITEMS: PublicCampNavItem[] = RESTORED_PUBLIC_CAMP_CARDS.map((camp) => ({
@@ -581,6 +600,154 @@ function todayIso() {
   return new Date().toISOString().slice(0, 10)
 }
 
+function restoredTorontoCamp({
+  slug,
+  id,
+  startDate,
+  endDate,
+  heroImageUrl,
+  registeredCount,
+}: {
+  slug: string
+  id: string
+  startDate: string
+  endDate: string
+  heroImageUrl: string
+  registeredCount: number
+}): PublicCamp {
+  const capacity = 16
+  const breaks: CampBreak[] = [
+    {
+      type: "catered_lunch",
+      start: "11:30",
+      durationMinutes: 60,
+      windowLabel: "11:30 AM – 12:30 PM",
+    },
+  ]
+  return {
+    id,
+    slug,
+    title: "Toronto Intermediate Intensive",
+    startDate,
+    subtitle: "2-Day Advanced Training • Intermediate Players (3.0-3.5)",
+    dateLabel: dateLabel(startDate, endDate),
+    timeLabel: "9:00 AM - 3:00 PM",
+    schedule: scheduleForCamp(startDate, endDate, "9:00 AM - 3:00 PM", breaks),
+    lunchType: "catered",
+    location: "Toronto",
+    venue: "The JAR Pickleball Club",
+    priceLabel: "$700 CAD",
+    checkoutUrl: null,
+    checkoutPath: `/checkout/${slug}`,
+    capacity,
+    registeredCount,
+    spotsLeft: capacity - registeredCount,
+    isSoldOut: false,
+    badge: "new",
+    summary:
+      "A two-day intermediate intensive built around coached reps, clear patterns, and practical match-play feedback.",
+    modulesIntro:
+      "A two-day intermediate intensive built around coached reps, clear patterns, and practical match-play feedback.",
+    modules: getPublicCampModules(
+      [
+        "shot-dink",
+        "shot-crosscourt-dink",
+        "shot-volley",
+        "shot-speedup",
+        "shot-drive",
+        "shot-drop",
+        "shot-block",
+        "shot-getting-to-the-kitchen",
+      ],
+      "Toronto Intermediate Intensive",
+    ),
+    heroImageUrl,
+    skillLabel: "3.0-3.5",
+    visibility: "published",
+    facility: {
+      name: "The JAR Pickleball Club",
+      city: "Toronto",
+      address: "900 Caledonia Rd, Unit 5",
+      courtCount: 12,
+      photos: JAR_VENUE_PHOTOS,
+      notes: venueCopyForCamp(
+        {
+          id: "jar",
+          name: "The JAR Pickleball Club",
+          city: "Toronto",
+          address: "900 Caledonia Rd, Unit 5",
+          court_count: 12,
+          photo_url: null,
+          photos: JAR_VENUE_PHOTOS,
+          notes: null,
+        },
+        "The JAR Pickleball Club",
+      ),
+    },
+    coach: {
+      name: "Joey Manchurek",
+      initials: "JM",
+      role: "Breakaway coach",
+      location: "Toronto",
+      bio: JOEY_TORONTO_BIO,
+      duprRating: 5,
+      imageUrl: "/coach-joey-admin.png",
+    },
+    testimonials: [
+      {
+        id: "leadership",
+        quote: "Leadership and coaching style is of the highest caliber",
+        name: "Toronto Camp Participant",
+        detail: "April 11-12, 2026",
+        rating: 5,
+      },
+      {
+        id: "invigorated",
+        quote: "I was surprised at my stamina and at the end of the 2 days I felt completely invigorated",
+        name: "Toronto Camp Participant",
+        detail: "April 11-12, 2026",
+        rating: 5,
+      },
+      {
+        id: "recommend",
+        quote: "I loved everything about the camp and will be recommending it to all my pickleball friends",
+        name: "Toronto Camp Participant",
+        detail: "April 11-12, 2026",
+        rating: 5,
+      },
+    ],
+  }
+}
+
+const RESTORED_PUBLIC_CAMPS: Record<string, PublicCamp> = {
+  "toronto-intermediate-intensive-sep-12-2026-3": restoredTorontoCamp({
+    slug: "toronto-intermediate-intensive-sep-12-2026-3",
+    id: "ca6598ec-1af4-4db7-a97e-6718b09e1601",
+    startDate: "2026-09-12",
+    endDate: "2026-09-13",
+    heroImageUrl: "/jar3.png",
+    registeredCount: 4,
+  }),
+  "toronto-intermediate-intensive-oct-24-2026": restoredTorontoCamp({
+    slug: "toronto-intermediate-intensive-oct-24-2026",
+    id: "f9eb8926-c60e-44bf-891d-7faa09ae8778",
+    startDate: "2026-10-24",
+    endDate: "2026-10-25",
+    heroImageUrl: "/toronto-coaching-instruction.png",
+    registeredCount: 2,
+  }),
+}
+
+function canonicalCampSlug(slug: string | null, campId?: string | null) {
+  if (
+    slug === "toronto-intermediate-intensive-oct-17-2026" ||
+    campId === "f9eb8926-c60e-44bf-891d-7faa09ae8778"
+  ) {
+    return "toronto-intermediate-intensive-oct-24-2026"
+  }
+  return slug
+}
+
 async function getPaymentLinks(ids: string[], options: SupabaseRestOptions = {}) {
   const linkIds = ids.filter((id) => id && !/^https?:\/\//i.test(id))
   const directUrls = ids.filter((id) => /^https?:\/\//i.test(id))
@@ -798,7 +965,7 @@ function publicCampRowToCard(
     facilityPhotosForCamp(facility, "/toronto-coaching-instruction.png")[0]
 
   return {
-    id: row.slug!,
+    id: canonicalCampSlug(row.slug, row.id)!,
     title: row.title,
     date: dateLabel(row.start_date, row.end_date),
     sortDate: row.start_date,
@@ -815,7 +982,7 @@ function publicCampRowToCard(
     image: heroImageUrl ?? "/toronto-coaching-instruction.png",
     badges: badgeLabel ? [{ text: titleCaseBadge(badgeLabel), variant: badgeVariant(badge) }] : [],
     coach: coach?.display_name ?? "Breakaway coach",
-    link: `/pickleball-camps/${row.slug}`,
+    link: `/pickleball-camps/${canonicalCampSlug(row.slug, row.id)}`,
     imageEnhanced: false,
     soldOut: spotsLeft <= 0,
     spotsRemaining: spotsLeft <= 0 ? undefined : spotsLeft,
@@ -878,7 +1045,7 @@ export async function getPublishedPublicCampNavItems(limit = 12): Promise<Public
     ...RESTORED_PUBLIC_CAMP_NAV_ITEMS,
     ...(rows ?? []).filter((row) => row.slug).map((camp) => ({
       title: camp.title,
-      href: `/pickleball-camps/${camp.slug}`,
+      href: `/pickleball-camps/${canonicalCampSlug(camp.slug)}`,
     })),
   ]).slice(0, limit)
 }
@@ -897,7 +1064,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
   )
 
   const row = rows?.[0]
-  if (!row || !row.slug) return null
+  if (!row || !row.slug) return RESTORED_PUBLIC_CAMPS[slug] ?? null
   const visibility = row.public_visibility ?? "unpublished"
   if (visibility !== "published" && !options.preview) return null
   if (visibility === "archived" && !options.preview) return null

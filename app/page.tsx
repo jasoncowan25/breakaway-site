@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Navigation } from "@/components/Navigation"
 import { CampFinder } from "@/components/CampFinder"
 import { ValueProps } from "@/components/ValueProps"
@@ -6,11 +7,23 @@ import { MuskokaHubCard } from "@/components/MuskokaHubCard"
 import { Footer } from "@/components/Footer"
 import { HeroAvatars } from "@/components/HeroAvatars"
 import { HeroVideo } from "@/components/HeroVideo"
+import { JsonLd } from "@/components/JsonLd"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Quote } from "lucide-react"
 import Link from "next/link"
 import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
+import { organizationJsonLd } from "@/lib/seo"
+
+export const metadata: Metadata = {
+  title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
+  description:
+    "Premium pickleball training camps across Toronto, the GTA and Muskoka. Small groups, professional coaching, results-oriented programs for intermediate to advanced players.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+  },
+}
 
 export default async function HomePage() {
   const [publishedCampCards, navCampItems] = await Promise.all([
@@ -39,6 +52,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={organizationJsonLd()} />
       <Navigation campItems={navCampItems} />
 
       {/* Hero Section */}
@@ -67,6 +81,26 @@ export default async function HomePage() {
 
       {/* Value Props */}
       <ValueProps />
+
+      <section className="border-y border-border bg-muted/20 py-8">
+        <div className="mx-auto grid max-w-7xl gap-2 px-4 text-center text-sm sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 sm:px-6 lg:px-8">
+          <Link href="/pickleball-coaches" className="font-medium text-primary underline-offset-4 hover:underline">
+            Pickleball coaches in Toronto
+          </Link>
+          <span className="hidden text-muted-foreground sm:inline">/</span>
+          <Link href="/schedule" className="font-medium text-primary underline-offset-4 hover:underline">
+            Camp schedule
+          </Link>
+          <span className="hidden text-muted-foreground sm:inline">/</span>
+          <Link href="/pickleball-camps/punta-cana" className="font-medium text-primary underline-offset-4 hover:underline">
+            Punta Cana pickleball retreat
+          </Link>
+          <span className="hidden text-muted-foreground sm:inline">/</span>
+          <Link href="/pickleball-camp-experience" className="font-medium text-primary underline-offset-4 hover:underline">
+            Pickleball camp experience
+          </Link>
+        </div>
+      </section>
 
       {/* Featured Camps Carousel */}
       <section className="py-16 bg-background">

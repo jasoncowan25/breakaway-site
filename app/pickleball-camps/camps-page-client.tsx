@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense, useEffect } from "react"
+import { useState } from "react"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { CampCard } from "@/components/CampCard"
@@ -10,60 +10,43 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Filter } from "lucide-react"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import type { PublicCampCard, PublicCampNavItem } from "@/lib/public-camps"
 
 type CampsPageClientProps = {
   publishedCampCards?: PublicCampCard[]
   navCampItems?: PublicCampNavItem[]
+  initialSelectedLocations?: string[]
+  initialSelectedSkillLevels?: string[]
+  initialView?: "upcoming" | "completed"
 }
 
-function CampsPageContent({ publishedCampCards = [], navCampItems = [] }: CampsPageClientProps) {
-  const searchParams = useSearchParams()
+function CampsPageContent({
+  publishedCampCards = [],
+  navCampItems = [],
+  initialSelectedLocations = [],
+  initialSelectedSkillLevels = [],
+  initialView = "upcoming",
+}: CampsPageClientProps) {
   const router = useRouter()
   const [showFilters, setShowFilters] = useState(false)
-  
-  // Parse URL params for initial filter state
-  const locationParam = searchParams.get("location")
-  const skillParam = searchParams.get("skill")
-  const viewParam = searchParams.get("view")
-  
-  // Map URL location values to filter values
-  const getInitialLocations = (): string[] => {
-    if (!locationParam) return []
-    if (locationParam === "toronto-gta") return ["Toronto & GTA"]
-    if (locationParam === "muskoka") return ["Muskoka"]
-    if (locationParam === "punta-cana") return ["Punta Cana"]
-    return []
-  }
-  
-  const getInitialSkillLevels = (): string[] => {
-    if (!skillParam) return []
-    return [skillParam]
-  }
-  
-  const [selectedSkillLevels, setSelectedSkillLevels] = useState<string[]>(getInitialSkillLevels)
-  const [selectedLocations, setSelectedLocations] = useState<string[]>(getInitialLocations)
+  const [selectedSkillLevels, setSelectedSkillLevels] = useState<string[]>(initialSelectedSkillLevels)
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(initialSelectedLocations)
   const [selectedFormats, setSelectedFormats] = useState<string[]>([])
-  const [dateFilter, setDateFilter] = useState<"upcoming" | "completed">(
-    viewParam === "completed" ? "completed" : "upcoming"
-  )
+  const [dateFilter, setDateFilter] = useState<"upcoming" | "completed">(initialView)
 
-  // Sync dateFilter with URL
-  useEffect(() => {
-    const currentView = searchParams.get("view")
-    if (dateFilter === "completed" && currentView !== "completed") {
-      const params = new URLSearchParams(searchParams.toString())
+  const setView = (view: "upcoming" | "completed") => {
+    setDateFilter(view)
+    const params = new URLSearchParams(window.location.search)
+    if (view === "completed") {
       params.set("view", "completed")
-      router.replace(`/pickleball-camps?${params.toString()}`, { scroll: false })
-    } else if (dateFilter === "upcoming" && currentView === "completed") {
-      const params = new URLSearchParams(searchParams.toString())
+    } else {
       params.delete("view")
-      const queryString = params.toString()
-      router.replace(queryString ? `/pickleball-camps?${queryString}` : "/pickleball-camps", { scroll: false })
     }
-  }, [dateFilter, searchParams, router])
+    const queryString = params.toString()
+    router.replace(queryString ? `/pickleball-camps?${queryString}` : "/pickleball-camps", { scroll: false })
+  }
 
   const upcomingCamps = [
     ...publishedCampCards,
@@ -298,6 +281,20 @@ function CampsPageContent({ publishedCampCards = [], navCampItems = [] }: CampsP
           <p className="text-muted-foreground">
             Discover upcoming pickleball camps and clinics across Toronto, the GTA & Muskoka
           </p>
+          <div className="mt-4 grid gap-2 text-sm sm:flex sm:flex-wrap sm:gap-x-4">
+            <a href="/pickleball-coaches" className="font-medium text-primary underline-offset-4 hover:underline">
+              Pickleball coaches
+            </a>
+            <a href="/schedule" className="font-medium text-primary underline-offset-4 hover:underline">
+              Camp schedule
+            </a>
+            <a href="/pickleball-camps/punta-cana" className="font-medium text-primary underline-offset-4 hover:underline">
+              Punta Cana pickleball retreat
+            </a>
+            <a href="/pickleball-camp-experience" className="font-medium text-primary underline-offset-4 hover:underline">
+              Pickleball camp experience
+            </a>
+          </div>
         </div>
 
         <div className="mb-6 flex gap-2 border-b">
@@ -308,7 +305,7 @@ function CampsPageContent({ publishedCampCards = [], navCampItems = [] }: CampsP
                 ? "border-primary text-primary font-semibold"
                 : "border-transparent text-muted-foreground"
             }`}
-            onClick={() => setDateFilter("upcoming")}
+            onClick={() => setView("upcoming")}
             aria-selected={dateFilter === "upcoming"}
             role="tab"
           >
@@ -321,7 +318,7 @@ function CampsPageContent({ publishedCampCards = [], navCampItems = [] }: CampsP
                 ? "border-primary text-primary font-semibold"
                 : "border-transparent text-muted-foreground"
             }`}
-            onClick={() => setDateFilter("completed")}
+            onClick={() => setView("completed")}
             aria-selected={dateFilter === "completed"}
             role="tab"
           >
@@ -416,9 +413,5 @@ function CampsPageContent({ publishedCampCards = [], navCampItems = [] }: CampsP
 }
 
 export default function CampsPageClient(props: CampsPageClientProps) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CampsPageContent {...props} />
-    </Suspense>
-  )
+  return <CampsPageContent {...props} />
 }

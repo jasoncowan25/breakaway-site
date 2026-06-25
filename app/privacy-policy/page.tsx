@@ -5,6 +5,8 @@ import { ArrowLeft } from "lucide-react"
 export const metadata: Metadata = {
   title: "Privacy Policy | Breakaway Pickleball Camps",
   description: "Privacy policy for Breakaway Pickleball Camps Inc. Learn how we collect, use, and protect your personal information.",
+  alternates: { canonical: "/privacy-policy" },
+  openGraph: { url: "/privacy-policy" },
 }
 
 export default function PrivacyPolicyPage() {

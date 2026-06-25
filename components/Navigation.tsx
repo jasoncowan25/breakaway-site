@@ -60,7 +60,7 @@ export function Navigation({ campItems = EMPTY_CAMP_ITEMS }: NavigationProps) {
               Coaches
             </Link>
             <Link
-              href="/experience"
+              href="/pickleball-camp-experience"
               className="text-sm font-medium text-foreground hover:text-primary transition-colors"
             >
               The Experience

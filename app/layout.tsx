@@ -6,6 +6,7 @@ import { Suspense } from "react"
 import Script from "next/script"
 import { ScrollToTop } from "@/components/ScrollToTop"
 import { ResizeObserverFix } from "@/components/ResizeObserverFix"
+import { DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT, SITE_URL, defaultOpenGraphImage } from "@/lib/seo"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -19,10 +20,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.breakawaypickleball.ca"),
-  alternates: {
-    canonical: "/",
-  },
+  metadataBase: new URL(SITE_URL),
   title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
   description:
     "Premium pickleball training camps across Toronto, the GTA and Muskoka. Small groups, professional coaching, results-oriented programs for intermediate to advanced players.",
@@ -36,19 +34,11 @@ export const metadata: Metadata = {
     title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
     description:
       "Premium pickleball training camps across Toronto, the GTA and Muskoka. Small groups, professional coaching, results-oriented programs for intermediate to advanced players.",
-    url: "/",
-    images: [
-      {
-        url: "/images/screenshot-202025-09-07-20at-2010.png",
-        width: 1200,
-        height: 630,
-        alt: "Pickleball player in action at Breakaway camp",
-      },
-    ],
+    images: defaultOpenGraphImage,
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/images/screenshot-202025-09-07-20at-2010.png"],
+    images: [{ url: DEFAULT_OG_IMAGE, alt: DEFAULT_OG_IMAGE_ALT }],
   },
 }
 

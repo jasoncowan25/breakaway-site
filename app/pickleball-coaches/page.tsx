@@ -1,9 +1,11 @@
 import { Metadata } from "next"
+import { JsonLd } from "@/components/JsonLd"
 import { Navigation } from "@/components/Navigation"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Footer } from "@/components/Footer"
+import { personJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Pickleball Coaches | Pro-Led Training | Breakaway Camps",
@@ -31,6 +33,15 @@ export default function CoachesPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd
+        data={personJsonLd({
+          name: "Joey Manchurek",
+          jobTitle: "Founder & Lead Coach",
+          image: "/coach-joey.jpg",
+          description:
+            "Breakaway Pickleball lead coach, former pro hockey player, and competitive pickleball coach focused on structured skill development.",
+        })}
+      />
       <Navigation />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">

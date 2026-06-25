@@ -15,7 +15,7 @@
  */
 export const NEW_CHECKOUT_SLUGS: readonly string[] = [
   "toronto-intermediate-intensive-sep-12-2026-3", // Toronto · Sep 12, 2026
-  "toronto-intermediate-intensive-oct-17-2026", // Toronto · Oct 2026
+  "toronto-intermediate-intensive-oct-24-2026", // Toronto · Oct 24, 2026
 ]
 
 /** True if this camp's Book button should use the in-house checkout. */
