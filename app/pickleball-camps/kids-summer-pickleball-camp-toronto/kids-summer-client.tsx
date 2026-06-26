@@ -42,7 +42,7 @@ export default function KidsSummerCampClient() {
     location: "Toronto",
     coach: "Joey Manchurek and the Breakaway x Baseline team",
     date: "August 17 – September 4, 2026",
-    price: "$625 CAD / week",
+    price: "$575 CAD / week",
     priceNote: "per week (5 days)",
     totalPrice: "Full 3-week program also available",
     venue: "The Jar PickleBall Club",

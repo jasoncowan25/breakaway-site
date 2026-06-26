@@ -271,7 +271,7 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     locationFilter: "Toronto & GTA",
     format: "Camp",
     skillLevel: "All Levels",
-    price: "From $625 CAD",
+    price: "From $575 CAD",
     image: "/kids-passover-camp-hero.webp",
     badges: [{ text: "Just Announced", variant: "accent" }],
     coach: "Joey Manchurek",
