@@ -358,7 +358,7 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-1">Garden View — Single</h3>
                     <p className="text-sm text-muted-foreground mb-4">King bed, ideal for solo travelers</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$3,179 CAD </p>
+                    <p className="text-2xl font-bold text-primary mb-2">$2,958 CAD </p>
                     <p className="text-sm text-muted-foreground">3 rooms available</p>
                   </CardContent>
                 </Card>
@@ -366,7 +366,7 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-1">Garden View — Double</h3>
                     <p className="text-sm text-muted-foreground mb-4">King bed, ideal for couples</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$2,420 CAD </p>
+                    <p className="text-2xl font-bold text-primary mb-2">$2,201 CAD </p>
                     <p className="text-sm text-muted-foreground">4 rooms (8 guests) available</p>
                   </CardContent>
                 </Card>
@@ -374,7 +374,7 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-1">Pool View — Double</h3>
                     <p className="text-sm text-muted-foreground mb-4">2 beds, ideal for friends sharing</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$2,498 CAD </p>
+                    <p className="text-2xl font-bold text-primary mb-2">$2,278 CAD </p>
                     <p className="text-sm text-muted-foreground">6 rooms (12 guests) available</p>
                   </CardContent>
                 </Card>
@@ -457,9 +457,9 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
                               <SelectValue placeholder="Select your preferred room type" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Garden View — Single ($3,179 CAD)">Garden View — Single ($3,179 CAD)</SelectItem>
-                              <SelectItem value="Garden View — Double ($2,420 CAD)">Garden View — Double ($2,420 CAD)</SelectItem>
-                              <SelectItem value="Pool View — Double ($2,498 CAD)">Pool View — Double ($2,498 CAD)</SelectItem>
+                              <SelectItem value="Garden View — Single ($2,958 CAD)">Garden View — Single ($2,958 CAD)</SelectItem>
+                              <SelectItem value="Garden View — Double ($2,201 CAD)">Garden View — Double ($2,201 CAD)</SelectItem>
+                              <SelectItem value="Pool View — Double ($2,278 CAD)">Pool View — Double ($2,278 CAD)</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -657,7 +657,7 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
                     </div>
                   </div>
                   <div className="border-t pt-4">
-                    <p className="text-lg font-bold text-primary">From $2,420 CAD</p>
+                    <p className="text-lg font-bold text-primary">From $2,201 CAD</p>
                     <p className="text-sm text-muted-foreground">+ $800 program fee</p>
                   </div>
                   <Button onClick={scrollToForm} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
@@ -690,7 +690,7 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 lg:hidden z-50">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="font-bold text-primary">From $2,420 CAD</p>
+            <p className="font-bold text-primary">From $2,201 CAD</p>
             <p className="text-xs text-muted-foreground">+ $800 program fee</p>
           </div>
           <Button onClick={scrollToForm} className="bg-accent text-accent-foreground hover:bg-accent/90">

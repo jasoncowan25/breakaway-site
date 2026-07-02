@@ -30,7 +30,7 @@ export default async function SchedulePage() {
     date: "Nov 24 – Dec 1, 2026",
     sortDate: new Date("2026-11-24"),
     location: "TRS Turquesa, Punta Cana, DR",
-    price: "From $2,420 CAD",
+    price: "From $2,201 CAD",
     image: "/punta-cana-resort-pool.jpg",
     badges: [
       { text: "Few spots left", variant: "destructive" as const },
