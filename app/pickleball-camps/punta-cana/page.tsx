@@ -77,6 +77,7 @@ export default async function PuntaCanaPage() {
             locationName: "TRS Turquesa, Punta Cana, Dominican Republic",
             address: "TRS Turquesa, Punta Cana, Dominican Republic",
             priceLabel: "From $2,201 CAD",
+            performer: "Joey Manchurek and the Breakaway team",
           }),
           faqJsonLd(puntaCanaFaq),
         ]}

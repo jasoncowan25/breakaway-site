@@ -78,6 +78,11 @@ function priceFromLabel(label: string) {
   return match ? match[1] : undefined
 }
 
+// Date from which camp/retreat booking offers are considered valid. Bookings
+// for the current slate of events have been open since early 2025, so this
+// reads as "on sale now" for all upcoming events.
+const OFFER_VALID_FROM = "2025-01-01"
+
 export function eventJsonLd({
   name,
   description,
@@ -88,6 +93,8 @@ export function eventJsonLd({
   locationName,
   address,
   priceLabel,
+  performer,
+  validFrom,
   availability = "https://schema.org/InStock",
 }: {
   name: string
@@ -99,6 +106,8 @@ export function eventJsonLd({
   locationName: string
   address?: string
   priceLabel?: string
+  performer?: string
+  validFrom?: string
   availability?: string
 }): JsonLdObject {
   const price = priceLabel ? priceFromLabel(priceLabel) : undefined
@@ -123,6 +132,10 @@ export function eventJsonLd({
       name: "Breakaway Pickleball Camps",
       url: SITE_URL,
     },
+    performer: {
+      "@type": "PerformingGroup",
+      name: performer ?? "Breakaway Pickleball Camps",
+    },
     offers: price
       ? {
           "@type": "Offer",
@@ -130,6 +143,7 @@ export function eventJsonLd({
           price,
           priceCurrency: "CAD",
           availability,
+          validFrom: validFrom ?? OFFER_VALID_FROM,
         }
       : undefined,
   }
