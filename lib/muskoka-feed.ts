@@ -55,6 +55,34 @@ function priceLabel(basePriceCents: number | null): string {
   return `$${Math.round(basePriceCents / 100).toLocaleString()} CAD / player`
 }
 
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+/** "2026-07-10" → "Fri Jul 10". */
+function dayButtonLabel(iso: string): string {
+  const { m, d } = parts(iso)
+  const weekday = WEEKDAYS[new Date(`${iso}T00:00:00Z`).getUTCDay()]
+  return `${weekday} ${MONTHS_SHORT[m - 1]} ${d}`
+}
+
+function mapSingleDay(c: ApiCampEventCamp): MuskokaCamp["singleDay"] {
+  // The offer only renders once day links exist — a camp flagged
+  // single_day_enabled with no links yet stays a plain 3-day card.
+  if (!c.singleDay || !c.singleDay.days.some((d) => d.checkoutUrl)) return null
+  return {
+    priceLabel:
+      c.singleDay.priceCents == null
+        ? "Price TBA"
+        : `$${Math.round(c.singleDay.priceCents / 100).toLocaleString()} CAD / day`,
+    days: c.singleDay.days.map((d) => ({
+      date: d.date,
+      label: dayButtonLabel(d.date),
+      checkoutUrl: d.checkoutUrl,
+      available: d.available,
+    })),
+  }
+}
+
 /** "9:00 AM - 12:00 PM" → 540 (minutes since midnight). Unknown → end of day. */
 function sessionStartMinutes(label: string | null): number {
   if (!label) return 24 * 60
@@ -100,9 +128,10 @@ export function mapEventCampsToMuskoka(camps: ApiCampEventCamp[]): MuskokaCamp[]
       // Carry the feed's own availability so the card never has to infer
       // sold-out state from a missing checkout link (sold-out camps have no
       // active Stripe link → no availability entry → would otherwise fall back
-      // to capacity and show "N Spots Left / Coming Soon").
+      // to capacity and show a bookable card).
       spotsRemaining: c.spotsLeft,
       isSoldOut: c.isSoldOut,
+      singleDay: mapSingleDay(c),
     }
   })
 }

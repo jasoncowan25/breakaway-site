@@ -21,13 +21,15 @@ type AvailabilityData = {
   lastUpdated: string
 }
 
-function CampCard({ 
-  camp, 
-  availability,
-  isLoading 
-}: { 
+type LiveAvailability = { spotsRemaining: number; maxSpots: number }
+
+function CampCard({
+  camp,
+  getAvailability,
+  isLoading,
+}: {
   camp: MuskokaCamp
-  availability?: { spotsRemaining: number; maxSpots: number }
+  getAvailability: (checkoutUrl: string) => LiveAvailability | undefined
   isLoading?: boolean
 }) {
   const hasCheckout = camp.checkoutUrl && camp.checkoutUrl.length > 0
@@ -35,10 +37,31 @@ function CampCard({
   // back to the DB feed's own spotsRemaining — sold-out camps have no active
   // Stripe link, so no availability entry — then to capacity for the hardcoded
   // list. isSoldOut honours the feed (covers override + no-active-link camps).
+  // Spot COUNTS are never rendered — availability only drives Book vs Sold Out
+  // (plus a numberless "Selling Fast" nudge when it's tight).
+  const availability = camp.checkoutUrl ? getAvailability(camp.checkoutUrl) : undefined
   const spotsRemaining =
     availability?.spotsRemaining ?? camp.spotsRemaining ?? camp.maxPlayers
-  const isSoldOut =
+  // The 3-day product. Feed isSoldOut already means "no seat free on every day".
+  const fullSoldOut =
     !isLoading && ((camp.isSoldOut ?? false) || spotsRemaining === 0)
+
+  // Single-day options: feed availability refined by the 30s SWR overlay.
+  const singleDays = (camp.singleDay?.days ?? []).map((day) => {
+    const live = day.checkoutUrl ? getAvailability(day.checkoutUrl) : undefined
+    return {
+      ...day,
+      available:
+        day.available &&
+        Boolean(day.checkoutUrl) &&
+        (live == null || live.spotsRemaining > 0),
+    }
+  })
+  const hasSingleDays = singleDays.some((d) => d.checkoutUrl)
+  const anyDayAvailable = singleDays.some((d) => d.available)
+  // The card only reads fully SOLD OUT when every way in is gone.
+  const isSoldOut = fullSoldOut && (!hasSingleDays || !anyDayAvailable)
+  const sellingFast = !isLoading && !isSoldOut && spotsRemaining <= 2
 
   return (
     <Card className="overflow-hidden h-full flex flex-col">
@@ -52,15 +75,12 @@ function CampCard({
             <Badge variant="destructive" className="text-xs">
               Sold Out
             </Badge>
-          ) : (
-            <Badge 
-              variant="outline" 
-              className={`text-xs ${spotsRemaining <= 2 ? "border-orange-500 text-orange-600" : ""}`}
-            >
+          ) : sellingFast ? (
+            <Badge variant="outline" className="text-xs border-orange-500 text-orange-600">
               <Users className="h-3 w-3 mr-1" />
-              {spotsRemaining} {spotsRemaining === 1 ? "Spot" : "Spots"} Left
+              Selling Fast
             </Badge>
-          )}
+          ) : null}
         </div>
 
         {/* Title */}
@@ -93,18 +113,28 @@ function CampCard({
           </ul>
         </div>
 
-        {/* Price & CTA */}
-        <div className="mt-auto pt-4 border-t">
-          <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold text-primary">{camp.price}</span>
-            {isSoldOut ? (
+        {/* Booking — the 3-day camp and each single day sell out independently */}
+        <div className="mt-auto pt-4 border-t space-y-4">
+          {/* Full camp */}
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              {hasSingleDays && (
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  Full camp · {camp.duration}
+                </p>
+              )}
+              <span className={`font-bold text-primary ${hasSingleDays ? "text-xl" : "text-2xl"}`}>
+                {camp.price}
+              </span>
+            </div>
+            {fullSoldOut ? (
               <Button disabled variant="outline">
-                Sold Out
+                {hasSingleDays ? "3-Day Sold Out" : "Sold Out"}
               </Button>
             ) : hasCheckout ? (
               <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
                 <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
-                  Book
+                  {hasSingleDays ? "Book 3 Days" : "Book"}
                 </a>
               </Button>
             ) : (
@@ -113,6 +143,45 @@ function CampCard({
               </Button>
             )}
           </div>
+
+          {/* Single day */}
+          {hasSingleDays && camp.singleDay && (
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  Single day
+                </p>
+                <span className="text-sm font-bold text-primary">{camp.singleDay.priceLabel}</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {singleDays.map((day) =>
+                  day.available && day.checkoutUrl ? (
+                    <Button
+                      key={day.date}
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    >
+                      <a href={day.checkoutUrl} target="_blank" rel="noopener noreferrer">
+                        {day.label}
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      key={day.date}
+                      disabled
+                      size="sm"
+                      variant="outline"
+                      className="line-through"
+                    >
+                      {day.label}
+                    </Button>
+                  ),
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -159,6 +228,10 @@ export function MuskokaPageClient({
   const scrollToCamps = () => {
     document.getElementById("camps")?.scrollIntoView({ behavior: "smooth" })
   }
+
+  // Announce single-day options once any camp actually has day links live.
+  const singleDayOffer = camps.find((c) => c.singleDay?.days.some((d) => d.checkoutUrl))?.singleDay
+  const singleDayBannerPrice = singleDayOffer?.priceLabel.replace(" CAD / day", "/day")
 
   return (
     <div className="min-h-screen bg-background">
@@ -228,6 +301,26 @@ export function MuskokaPageClient({
         </div>
       </section>
 
+      {/* Single-day announcement — renders once day links are live */}
+      {singleDayOffer && (
+        <section className="bg-accent">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
+            <Badge className="bg-primary text-primary-foreground text-xs font-bold tracking-wide">
+              NEW
+            </Badge>
+            <p className="font-semibold text-accent-foreground">
+              Single-day options now available — {singleDayBannerPrice}.
+            </p>
+            <button
+              onClick={scrollToCamps}
+              className="text-sm text-accent-foreground/80 underline underline-offset-2 hover:text-accent-foreground"
+            >
+              Can&apos;t make all three days? Book any open day below.
+            </button>
+          </div>
+        </section>
+      )}
+
       {/* Camps Section */}
       <section id="camps" className="py-16 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -289,7 +382,7 @@ export function MuskokaPageClient({
                   </h3>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {group.map((camp) => (
-                      <CampCard key={camp.id} camp={camp} availability={getAvailability(camp.checkoutUrl)} isLoading={isLoadingAvailability} />
+                      <CampCard key={camp.id} camp={camp} getAvailability={getAvailability} isLoading={isLoadingAvailability} />
                     ))}
                   </div>
                 </div>
@@ -299,8 +392,11 @@ export function MuskokaPageClient({
 
           {/* Booking note */}
           <p className="text-sm text-muted-foreground text-center mt-8">
-            All camps are 3 consecutive days, limited to 4 players per session. Sessions are held at our private
-            indoor facility - exact address shared after booking confirmation.
+            All camps are 3 consecutive days, limited to 4 players per session.
+            {singleDayOffer
+              ? ` Can't make all three? Single-day spots (${singleDayBannerPrice}) are open on any day with a Book button. `
+              : " "}
+            Sessions are held at our private indoor facility - exact address shared after booking confirmation.
           </p>
         </div>
       </section>

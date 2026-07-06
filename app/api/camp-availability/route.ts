@@ -27,14 +27,26 @@ export async function GET() {
   const camps = await fetchPublicCamps({ revalidate: 30 })
 
   const availability: Record<string, Availability> = {}
-  for (const camp of camps) {
-    if (!camp.checkoutUrl || camp.capacity == null) continue
-    const maxSpots = camp.capacity
-    const spotsRemaining = camp.isSoldOut ? 0 : Math.max(0, camp.spotsLeft ?? maxSpots)
+  const put = (url: string, spotsRemaining: number, maxSpots: number) => {
     // If two camps share a checkout URL, keep the tighter (lower) availability.
-    const existing = availability[camp.checkoutUrl]
+    const existing = availability[url]
     if (!existing || spotsRemaining < existing.spotsRemaining) {
-      availability[camp.checkoutUrl] = { spotsRemaining, maxSpots }
+      availability[url] = { spotsRemaining, maxSpots }
+    }
+  }
+
+  for (const camp of camps) {
+    if (camp.capacity == null) continue
+    const maxSpots = camp.capacity
+    if (camp.checkoutUrl) {
+      put(camp.checkoutUrl, camp.isSoldOut ? 0 : Math.max(0, camp.spotsLeft ?? maxSpots), maxSpots)
+    }
+    // Single-day links: one entry per day URL. `available:false` also covers
+    // the booking cutoff and deactivated links, not just sold-out seats — so a
+    // closed day reads as 0 spots to the polling pages.
+    for (const day of camp.singleDay?.days ?? []) {
+      if (!day.checkoutUrl) continue
+      put(day.checkoutUrl, day.available ? Math.max(0, day.remaining ?? maxSpots) : 0, maxSpots)
     }
   }
 

@@ -95,12 +95,30 @@ export interface ApiCamp {
   breaks: ApiCampBreak[]
   lunchType: "catered" | "byo" | null
   registeredCount: number
+  // Bookable WHOLE-CAMP seats: the day with the fewest open seats, since a
+  // full-camp buyer needs a seat on every day. isSoldOut refers to the
+  // whole-camp product only — single days may still be bookable (singleDay).
   spotsLeft: number | null
   isSoldOut: boolean
+  // Single-day ticket offer ($X/day, one Stripe link per camp day). Null when
+  // the camp doesn't sell single days.
+  singleDay: ApiCampSingleDay | null
   checkoutUrl: string | null
   facility: ApiCampFacility | null
   coaches: ApiCampCoach[]
   testimonials: ApiCampTestimonial[]
+}
+
+export interface ApiCampSingleDayDay {
+  date: string // YYYY-MM-DD
+  remaining: number | null
+  available: boolean
+  checkoutUrl: string | null
+}
+
+export interface ApiCampSingleDay {
+  priceCents: number | null
+  days: ApiCampSingleDayDay[]
 }
 
 interface Envelope<T> {

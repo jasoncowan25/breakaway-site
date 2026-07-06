@@ -117,6 +117,17 @@ export type MuskokaCamp = (typeof muskokaCamps)[number] & {
   /** Live availability from the DB Camp Event feed (absent for the hardcoded fallback). */
   spotsRemaining?: number | null
   isSoldOut?: boolean
+  /** Single-day ticket offer from the feed ($X/day, one button per open day).
+   *  Absent for the hardcoded fallback and for camps without day links. */
+  singleDay?: {
+    priceLabel: string
+    days: Array<{
+      date: string // YYYY-MM-DD
+      label: string // "Fri Jul 10"
+      checkoutUrl: string | null
+      available: boolean
+    }>
+  } | null
 }
 
 /**
