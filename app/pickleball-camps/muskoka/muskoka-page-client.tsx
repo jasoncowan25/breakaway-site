@@ -6,7 +6,6 @@ import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Calendar, Clock, Users, Check, MapPin, ArrowRight } from "lucide-react"
 import Link from "next/link"
@@ -44,11 +43,9 @@ function dayRowLabel(label: string, index: number): string {
 function CampCard({
   camp,
   getAvailability,
-  isLoading,
 }: {
   camp: MuskokaCamp
   getAvailability: (checkoutUrl: string) => LiveAvailability | undefined
-  isLoading?: boolean
 }) {
   const hasCheckout = camp.checkoutUrl && camp.checkoutUrl.length > 0
   // Prefer live availability (SWR, keyed by checkout link) when present; fall
@@ -60,8 +57,7 @@ function CampCard({
   const spotsRemaining =
     availability?.spotsRemaining ?? camp.spotsRemaining ?? camp.maxPlayers
   // The 3-day product. Feed isSoldOut already means "no seat free on every day".
-  const fullSoldOut =
-    !isLoading && ((camp.isSoldOut ?? false) || spotsRemaining === 0)
+  const fullSoldOut = (camp.isSoldOut ?? false) || spotsRemaining === 0
 
   // Single-day options: feed availability refined by the 30s SWR overlay.
   const singleDays = (camp.singleDay?.days ?? []).map((day) => {
@@ -78,21 +74,13 @@ function CampCard({
   const anyDayAvailable = singleDays.some((d) => d.available)
   // The card only reads fully SOLD OUT when every way in is gone.
   const isSoldOut = fullSoldOut && (!hasSingleDays || !anyDayAvailable)
-  const soldOutDayCount = hasSingleDays ? singleDays.filter((d) => !d.available).length : 0
 
-  // Top badge per the design: Sold Out (everything gone) → "N Days Sold Out"
-  // (some days gone) → Available.
+  // Top badge: just Available / Sold Out — a partial "N Days Sold Out" state
+  // read as more confusing than useful (the day rows below already show
+  // exactly which days are gone).
   let topBadge: React.ReactNode
-  if (isLoading) {
-    topBadge = <Skeleton className="h-5 w-20" />
-  } else if (isSoldOut) {
+  if (isSoldOut) {
     topBadge = <span className={`${BADGE_BASE} border-transparent bg-[#dc2626] text-white`}>Sold Out</span>
-  } else if (soldOutDayCount > 0) {
-    topBadge = (
-      <span className={`${BADGE_BASE} border-[#f97316] bg-white/95 text-[#ea580c]`}>
-        {soldOutDayCount} {soldOutDayCount === 1 ? "Day" : "Days"} Sold Out
-      </span>
-    )
   } else {
     topBadge = (
       <span className={`${BADGE_BASE} border-[#e5e7eb] bg-white/95 text-[#111827]`}>
@@ -222,7 +210,7 @@ export function MuskokaPageClient({
   const [mapModalOpen, setMapModalOpen] = useState(false)
   const [levelFilter, setLevelFilter] = useState<LevelFilter>("all")
   
-  const { data: availabilityData, isLoading: isLoadingAvailability } = useSWR<AvailabilityData>(
+  const { data: availabilityData } = useSWR<AvailabilityData>(
     "/api/camp-availability",
     fetcher,
     { refreshInterval: 30000 } // Refresh every 30 seconds
@@ -401,7 +389,7 @@ export function MuskokaPageClient({
                   {/* Design's .bp-camp-cards grid: 2 columns, 1 below 720px, top-aligned */}
                   <div className="grid grid-cols-1 items-start gap-6 min-[720px]:grid-cols-2">
                     {group.map((camp) => (
-                      <CampCard key={camp.id} camp={camp} getAvailability={getAvailability} isLoading={isLoadingAvailability} />
+                      <CampCard key={camp.id} camp={camp} getAvailability={getAvailability} />
                     ))}
                   </div>
                 </div>
