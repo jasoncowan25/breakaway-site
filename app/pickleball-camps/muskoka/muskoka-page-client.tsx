@@ -5,7 +5,6 @@ import useSWR from "swr"
 import { Navigation } from "@/components/Navigation"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
@@ -23,6 +22,25 @@ type AvailabilityData = {
 
 type LiveAvailability = { spotsRemaining: number; maxSpots: number }
 
+/* ---------------------------------------------------------------------------
+ * Camp card — verbatim port of the Claude Design "Muskoka Camps.dc.html" card
+ * (project b1163a4b). Layout, spacing, colours and type sizes are copied
+ * mechanically from the design; token values come from the design system's
+ * colors_and_type.css (navy #124A7A, lime #90D123, border #e5e7eb,
+ * fg-muted #6b7280, radius-md 6px, shadow-sm).
+ * ------------------------------------------------------------------------- */
+
+const CARD_SHADOW = "shadow-[0_1px_2px_0_rgba(0,0,0,0.05),0_1px_3px_0_rgba(0,0,0,0.1)]"
+const BADGE_BASE =
+  "inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 py-1 text-xs font-medium leading-none"
+const BTN_SM =
+  "inline-flex h-8 items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 text-[13px] transition-colors"
+
+/** "Fri Jul 10" (feed label) → "Day 1 · Fri, Jul 10" (design day-row label). */
+function dayRowLabel(label: string, index: number): string {
+  return `Day ${index + 1} · ${label.replace(/^(\S+)\s+/, "$1, ")}`
+}
+
 function CampCard({
   camp,
   getAvailability,
@@ -37,8 +55,7 @@ function CampCard({
   // back to the DB feed's own spotsRemaining — sold-out camps have no active
   // Stripe link, so no availability entry — then to capacity for the hardcoded
   // list. isSoldOut honours the feed (covers override + no-active-link camps).
-  // Spot COUNTS are never rendered — availability only drives Book vs Sold Out
-  // (plus a numberless "Selling Fast" nudge when it's tight).
+  // Spot COUNTS are never rendered — availability only drives Book vs Sold Out.
   const availability = camp.checkoutUrl ? getAvailability(camp.checkoutUrl) : undefined
   const spotsRemaining =
     availability?.spotsRemaining ?? camp.spotsRemaining ?? camp.maxPlayers
@@ -61,130 +78,135 @@ function CampCard({
   const anyDayAvailable = singleDays.some((d) => d.available)
   // The card only reads fully SOLD OUT when every way in is gone.
   const isSoldOut = fullSoldOut && (!hasSingleDays || !anyDayAvailable)
-  const sellingFast = !isLoading && !isSoldOut && spotsRemaining <= 2
+  const soldOutDayCount = hasSingleDays ? singleDays.filter((d) => !d.available).length : 0
+
+  // Top badge per the design: Sold Out (everything gone) → "N Days Sold Out"
+  // (some days gone) → Available.
+  let topBadge: React.ReactNode
+  if (isLoading) {
+    topBadge = <Skeleton className="h-5 w-20" />
+  } else if (isSoldOut) {
+    topBadge = <span className={`${BADGE_BASE} border-transparent bg-[#dc2626] text-white`}>Sold Out</span>
+  } else if (soldOutDayCount > 0) {
+    topBadge = (
+      <span className={`${BADGE_BASE} border-[#f97316] bg-white/95 text-[#ea580c]`}>
+        {soldOutDayCount} {soldOutDayCount === 1 ? "Day" : "Days"} Sold Out
+      </span>
+    )
+  } else {
+    topBadge = (
+      <span className={`${BADGE_BASE} border-[#e5e7eb] bg-white/95 text-[#111827]`}>
+        <Users className="h-3 w-3" />
+        Available
+      </span>
+    )
+  }
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col">
-      <CardContent className="p-5 flex flex-col h-full">
-        {/* Badges */}
-        <div className="flex items-center justify-between mb-3">
-          <Badge variant={camp.levelVariant}>{camp.level}</Badge>
-          {isLoading ? (
-            <Skeleton className="h-5 w-20" />
-          ) : isSoldOut ? (
-            <Badge variant="destructive" className="text-xs">
-              Sold Out
-            </Badge>
-          ) : sellingFast ? (
-            <Badge variant="outline" className="text-xs border-orange-500 text-orange-600">
-              <Users className="h-3 w-3 mr-1" />
-              Selling Fast
-            </Badge>
-          ) : null}
+    <div className={`flex flex-col rounded-lg border border-[#e5e7eb] bg-white p-5 ${CARD_SHADOW}`}>
+      {/* Level + availability badge */}
+      <div className="mb-[10px] flex items-start justify-between gap-2">
+        <span className="text-xs font-semibold text-[#6b7280]">{camp.level}</span>
+        {topBadge}
+      </div>
+
+      {/* Title */}
+      <h3 className="mb-[10px] text-lg font-bold leading-[1.1] tracking-[-0.02em] text-[#124A7A] text-balance">
+        {camp.title}
+      </h3>
+
+      {/* Date + time */}
+      <div className="mb-[5px] flex items-center gap-2 text-sm text-[#6b7280]">
+        <Calendar className="h-3.5 w-3.5" />
+        <span>{camp.dates}</span>
+      </div>
+      <div className="flex items-center gap-2 text-sm text-[#6b7280]">
+        <Clock className="h-3.5 w-3.5" />
+        <span>{camp.time}</span>
+      </div>
+
+      {/* What you'll work on */}
+      <div className="mt-4">
+        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#6b7280]">
+          What You&apos;ll Work On
         </div>
+        <ul className="flex flex-col gap-1.5">
+          {camp.focus.map((item) => (
+            <li key={item} className="flex items-center gap-2 text-sm text-[#111827]">
+              <Check className="h-[15px] w-[15px] shrink-0 text-[#90D123]" strokeWidth={2.5} />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-        {/* Title */}
-        <h3 className="text-xl font-bold text-primary mb-3">{camp.title}</h3>
-
-        {/* Details */}
-        <div className="space-y-2 mb-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>{camp.dates}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            <span>{camp.time}</span>
-          </div>
+      {/* Price + full-camp booking — sells out independently of day buttons */}
+      <div className="mt-4 flex items-center justify-between border-t border-[#e5e7eb] pt-3.5">
+        <div>
+          <span className="text-[22px] font-bold text-[#124A7A]">
+            {camp.price.replace(/\s*\/\s*player$/, "")}
+          </span>
+          <span className="text-[13px] text-[#6b7280]"> / player</span>
         </div>
+        {fullSoldOut ? (
+          <button
+            disabled
+            className={`${BTN_SM} cursor-not-allowed border border-[#e5e7eb] bg-[#f3f4f6] font-medium text-[#9ca3af] opacity-50`}
+          >
+            Sold Out
+          </button>
+        ) : hasCheckout ? (
+          <a
+            href={camp.checkoutUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${BTN_SM} border border-transparent bg-[#90D123] font-semibold text-[#111827] hover:bg-[#7fba1f]`}
+          >
+            Book 3 Days
+          </a>
+        ) : (
+          <button
+            disabled
+            className={`${BTN_SM} cursor-not-allowed border border-[#e5e7eb] bg-[#f3f4f6] font-medium text-[#9ca3af] opacity-50`}
+          >
+            Coming Soon
+          </button>
+        )}
+      </div>
 
-        {/* Focus areas */}
-        <div className="mb-4 flex-1">
-          <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
-            What you&apos;ll work on
-          </p>
-          <ul className="space-y-1">
-            {camp.focus.map((item) => (
-              <li key={item} className="flex items-center gap-2 text-sm">
-                <Check className="h-3 w-3 text-accent" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Booking — the 3-day camp and each single day sell out independently */}
-        <div className="mt-auto pt-4 border-t space-y-4">
-          {/* Full camp */}
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              {hasSingleDays && (
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  Full camp · {camp.duration}
-                </p>
-              )}
-              <span className={`font-bold text-primary ${hasSingleDays ? "text-xl" : "text-2xl"}`}>
-                {camp.price}
-              </span>
-            </div>
-            {fullSoldOut ? (
-              <Button disabled variant="outline">
-                {hasSingleDays ? "3-Day Sold Out" : "Sold Out"}
-              </Button>
-            ) : hasCheckout ? (
-              <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <a href={camp.checkoutUrl} target="_blank" rel="noopener noreferrer">
-                  {hasSingleDays ? "Book 3 Days" : "Book"}
-                </a>
-              </Button>
-            ) : (
-              <Button disabled variant="outline">
-                Coming Soon
-              </Button>
-            )}
+      {/* Single-day booking — hidden until day links exist in the feed */}
+      {hasSingleDays && camp.singleDay && (
+        <div className="mt-4 border-t border-dashed border-[#e5e7eb] pt-3.5">
+          <div className="mb-[10px] flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-[0.04em] text-[#124A7A]">
+              Or Book A Single Day
+            </span>
+            <span className="text-xs text-[#6b7280]">{camp.singleDay.priceLabel}</span>
           </div>
-
-          {/* Single day */}
-          {hasSingleDays && camp.singleDay && (
-            <div>
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  Single day
-                </p>
-                <span className="text-sm font-bold text-primary">{camp.singleDay.priceLabel}</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {singleDays.map((day) =>
-                  day.available && day.checkoutUrl ? (
-                    <Button
-                      key={day.date}
-                      asChild
-                      size="sm"
-                      variant="outline"
-                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                    >
-                      <a href={day.checkoutUrl} target="_blank" rel="noopener noreferrer">
-                        {day.label}
-                      </a>
-                    </Button>
-                  ) : (
-                    <Button
-                      key={day.date}
-                      disabled
-                      size="sm"
-                      variant="outline"
-                      className="line-through"
-                    >
-                      {day.label}
-                    </Button>
-                  ),
+          <div className="flex flex-col gap-2">
+            {singleDays.map((day, index) => (
+              <div key={day.date} className="flex items-center justify-between gap-2">
+                <span className="text-[13px] text-[#111827]">{dayRowLabel(day.label, index)}</span>
+                {day.available && day.checkoutUrl ? (
+                  <a
+                    href={day.checkoutUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${BTN_SM} border border-[#124A7A] bg-transparent font-medium text-[#124A7A] hover:bg-[#124A7A] hover:text-white`}
+                  >
+                    Book Day
+                  </a>
+                ) : (
+                  <span className="inline-flex items-center whitespace-nowrap rounded-md border border-[#e5e7eb] bg-[#f3f4f6] px-[9px] py-1 text-[11px] font-medium leading-none text-[#6b7280]">
+                    Sold Out
+                  </span>
                 )}
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   )
 }
 
@@ -330,32 +352,28 @@ export function MuskokaPageClient({
               Choose from the below camps. 4 players per session.
             </p>
             
-            {/* Level Filter */}
+            {/* Level Filter — design's rounded pills (navy when active) */}
             <div className="flex justify-center gap-2">
-              <Button
-                variant={levelFilter === "all" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setLevelFilter("all")}
-                className={levelFilter === "all" ? "bg-primary text-primary-foreground" : ""}
-              >
-                All Levels
-              </Button>
-              <Button
-                variant={levelFilter === "under3" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setLevelFilter("under3")}
-                className={levelFilter === "under3" ? "bg-primary text-primary-foreground" : ""}
-              >
-                Under 3.0
-              </Button>
-              <Button
-                variant={levelFilter === "3plus" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setLevelFilter("3plus")}
-                className={levelFilter === "3plus" ? "bg-primary text-primary-foreground" : ""}
-              >
-                3.0+
-              </Button>
+              {(
+                [
+                  { key: "all", label: "All Levels" },
+                  { key: "under3", label: "Under 3.0" },
+                  { key: "3plus", label: "3.0+" },
+                ] as const
+              ).map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  onClick={() => setLevelFilter(f.key)}
+                  className={`inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full border px-3 text-[13px] font-medium transition-colors ${
+                    levelFilter === f.key
+                      ? "border-transparent bg-[#124A7A] text-white"
+                      : "border-[#e5e7eb] bg-transparent text-[#6b7280]"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -376,11 +394,12 @@ export function MuskokaPageClient({
               // so it can never drift from what's shown below it.
               const heading = group[0].dates.replace(/,\s*\d{4}\s*$/, "")
               return (
-                <div key={week} className="mb-8">
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                <div key={week} className="mb-10 last:mb-0">
+                  <h3 className="mb-3.5 text-[13px] font-semibold uppercase tracking-[0.05em] text-[#6b7280]">
                     {heading}
                   </h3>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Design's .bp-camp-cards grid: 2 columns, 1 below 720px, top-aligned */}
+                  <div className="grid grid-cols-1 items-start gap-6 min-[720px]:grid-cols-2">
                     {group.map((camp) => (
                       <CampCard key={camp.id} camp={camp} getAvailability={getAvailability} isLoading={isLoadingAvailability} />
                     ))}
