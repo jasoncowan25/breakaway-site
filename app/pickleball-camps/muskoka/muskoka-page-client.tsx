@@ -35,6 +35,11 @@ const BADGE_BASE =
 const BTN_SM =
   "inline-flex h-8 items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 text-[13px] transition-colors"
 
+// Spot counts render only at or below this threshold (capacity is 4, so
+// "2 left" means half gone — real urgency). Above it the card just says
+// Available; raise/lower to tune how early scarcity starts showing.
+const SCARCE_AT = 2
+
 /** "Fri Jul 10" (feed label) → "Day 1 · Fri, Jul 10" (design day-row label). */
 function dayRowLabel(label: string, index: number): string {
   return `Day ${index + 1} · ${label.replace(/^(\S+)\s+/, "$1, ")}`
@@ -52,7 +57,6 @@ function CampCard({
   // back to the DB feed's own spotsRemaining — sold-out camps have no active
   // Stripe link, so no availability entry — then to capacity for the hardcoded
   // list. isSoldOut honours the feed (covers override + no-active-link camps).
-  // Spot COUNTS are never rendered — availability only drives Book vs Sold Out.
   const availability = camp.checkoutUrl ? getAvailability(camp.checkoutUrl) : undefined
   const spotsRemaining =
     availability?.spotsRemaining ?? camp.spotsRemaining ?? camp.maxPlayers
@@ -68,6 +72,7 @@ function CampCard({
         day.available &&
         Boolean(day.checkoutUrl) &&
         (live == null || live.spotsRemaining > 0),
+      remaining: live?.spotsRemaining ?? day.remaining,
     }
   })
   const hasSingleDays = singleDays.some((d) => d.checkoutUrl)
@@ -75,12 +80,27 @@ function CampCard({
   // The card only reads fully SOLD OUT when every way in is gone.
   const isSoldOut = fullSoldOut && (!hasSingleDays || !anyDayAvailable)
 
-  // Top badge: just Available / Sold Out — a partial "N Days Sold Out" state
-  // read as more confusing than useful (the day rows below already show
-  // exactly which days are gone).
+  // Top badge escalates only when scarcity is real:
+  //   Available → "N spots left" (amber, ≤SCARCE_AT full-camp seats)
+  //   → "Single days only" (3-day gone, day seats remain) → Sold Out.
+  // Counts stay hidden until they mean something, so a fresh camp never
+  // advertises how empty it is ("4 spots left" = nobody booked yet).
   let topBadge: React.ReactNode
   if (isSoldOut) {
     topBadge = <span className={`${BADGE_BASE} border-transparent bg-[#dc2626] text-white`}>Sold Out</span>
+  } else if (fullSoldOut) {
+    topBadge = (
+      <span className={`${BADGE_BASE} border-[#124A7A] bg-white font-semibold text-[#124A7A]`}>
+        Single days only
+      </span>
+    )
+  } else if (spotsRemaining <= SCARCE_AT) {
+    topBadge = (
+      <span className={`${BADGE_BASE} border-orange-500 bg-orange-50 font-semibold text-orange-600`}>
+        <Users className="h-3 w-3" />
+        {spotsRemaining} {spotsRemaining === 1 ? "spot" : "spots"} left
+      </span>
+    )
   } else {
     topBadge = (
       <span className={`${BADGE_BASE} border-[#e5e7eb] bg-white/95 text-[#111827]`}>
@@ -176,14 +196,21 @@ function CampCard({
               <div key={day.date} className="flex items-center justify-between gap-2">
                 <span className="text-[13px] text-[#111827]">{dayRowLabel(day.label, index)}</span>
                 {day.available && day.checkoutUrl ? (
-                  <a
-                    href={day.checkoutUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${BTN_SM} border border-[#124A7A] bg-transparent font-medium text-[#124A7A] hover:bg-[#124A7A] hover:text-white`}
-                  >
-                    Book Day
-                  </a>
+                  <span className="flex items-center gap-2">
+                    {day.remaining != null && day.remaining > 0 && day.remaining <= SCARCE_AT && (
+                      <span className="whitespace-nowrap text-[11px] font-semibold text-orange-600">
+                        {day.remaining} left
+                      </span>
+                    )}
+                    <a
+                      href={day.checkoutUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${BTN_SM} border border-[#124A7A] bg-transparent font-medium text-[#124A7A] hover:bg-[#124A7A] hover:text-white`}
+                    >
+                      Book Day
+                    </a>
+                  </span>
                 ) : (
                   <span className="inline-flex items-center whitespace-nowrap rounded-md border border-[#e5e7eb] bg-[#f3f4f6] px-[9px] py-1 text-[11px] font-medium leading-none text-[#6b7280]">
                     Sold Out

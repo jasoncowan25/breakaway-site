@@ -79,6 +79,7 @@ function mapSingleDay(c: ApiCampEventCamp): MuskokaCamp["singleDay"] {
       label: dayButtonLabel(d.date),
       checkoutUrl: d.checkoutUrl,
       available: d.available,
+      remaining: d.remaining,
     })),
   }
 }

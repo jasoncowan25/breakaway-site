@@ -126,6 +126,8 @@ export type MuskokaCamp = (typeof muskokaCamps)[number] & {
       label: string // "Fri Jul 10"
       checkoutUrl: string | null
       available: boolean
+      /** Seats left on this day, from the feed (null when the API omits it). */
+      remaining: number | null
     }>
   } | null
 }
