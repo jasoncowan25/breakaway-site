@@ -256,7 +256,7 @@ export function MuskokaPageClient({
     return availabilityData?.availability?.[checkoutUrl]
   }
   
-  const filterCampsByLevel = (camps: typeof muskokaCamps) => {
+  const filterCampsByLevel = (camps: MuskokaCamp[]) => {
     if (levelFilter === "all") return camps
     if (levelFilter === "under3") return camps.filter(c => c.level.includes("Under 3.0"))
     return camps.filter(c => c.level.includes("3.0+"))
@@ -402,6 +402,13 @@ export function MuskokaPageClient({
             const weeks = Array.from(new Set(visible.map((c) => c.week))).sort(
               (a, b) => a - b,
             )
+            if (weeks.length === 0) {
+              return (
+                <p className="py-10 text-center text-muted-foreground">
+                  No upcoming Muskoka camps are scheduled right now. New dates will appear here when they are announced.
+                </p>
+              )
+            }
             return weeks.map((week) => {
               const group = visible.filter((c) => c.week === week)
               // Heading = the group's date range without the year (e.g.

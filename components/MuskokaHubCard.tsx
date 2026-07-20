@@ -5,15 +5,25 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Flame } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { getMuskokaCampDateRanges, getMuskokaCampMinPrice } from "@/lib/muskoka-camps"
+import {
+  getMuskokaCampDateRanges,
+  getMuskokaCampMinPrice,
+  muskokaCamps,
+  type MuskokaCamp,
+} from "@/lib/muskoka-camps"
+import { currentAndUpcomingCamps } from "@/lib/upcoming-camps"
 
 interface MuskokaHubCardProps {
   className?: string
+  camps?: readonly MuskokaCamp[]
 }
 
-export function MuskokaHubCard({ className }: MuskokaHubCardProps) {
-  const dateRanges = getMuskokaCampDateRanges()
-  const minPrice = getMuskokaCampMinPrice()
+export function MuskokaHubCard({ className, camps = muskokaCamps }: MuskokaHubCardProps) {
+  const visibleCamps = currentAndUpcomingCamps(camps)
+  if (visibleCamps.length === 0) return null
+
+  const dateRanges = getMuskokaCampDateRanges(visibleCamps)
+  const minPrice = getMuskokaCampMinPrice(visibleCamps)
   return (
     <Link
       href="/pickleball-camps/muskoka"

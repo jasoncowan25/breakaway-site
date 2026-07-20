@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Quote } from "lucide-react"
 import Link from "next/link"
 import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
+import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 import { organizationJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = {
@@ -26,9 +27,10 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const [publishedCampCards, navCampItems] = await Promise.all([
+  const [publishedCampCards, navCampItems, upcomingMuskokaCamps] = await Promise.all([
     getPublishedPublicCampCards(),
     getPublishedPublicCampNavItems(),
+    getUpcomingMuskokaCamps(),
   ])
 
   const puntaCanaCamp = {
@@ -115,7 +117,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <MuskokaHubCard className="md:col-span-2 lg:col-span-2" />
+            <MuskokaHubCard camps={upcomingMuskokaCamps} className="md:col-span-2 lg:col-span-2" />
             {publishedCampCards.map((camp) => (
               <CampCard key={camp.id} {...camp} />
             ))}

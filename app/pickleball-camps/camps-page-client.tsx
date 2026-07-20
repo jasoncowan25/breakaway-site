@@ -13,10 +13,12 @@ import { Filter } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import type { PublicCampCard, PublicCampNavItem } from "@/lib/public-camps"
+import type { MuskokaCamp } from "@/lib/muskoka-camps"
 
 type CampsPageClientProps = {
   publishedCampCards?: PublicCampCard[]
   navCampItems?: PublicCampNavItem[]
+  muskokaCamps?: MuskokaCamp[]
   initialSelectedLocations?: string[]
   initialSelectedSkillLevels?: string[]
   initialView?: "upcoming" | "completed"
@@ -25,6 +27,7 @@ type CampsPageClientProps = {
 function CampsPageContent({
   publishedCampCards = [],
   navCampItems = [],
+  muskokaCamps = [],
   initialSelectedLocations = [],
   initialSelectedSkillLevels = [],
   initialView = "upcoming",
@@ -170,6 +173,7 @@ function CampsPageContent({
   const filteredUpcomingCamps = filterCamps(upcomingCamps)
   const filteredCompletedCamps = filterCamps(completedCamps)
   const showMuskokaHub =
+    muskokaCamps.length > 0 &&
     (selectedLocations.length === 0 || selectedLocations.includes("Muskoka")) &&
     (selectedFormats.length === 0 || selectedFormats.includes("Camp"))
 
@@ -375,7 +379,7 @@ function CampsPageContent({
                 ))}
                 {/* Show Muskoka Hub Card for upcoming camps - Muskoka has camps for all skill levels */}
                 {showMuskokaHub && (
-                  <MuskokaHubCard />
+                  <MuskokaHubCard camps={muskokaCamps} />
                 )}
               </div>
               {filteredUpcomingCamps.length === 0 && !showMuskokaHub && (

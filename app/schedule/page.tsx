@@ -5,6 +5,7 @@ import { CampCard } from "@/components/CampCard"
 import { MuskokaHubCard } from "@/components/MuskokaHubCard"
 import { Footer } from "@/components/Footer"
 import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
+import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 import { itemListJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = {
@@ -19,9 +20,10 @@ export const metadata: Metadata = {
 }
 
 export default async function SchedulePage() {
-  const [publishedCampCards, navCampItems] = await Promise.all([
+  const [publishedCampCards, navCampItems, upcomingMuskokaCamps] = await Promise.all([
     getPublishedPublicCampCards(),
     getPublishedPublicCampNavItems(),
+    getUpcomingMuskokaCamps(),
   ])
 
   const puntaCanaCamp = {
@@ -55,7 +57,7 @@ export default async function SchedulePage() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <MuskokaHubCard className="md:col-span-2 lg:col-span-2" />
+          <MuskokaHubCard camps={upcomingMuskokaCamps} className="md:col-span-2 lg:col-span-2" />
           {publishedCampCards.map((camp) => (
             <CampCard key={camp.id} {...camp} />
           ))}
