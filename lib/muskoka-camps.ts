@@ -4,6 +4,8 @@ export const muskokaCamps = [
     title: "Fundamentals Camp",
     level: "Fundamentals (Under 3.0)",
     levelVariant: "secondary" as const,
+    startDate: "2026-07-10",
+    endDate: "2026-07-12",
     dates: "July 10-12, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
@@ -18,6 +20,8 @@ export const muskokaCamps = [
     title: "Intermediate Camp",
     level: "Intermediate (3.0+)",
     levelVariant: "secondary" as const,
+    startDate: "2026-07-10",
+    endDate: "2026-07-12",
     dates: "July 10-12, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
@@ -32,6 +36,8 @@ export const muskokaCamps = [
     title: "Intermediate Camp",
     level: "Intermediate (3.0+)",
     levelVariant: "secondary" as const,
+    startDate: "2026-07-13",
+    endDate: "2026-07-15",
     dates: "July 13-15, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
@@ -46,6 +52,8 @@ export const muskokaCamps = [
     title: "Intermediate Camp",
     level: "Intermediate (3.0+)",
     levelVariant: "secondary" as const,
+    startDate: "2026-07-13",
+    endDate: "2026-07-15",
     dates: "July 13-15, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
@@ -60,6 +68,8 @@ export const muskokaCamps = [
     title: "Intermediate Camp",
     level: "Intermediate (3.0+)",
     levelVariant: "secondary" as const,
+    startDate: "2026-07-17",
+    endDate: "2026-07-19",
     dates: "July 17-19, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
@@ -74,6 +84,8 @@ export const muskokaCamps = [
     title: "Intermediate Camp",
     level: "Intermediate (3.0+)",
     levelVariant: "secondary" as const,
+    startDate: "2026-07-17",
+    endDate: "2026-07-19",
     dates: "July 17-19, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
@@ -88,6 +100,8 @@ export const muskokaCamps = [
     title: "Intermediate Camp",
     level: "Intermediate (3.0+)",
     levelVariant: "secondary" as const,
+    startDate: "2026-08-04",
+    endDate: "2026-08-06",
     dates: "August 4-6, 2026",
     time: "9:00 AM - 12:00 PM",
     duration: "3 Days",
@@ -102,6 +116,8 @@ export const muskokaCamps = [
     title: "Intermediate Camp",
     level: "Intermediate (3.0+)",
     levelVariant: "secondary" as const,
+    startDate: "2026-08-04",
+    endDate: "2026-08-06",
     dates: "August 4-6, 2026",
     time: "1:00 PM - 4:00 PM",
     duration: "3 Days",
@@ -136,13 +152,13 @@ export type MuskokaCamp = (typeof muskokaCamps)[number] & {
  * Get unique date ranges from Muskoka camps, formatted for display
  * Returns dates like "July 10–12 · July 13–15 · August 4–6"
  */
-export function getMuskokaCampDateRanges(): string | null {
-  if (muskokaCamps.length === 0) return null
+export function getMuskokaCampDateRanges(camps: readonly MuskokaCamp[] = muskokaCamps): string | null {
+  if (camps.length === 0) return null
 
   // Extract unique date ranges (without year)
   const uniqueDates = new Set<string>()
   
-  for (const camp of muskokaCamps) {
+  for (const camp of camps) {
     // Convert "July 10-12, 2026" to "July 10–12"
     const dateWithoutYear = camp.dates.replace(/, \d{4}$/, "").replace(/-/g, "–")
     uniqueDates.add(dateWithoutYear)
@@ -170,11 +186,11 @@ export function getMuskokaCampDateRanges(): string | null {
 /**
  * Get the lowest price from all Muskoka camps
  */
-export function getMuskokaCampMinPrice(): string {
-  if (muskokaCamps.length === 0) return "$800 CAD / player"
+export function getMuskokaCampMinPrice(camps: readonly MuskokaCamp[] = muskokaCamps): string {
+  if (camps.length === 0) return "$800 CAD / player"
   
   // All camps currently have the same price, but this will work if they differ
-  const prices = muskokaCamps.map(c => {
+  const prices = camps.map(c => {
     const match = c.price.match(/\$(\d+)/)
     return match ? parseInt(match[1]) : 800
   })

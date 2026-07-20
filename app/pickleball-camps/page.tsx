@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { JsonLd } from "@/components/JsonLd"
 import CampsPageClient from "./camps-page-client"
 import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
+import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 import { itemListJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = {
@@ -31,10 +32,13 @@ function locationsFromParam(location?: string) {
 }
 
 export default async function CampsPage({ searchParams }: CampsPageProps) {
-  const [publishedCampCards, navCampItems, params] = await Promise.all([
+  const paramsPromise: NonNullable<CampsPageProps["searchParams"]> =
+    searchParams ?? Promise.resolve({})
+  const [publishedCampCards, navCampItems, upcomingMuskokaCamps, params] = await Promise.all([
     getPublishedPublicCampCards(),
     getPublishedPublicCampNavItems(),
-    searchParams ?? Promise.resolve({}),
+    getUpcomingMuskokaCamps(),
+    paramsPromise,
   ])
 
   const puntaCanaCard = {
@@ -48,6 +52,7 @@ export default async function CampsPage({ searchParams }: CampsPageProps) {
       <CampsPageClient
         publishedCampCards={publishedCampCards}
         navCampItems={navCampItems}
+        muskokaCamps={upcomingMuskokaCamps}
         initialSelectedLocations={locationsFromParam(params.location)}
         initialSelectedSkillLevels={params.skill ? [params.skill] : []}
         initialView={params.view === "completed" ? "completed" : "upcoming"}

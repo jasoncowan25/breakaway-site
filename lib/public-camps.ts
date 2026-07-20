@@ -1,4 +1,9 @@
 import { getPublicCampModules, type PublicCampModule } from "@/lib/public-camp-modules"
+import {
+  campHasNotEnded,
+  postgrestCurrentCampDateFilter,
+  todayIsoInToronto,
+} from "@/lib/upcoming-camps"
 
 const PUBLIC_CAMP_REVALIDATE_SECONDS = 300
 const ACTIVE_ATTENDANCE_EXCLUSIONS = ["cancelled", "refunded", "credit_on_file", "credit_applied"]
@@ -176,6 +181,7 @@ export type PublicCamp = {
   slug: string
   title: string
   startDate: string
+  endDate: string | null
   subtitle: string
   dateLabel: string
   timeLabel: string
@@ -237,6 +243,7 @@ export type PublicCampCard = {
   title: string
   date: string
   sortDate: string
+  endDate: string
   location: string
   locationFilter: string
   format: string
@@ -267,6 +274,7 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     title: "Baseline x Breakaway Kids Summer Camp",
     date: "August 17 – September 4, 2026",
     sortDate: "2026-08-17",
+    endDate: "2026-09-04",
     location: "The JAR Pickleball Club",
     locationFilter: "Toronto & GTA",
     format: "Camp",
@@ -285,6 +293,7 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     title: "Toronto Intermediate Intensive",
     date: "September 12-13, 2026",
     sortDate: "2026-09-12",
+    endDate: "2026-09-13",
     location: "The JAR Pickleball Club",
     locationFilter: "Toronto & GTA",
     format: "Camp",
@@ -304,6 +313,7 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     title: "Toronto Intermediate Intensive",
     date: "October 24-25, 2026",
     sortDate: "2026-10-24",
+    endDate: "2026-10-25",
     location: "The JAR Pickleball Club",
     locationFilter: "Toronto & GTA",
     format: "Camp",
@@ -319,11 +329,6 @@ const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     buttonText: "Learn More",
   },
 ]
-
-const RESTORED_PUBLIC_CAMP_NAV_ITEMS: PublicCampNavItem[] = RESTORED_PUBLIC_CAMP_CARDS.map((camp) => ({
-  title: camp.title,
-  href: camp.link,
-}))
 
 function supabaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -560,6 +565,7 @@ function publicCampToCard(camp: PublicCamp): PublicCampCard {
     title: camp.title,
     date: camp.dateLabel,
     sortDate: camp.startDate,
+    endDate: camp.endDate ?? camp.startDate,
     location: camp.venue,
     locationFilter: locationFilterForCamp(camp),
     format: camp.title.toLowerCase().includes("clinic") ? "Clinic" : "Camp",
@@ -596,10 +602,6 @@ function dedupeNavItemsByHref(items: PublicCampNavItem[]) {
   })
 }
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10)
-}
-
 function restoredTorontoCamp({
   slug,
   id,
@@ -629,6 +631,7 @@ function restoredTorontoCamp({
     slug,
     title: "Toronto Intermediate Intensive",
     startDate,
+    endDate,
     subtitle: "2-Day Advanced Training • Intermediate Players (3.0-3.5)",
     dateLabel: dateLabel(startDate, endDate),
     timeLabel: "9:00 AM - 3:00 PM",
@@ -807,6 +810,7 @@ export function publicBadgeText(badge: Exclude<PublicCampBadge, "auto">) {
 }
 
 async function getPublishedCampRows(limit: number, options: SupabaseRestOptions = {}) {
+  const today = todayIsoInToronto()
   const rows = await supabaseRest<CampRow[]>(
     "camps",
     {
@@ -818,7 +822,7 @@ async function getPublishedCampRows(limit: number, options: SupabaseRestOptions 
       // through their event hub card, not as standalone cards in the main
       // grid — otherwise publishing them double-lists alongside the hub.
       event_id: "is.null",
-      start_date: `gte.${todayIso()}`,
+      or: postgrestCurrentCampDateFilter(today),
       status: "in.(upcoming,in_progress)",
       order: "start_date.asc",
       limit: String(limit),
@@ -969,6 +973,7 @@ function publicCampRowToCard(
     title: row.title,
     date: dateLabel(row.start_date, row.end_date),
     sortDate: row.start_date,
+    endDate: row.end_date ?? row.start_date,
     location: row.venue ?? row.location ?? "Breakaway",
     locationFilter: locationFilterForCamp({
       location: row.location ?? "Breakaway",
@@ -1012,19 +1017,26 @@ export async function getPublishedPublicCampCards(limit = 24) {
 
   return dedupeCardsByLink([
     ...RESTORED_PUBLIC_CAMP_CARDS,
-    ...rows
-    .map((row) =>
+    ...rows.map((row) =>
       publicCampRowToCard(
         row,
         registeredCounts.get(row.id) ?? 0,
         row.facility_id ? facilitiesById.get(row.facility_id) ?? null : null,
         coachesByCampId.get(row.id) ?? null,
       ),
+    ),
+  ])
+    .filter((camp) =>
+      campHasNotEnded({
+        startDate: camp.sortDate,
+        endDate: camp.endDate,
+      }),
     )
-  ]).sort((a, b) => a.sortDate.localeCompare(b.sortDate))
+    .sort((a, b) => a.sortDate.localeCompare(b.sortDate))
 }
 
 export async function getPublishedPublicCampNavItems(limit = 12): Promise<PublicCampNavItem[]> {
+  const today = todayIsoInToronto()
   const rows = await supabaseRest<Array<Pick<CampRow, "slug" | "title">>>(
     "camps",
     {
@@ -1033,7 +1045,7 @@ export async function getPublishedPublicCampNavItems(limit = 12): Promise<Public
       slug: "not.is.null",
       // Event-member camps live under their hub card, not the nav list.
       event_id: "is.null",
-      start_date: `gte.${todayIso()}`,
+      or: postgrestCurrentCampDateFilter(today),
       status: "in.(upcoming,in_progress)",
       order: "start_date.asc",
       limit: String(limit),
@@ -1042,7 +1054,20 @@ export async function getPublishedPublicCampNavItems(limit = 12): Promise<Public
   )
 
   return dedupeNavItemsByHref([
-    ...RESTORED_PUBLIC_CAMP_NAV_ITEMS,
+    ...RESTORED_PUBLIC_CAMP_CARDS
+      .filter((camp) =>
+        campHasNotEnded(
+          {
+            startDate: camp.sortDate,
+            endDate: camp.endDate,
+          },
+          today,
+        ),
+      )
+      .map((camp) => ({
+        title: camp.title,
+        href: camp.link,
+      })),
     ...(rows ?? []).filter((row) => row.slug).map((camp) => ({
       title: camp.title,
       href: `/pickleball-camps/${canonicalCampSlug(camp.slug)}`,
@@ -1170,6 +1195,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
     slug: row.slug,
     title: row.title,
     startDate: row.start_date,
+    endDate: row.end_date,
     subtitle: subtitleForCamp(row),
     dateLabel: dateLabel(row.start_date, row.end_date),
     timeLabel: row.session_label || "Time announced after registration",

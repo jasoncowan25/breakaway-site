@@ -1,9 +1,7 @@
 import type { Metadata } from "next"
 import { MuskokaPageClient } from "./muskoka-page-client"
-import { fetchPublicCampEvent, PUBLIC_CAMP_REVALIDATE_SECONDS } from "@/lib/breakaway-api"
-import { mapEventCampsToMuskoka } from "@/lib/muskoka-feed"
-import { muskokaCamps } from "@/lib/muskoka-camps"
 import { getPublishedPublicCampNavItems } from "@/lib/public-camps"
+import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 
 // Refresh the camp feed on the standard public-camp ISR window.
 export const revalidate = 300
@@ -29,18 +27,10 @@ export const metadata: Metadata = {
 }
 
 export default async function MuskokaPage() {
-  // Camps come from the Camp Event feed (DB). Fall back to the hardcoded list
-  // if the API is unavailable so the page never breaks.
-  const [event, navCampItems] = await Promise.all([
-    fetchPublicCampEvent("muskoka", {
-      revalidate: PUBLIC_CAMP_REVALIDATE_SECONDS,
-    }),
+  const [camps, navCampItems] = await Promise.all([
+    getUpcomingMuskokaCamps(),
     getPublishedPublicCampNavItems(),
   ])
-  const camps =
-    event && event.camps.length > 0
-      ? mapEventCampsToMuskoka(event.camps)
-      : muskokaCamps
 
   return <MuskokaPageClient camps={camps} navCampItems={navCampItems} />
 }

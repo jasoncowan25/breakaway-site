@@ -118,6 +118,8 @@ export function mapEventCampsToMuskoka(camps: ApiCampEventCamp[]): MuskokaCamp[]
       title: cleanTitle,
       level: `${track} (${rating})`,
       levelVariant: "secondary" as const,
+      startDate: c.startDate,
+      endDate: c.endDate ?? c.startDate,
       dates: formatDates(c.startDate, c.endDate),
       time: c.sessionLabel ?? "Time announced after registration",
       duration: durationDays(c.startDate, c.endDate),
