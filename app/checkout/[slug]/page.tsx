@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 
 import { fetchPublicCampBySlug, type ApiCamp } from "@/lib/breakaway-api"
+import { formatSessionTime } from "@/lib/session-time"
 
 import { CheckoutClient, type CheckoutCampView } from "./checkout-client"
 import "@/styles/tokens.css"
@@ -88,7 +89,7 @@ function toCheckoutCampView(camp: ApiCamp): CheckoutCampView | null {
     title: camp.title,
     subtitle,
     dateLabel: formatDateRange(camp.startDate, camp.endDate),
-    timeLabel: camp.sessionLabel ?? "Time announced after registration",
+    timeLabel: formatSessionTime(camp.sessionLabel) ?? "Time announced after registration",
     venue: camp.venue ?? camp.facility?.name ?? "Breakaway",
     location: camp.location ?? camp.facility?.city ?? "Breakaway",
     priceLabel: formatMoney(camp.basePriceCents),
