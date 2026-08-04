@@ -40,6 +40,7 @@ export type CheckoutCampView = {
   isKidsCamp: boolean
   collectTshirtSizes: boolean
   lunchType: "catered" | "byo" | null
+  isRecurring: boolean
 }
 
 type CheckoutMode = "adult" | "kids"
@@ -131,6 +132,7 @@ function toDesignCamp(camp: CheckoutCampView): Camp {
     lunchType: camp.lunchType,
     maxPlayers: Math.max(1, Math.min(6, camp.spotsLeft || camp.capacity || 6)),
     coachRatio: "4:1",
+    isRecurring: camp.isRecurring,
     urgencyBadge:
       !camp.isSoldOut && camp.spotsLeft > 0 && camp.spotsLeft <= 4 ? "Selling fast" : undefined,
   }

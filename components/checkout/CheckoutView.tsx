@@ -261,7 +261,7 @@ export function CheckoutView(props: CheckoutViewProps) {
                   <Icon name="cal" size={15} />
                 </span>
                 <span>
-                  <span className="k">Dates</span>
+                  <span className="k">{camp.isRecurring ? "Program dates" : "Dates"}</span>
                   <br />
                   <span className="v">{camp.date}</span>
                 </span>
@@ -439,12 +439,14 @@ export function CheckoutView(props: CheckoutViewProps) {
                           </a>
                           ,{" "}
                           <a
-                            href="https://breakawaypickleball.ca/waiver"
+                            href={kidsMode
+                              ? "https://breakawaypickleball.ca/waiver-u18"
+                              : "https://breakawaypickleball.ca/waiver"}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            Participant Waiver
+                            {kidsMode ? "Under-18 Participant Waiver" : "Participant Waiver"}
                           </a>
                           , and{" "}
                           <a
@@ -676,9 +678,9 @@ export function CheckoutView(props: CheckoutViewProps) {
             <span className="t">
               {kidsMode ? (
                 <>
-                  <b>In good hands.</b>{" "}Just 4 kids per certified coach on a private, gated
-                  facility — eyes on every camper, all day. You&apos;ll get a recap after each
-                  session.
+                  <b>In good hands.</b>{" "}This weekly program keeps groups small, coaching
+                  focused, and every child active. Your confirmation includes the complete
+                  15-session schedule.
                 </>
               ) : (
                 <>

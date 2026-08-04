@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 
 import { SuccessView } from "@/components/checkout/SuccessView"
+import { formatRecurringCampDates } from "@/lib/session-time"
 import type { Account, Camp, Guardian, Player } from "@/lib/types"
 
 type ConfirmationStatus = {
@@ -25,6 +26,8 @@ type ConfirmationStatus = {
     endDate: string | null
     venue: string | null
     coachLead?: string | null
+    sessionDates?: string[]
+    sessionLabel?: string | null
   } | null
 }
 
@@ -47,6 +50,8 @@ const localPreviewStatus: ConfirmationStatus = {
     startDate: "2026-09-12",
     endDate: "2026-09-13",
     venue: "Breakaway Toronto",
+    sessionDates: [],
+    sessionLabel: "9:00 AM - 4:00 PM",
   },
 }
 
@@ -84,6 +89,10 @@ function dateLabel(startDate: string | null, endDate: string | null) {
 
 function successCamp(status: ConfirmationStatus | null): Camp {
   const paid = formatMoney(status?.amountTotal ?? null, status?.currency ?? null)
+  const recurring = formatRecurringCampDates(
+    status?.camp?.sessionDates,
+    status?.camp?.sessionLabel,
+  )
 
   return {
     eyebrow: "Breakaway Pickleball",
@@ -91,8 +100,12 @@ function successCamp(status: ConfirmationStatus | null): Camp {
     coachLead: status?.camp?.coachLead ?? "Breakaway",
     coachPhoto: "/assets/breakaway-monogram.png",
     photo: "/jar3.png",
-    date: dateLabel(status?.camp?.startDate ?? null, status?.camp?.endDate ?? null),
-    dateSub: status?.paymentStatus ? `Payment ${status.paymentStatus.replace(/_/g, " ")}` : "Confirmation pending",
+    date: recurring?.dateLabel ?? dateLabel(status?.camp?.startDate ?? null, status?.camp?.endDate ?? null),
+    dateSub: recurring
+      ? `${recurring.scheduleLabel} · ${recurring.sessionCountLabel}`
+      : status?.paymentStatus
+        ? `Payment ${status.paymentStatus.replace(/_/g, " ")}`
+        : "Confirmation pending",
     location: status?.camp?.venue ?? "Breakaway",
     locSub: "Exact address emailed",
     skill: "Booked",
@@ -103,6 +116,7 @@ function successCamp(status: ConfirmationStatus | null): Camp {
     lunchType: null,
     maxPlayers: Math.max(1, status?.playerCount ?? 1),
     coachRatio: "4:1",
+    isRecurring: Boolean(recurring),
   }
 }
 

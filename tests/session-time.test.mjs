@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { formatSessionTime } from "../lib/session-time.ts"
+import { formatRecurringCampDates, formatSessionTime } from "../lib/session-time.ts"
 
 test("keeps already-12h ranges, normalizing to an en-dash", () => {
   assert.equal(formatSessionTime("9:00 AM - 12:00 PM"), "9:00 AM – 12:00 PM")
@@ -29,4 +29,23 @@ test("returns null when there is no time to show", () => {
 
 test("falls back to the trimmed raw string when it has digits but cannot be parsed", () => {
   assert.equal(formatSessionTime("  9-5ish  "), "9-5ish")
+})
+
+test("formats recurring camp dates as a weekly program instead of a continuous camp", () => {
+  assert.deepEqual(
+    formatRecurringCampDates(
+      ["2026-09-07", "2026-09-14", "2026-09-21", "2026-12-21"],
+      "5:00 PM - 7:00 PM",
+    ),
+    {
+      dateLabel: "September 7 – December 21, 2026",
+      scheduleLabel: "Mondays · 5:00 PM – 7:00 PM",
+      sessionCountLabel: "4 weekly sessions",
+    },
+  )
+})
+
+test("returns null for a non-recurring camp", () => {
+  assert.equal(formatRecurringCampDates([], "9:00 AM - 3:00 PM"), null)
+  assert.equal(formatRecurringCampDates(["2026-09-07"], null), null)
 })

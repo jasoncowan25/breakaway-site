@@ -36,6 +36,39 @@ export function formatSessionTime(raw: string | null | undefined): string | null
   return s // has digits but unparseable — keep what staff wrote
 }
 
+export function formatRecurringCampDates(
+  sessionDates: string[] | null | undefined,
+  sessionLabel: string | null | undefined,
+): {
+  dateLabel: string
+  scheduleLabel: string
+  sessionCountLabel: string
+} | null {
+  const dates = (sessionDates ?? []).filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date))
+  if (dates.length < 2) return null
+
+  const first = new Date(`${dates[0]}T00:00:00Z`)
+  const last = new Date(`${dates[dates.length - 1]}T00:00:00Z`)
+  if (Number.isNaN(first.getTime()) || Number.isNaN(last.getTime())) return null
+
+  const monthDay = new Intl.DateTimeFormat("en-CA", {
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  })
+  const weekday = new Intl.DateTimeFormat("en-CA", {
+    weekday: "long",
+    timeZone: "UTC",
+  }).format(first)
+  const time = formatSessionTime(sessionLabel)
+
+  return {
+    dateLabel: `${monthDay.format(first)} ${EN_DASH} ${monthDay.format(last)}, ${last.getUTCFullYear()}`,
+    scheduleLabel: [weekday.endsWith("s") ? weekday : `${weekday}s`, time].filter(Boolean).join(" · "),
+    sessionCountLabel: `${dates.length} weekly sessions`,
+  }
+}
+
 function parseClock(chunk: string | undefined): Clock | null {
   if (!chunk) return null
   const m = chunk.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i)

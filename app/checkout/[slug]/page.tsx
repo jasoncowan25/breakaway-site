@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 
 import { fetchPublicCampBySlug, type ApiCamp } from "@/lib/breakaway-api"
-import { formatSessionTime } from "@/lib/session-time"
+import { formatRecurringCampDates, formatSessionTime } from "@/lib/session-time"
 
 import { CheckoutClient, type CheckoutCampView } from "./checkout-client"
 import "@/styles/tokens.css"
@@ -61,6 +61,7 @@ function skillLabelForCamp(camp: ApiCamp) {
   if (camp.duprMin != null && camp.duprMax != null) return `${camp.duprMin.toFixed(1)}-${camp.duprMax.toFixed(1)}`
   const text = `${camp.title} ${camp.fullLabel} ${camp.publicSummary ?? ""}`.toLowerCase()
   if (text.includes("fundamentals") || text.includes("beginner")) return "Beginner"
+  if (text.includes("experienced")) return "Experienced"
   if (text.includes("intermediate")) return "3.0-3.5"
   if (text.includes("advanced")) return "Advanced"
   return "All levels"
@@ -82,26 +83,30 @@ function toCheckoutCampView(camp: ApiCamp): CheckoutCampView | null {
   const skillLabel = skillLabelForCamp(camp)
   const subtitle = subtitleForCamp(camp)
   const coach = camp.coaches.find((item) => item.isFeatured) ?? camp.coaches[0]
+  const recurring = formatRecurringCampDates(camp.sessionDates, camp.sessionLabel)
 
   return {
     id: camp.id,
     slug: camp.slug,
     title: camp.title,
     subtitle,
-    dateLabel: formatDateRange(camp.startDate, camp.endDate),
-    timeLabel: formatSessionTime(camp.sessionLabel) ?? "Time announced after registration",
+    dateLabel: recurring?.dateLabel ?? formatDateRange(camp.startDate, camp.endDate),
+    timeLabel: recurring
+      ? `${recurring.scheduleLabel} · ${recurring.sessionCountLabel}`
+      : formatSessionTime(camp.sessionLabel) ?? "Time announced after registration",
     venue: camp.venue ?? camp.facility?.name ?? "Breakaway",
     location: camp.location ?? camp.facility?.city ?? "Breakaway",
     priceLabel: formatMoney(camp.basePriceCents),
     capacity,
     spotsLeft,
     isSoldOut: camp.isSoldOut,
-    heroImageUrl: heroImageForCamp(camp),
+    heroImageUrl: camp.childrenEligible && recurring ? "/images/kids-camp-group-photo.png" : heroImageForCamp(camp),
     skillLabel,
     coachName: coach?.displayName ?? "Breakaway coach",
     isKidsCamp: camp.childrenEligible,
     collectTshirtSizes: camp.collectTshirtSizes,
     lunchType: camp.lunchType,
+    isRecurring: Boolean(recurring),
   }
 }
 
@@ -128,6 +133,7 @@ function localPreviewCamp(slug: string): CheckoutCampView | null {
     isKidsCamp: false,
     collectTshirtSizes: true,
     lunchType: "catered",
+    isRecurring: false,
   }
 }
 

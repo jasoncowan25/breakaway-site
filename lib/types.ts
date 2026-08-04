@@ -56,6 +56,8 @@ export interface Camp {
   coachRatio: string;
   /** Urgency badge text shown on the summary photo, e.g. "Selling fast". */
   urgencyBadge?: string;
+  /** True when one registration covers a list of recurring weekly sessions. */
+  isRecurring?: boolean;
 }
 
 /* -------------------------------------------------------------------------- */

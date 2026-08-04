@@ -79,6 +79,7 @@ export interface ApiCamp {
   capacity: number | null
   campKind: string | null
   sessionLabel: string | null
+  sessionDates: string[]
   landingPageUrl: string | null
   badgeMode: "auto" | "manual" | null
   badgeLabel: ApiCampBadge | null

@@ -100,7 +100,7 @@ export function SuccessView({
 
           <div className="success-facts">
             <div className="f">
-              <div className="k">Date</div>
+              <div className="k">{camp.isRecurring ? "Sessions" : "Date"}</div>
               <div className="v">
                 {isResolving ? (
                   <>
@@ -224,8 +224,9 @@ export function SuccessView({
                 <div className="an-copy">
                   <div className="an-h">Everything&apos;s in your inbox</div>
                   <div className="an-p">
-                    We sent <b>{recipientEmail}</b> the confirmation, receipt, and camp-day
-                    details. Bring that confirmation email with you when you arrive.
+                    We sent <b>{recipientEmail}</b> the confirmation, receipt, and {camp.isRecurring
+                      ? "weekly program schedule"
+                      : "camp-day details"}. Bring that confirmation email with you when you arrive.
                   </div>
                 </div>
               </div>
