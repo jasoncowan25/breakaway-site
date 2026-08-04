@@ -1,12 +1,15 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
+import { Footer } from "@/components/Footer"
+import { Navigation } from "@/components/Navigation"
 import { fetchPublicCampBySlug } from "@/lib/breakaway-api"
 import {
   KIDS_WEEKLY_PROGRAMS,
   buildKidsWeeklyProgram,
   canRenderKidsWeeklyLanding,
 } from "@/lib/kids-weekly-camp"
+import { getPublishedPublicCampNavItems } from "@/lib/public-camps"
 
 import { KidsWeeklyLanding } from "./kids-weekly-landing"
 
@@ -51,17 +54,22 @@ function canPreview(token: string | undefined) {
 export default async function KidsWeeklyCampPage({ searchParams }: PageProps) {
   const query = await (searchParams ?? Promise.resolve({} as { preview?: string }))
   const preview = canPreview(query.preview)
-  const [allLevelsCamp, experiencedCamp] = await Promise.all([
+  const [allLevelsCamp, experiencedCamp, navCampItems] = await Promise.all([
     fetchPublicCampBySlug(KIDS_WEEKLY_PROGRAMS.allLevels.slug, { noStore: true, preview }),
     fetchPublicCampBySlug(KIDS_WEEKLY_PROGRAMS.experienced.slug, { noStore: true, preview }),
+    getPublishedPublicCampNavItems(),
   ])
 
   if (!canRenderKidsWeeklyLanding(allLevelsCamp, experiencedCamp, preview)) notFound()
 
   return (
-    <KidsWeeklyLanding
-      allLevels={buildKidsWeeklyProgram("allLevels", allLevelsCamp)}
-      experienced={buildKidsWeeklyProgram("experienced", experiencedCamp)}
-    />
+    <>
+      <Navigation campItems={navCampItems} />
+      <KidsWeeklyLanding
+        allLevels={buildKidsWeeklyProgram("allLevels", allLevelsCamp)}
+        experienced={buildKidsWeeklyProgram("experienced", experiencedCamp)}
+      />
+      <Footer />
+    </>
   )
 }

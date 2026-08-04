@@ -8,16 +8,12 @@ import {
   Award,
   CalendarDays,
   CheckCircle2,
-  ChevronDown,
   Clock3,
   HeartPulse,
   MapPin,
-  Menu,
   Users,
-  X,
 } from "lucide-react"
 
-import { Footer } from "@/components/Footer"
 import type { buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
 
 import styles from "./kids-weekly.module.css"
@@ -84,7 +80,6 @@ function ProgramCard({ program }: { program: Program }) {
 
 export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
   const [selected, setSelected] = useState<"allLevels" | "experienced">("allLevels")
-  const [menuOpen, setMenuOpen] = useState(false)
   const program = selected === "allLevels" ? allLevels : experienced
   const totalSpots = [allLevels, experienced].reduce((sum, item) => {
     const value = Number.parseInt(item.spotsLabel, 10)
@@ -93,30 +88,6 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
 
   return (
     <div className={styles.page}>
-      <nav className={styles.nav} aria-label="Main navigation">
-        <div className={styles.navInner}>
-          <Link href="#top" className={styles.logoLink} aria-label="Breakaway Pickleball home">
-            <Image src="/images/kids-weekly/breakaway-logo.png" alt="Breakaway Pickleball" width={1024} height={244} priority />
-          </Link>
-          <div className={styles.desktopNav}>
-            <Link href="#programs">Camps <ChevronDown size={14} aria-hidden="true" /></Link>
-            <Link href="#coach">Coaches</Link>
-            <Link href="#session">The Experience</Link>
-          </div>
-          <div className={styles.navActions}>
-            <Link href="#book" className={styles.navCta}>Find Your Camp</Link>
-            <button type="button" className={styles.menuButton} aria-expanded={menuOpen} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen((open) => !open)}>
-              {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-            </button>
-          </div>
-        </div>
-        {menuOpen && <div className={styles.mobileMenu}>
-          <Link href="#programs" onClick={() => setMenuOpen(false)}>Camps</Link>
-          <Link href="#coach" onClick={() => setMenuOpen(false)}>Coaches</Link>
-          <Link href="#session" onClick={() => setMenuOpen(false)}>The Experience</Link>
-        </div>}
-      </nav>
-
       <main>
         <section id="top" className={styles.hero}>
           <Image className={styles.heroImage} src="/images/kids-weekly/kids-camp-group.png" alt="The full Breakaway kids camp group on court at The JAR Pickleball Club" fill sizes="100vw" priority />
@@ -189,7 +160,6 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
           <div><h2>Give Them A Game They&apos;ll Keep Playing</h2><p>{totalSpots || 30} spots across both programs. Registration closes when the courts are full.</p><Link href="#book">Book Now <ArrowRight size={17} aria-hidden="true" /></Link></div>
         </section>
       </main>
-      <Footer />
     </div>
   )
 }

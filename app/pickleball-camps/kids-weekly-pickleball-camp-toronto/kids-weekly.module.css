@@ -15,20 +15,6 @@
 .page a { text-decoration: none; }
 .page :focus-visible { outline: 3px solid rgba(144, 209, 35, .75); outline-offset: 3px; }
 
-.nav { position: sticky; top: 0; z-index: 50; background: white; border-bottom: 1px solid var(--line); }
-.navInner { max-width: 1280px; height: 64px; margin: auto; padding: 0 clamp(18px, 4vw, 32px); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.logoLink { display: flex; flex: none; }
-.logoLink img { width: auto; height: clamp(26px, 6vw, 34px); object-fit: contain; }
-.desktopNav { display: flex; align-items: center; gap: 28px; font-size: 14px; font-weight: 550; }
-.desktopNav a { display: inline-flex; align-items: center; gap: 5px; color: var(--navy); }
-.desktopNav a:hover { color: #6ea626; }
-.navActions { display: flex; align-items: center; gap: 8px; }
-.navCta { display: inline-flex; align-items: center; height: 40px; padding: 0 clamp(14px, 3vw, 18px); border-radius: 7px; background: var(--navy); color: white; font-size: 14px; font-weight: 650; white-space: nowrap; }
-.navCta:hover { background: #0f3d65; }
-.menuButton { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; background: transparent; color: var(--navy); }
-.mobileMenu { display: none; border-top: 1px solid var(--line); padding: 8px 18px 16px; box-shadow: 0 12px 24px rgba(10, 42, 70, .1); }
-.mobileMenu a { display: flex; align-items: center; min-height: 48px; border-bottom: 1px solid var(--line); color: var(--navy); font-weight: 650; }
-
 .hero { position: relative; overflow: hidden; background: var(--navy-dark); }
 .heroImage { object-fit: cover; object-position: 50% 42%; }
 .heroOverlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.66), rgba(0,0,0,.46)); }
@@ -132,15 +118,11 @@
 .closingCta a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 52px; padding: 0 28px; border-radius: 7px; background: var(--lime); color: var(--ink); font-size: 16px; font-weight: 650; }
 
 @media (max-width: 860px) {
-  .desktopNav { display: none; }
-  .menuButton { display: inline-flex; }
-  .mobileMenu { display: flex; flex-direction: column; }
   .heroInner { align-items: stretch; }
   .bookingCard { width: 100%; max-width: 560px; }
 }
 
 @media (max-width: 560px) {
-  .navCta { display: none; }
   .heroInner { padding-top: 44px; }
   .heroPills { gap: 8px; }
   .heroPills span { height: 34px; padding: 0 11px; font-size: 12px; }
