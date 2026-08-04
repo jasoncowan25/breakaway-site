@@ -4,6 +4,10 @@ import {
   postgrestCurrentCampDateFilter,
   todayIsoInToronto,
 } from "@/lib/upcoming-camps"
+import {
+  KIDS_WEEKLY_PROGRAM_SLUGS,
+  shouldListKidsWeeklyCampAsStandalone,
+} from "@/lib/kids-weekly-camp"
 
 const PUBLIC_CAMP_REVALIDATE_SECONDS = 300
 const ACTIVE_ATTENDANCE_EXCLUSIONS = ["cancelled", "refunded", "credit_on_file", "credit_applied"]
@@ -825,12 +829,14 @@ async function getPublishedCampRows(limit: number, options: SupabaseRestOptions 
       or: postgrestCurrentCampDateFilter(today),
       status: "in.(upcoming,in_progress)",
       order: "start_date.asc",
-      limit: String(limit),
+      limit: String(limit + KIDS_WEEKLY_PROGRAM_SLUGS.length),
     },
     options,
   )
 
-  return (rows ?? []).filter((row) => Boolean(row.slug))
+  return (rows ?? [])
+    .filter((row) => Boolean(row.slug) && shouldListKidsWeeklyCampAsStandalone(row.slug))
+    .slice(0, limit)
 }
 
 async function getRegisteredCountsForCamps(camps: CampRow[], options: SupabaseRestOptions = {}) {
@@ -1068,10 +1074,12 @@ export async function getPublishedPublicCampNavItems(limit = 12): Promise<Public
         title: camp.title,
         href: camp.link,
       })),
-    ...(rows ?? []).filter((row) => row.slug).map((camp) => ({
-      title: camp.title,
-      href: `/pickleball-camps/${canonicalCampSlug(camp.slug)}`,
-    })),
+    ...(rows ?? [])
+      .filter((row) => row.slug && shouldListKidsWeeklyCampAsStandalone(row.slug))
+      .map((camp) => ({
+        title: camp.title,
+        href: `/pickleball-camps/${canonicalCampSlug(camp.slug)}`,
+      })),
   ]).slice(0, limit)
 }
 

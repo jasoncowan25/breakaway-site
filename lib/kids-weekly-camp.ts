@@ -1,6 +1,9 @@
 import type { ApiCamp } from "./breakaway-api.ts"
 import { formatRecurringCampDates } from "./session-time.ts"
 
+export const KIDS_WEEKLY_LANDING_PATH =
+  "/pickleball-camps/kids-weekly-pickleball-camp-toronto"
+
 export const KIDS_WEEKLY_PROGRAMS = {
   allLevels: {
     slug: "toronto-kids-weekly-all-levels-sep-10-2026",
@@ -17,6 +20,20 @@ export const KIDS_WEEKLY_PROGRAMS = {
     capacity: 10,
   },
 } as const
+
+export const KIDS_WEEKLY_PROGRAM_SLUGS = Object.values(KIDS_WEEKLY_PROGRAMS).map(
+  (program) => program.slug,
+)
+const KIDS_WEEKLY_PROGRAM_SLUG_SET = new Set<string>(KIDS_WEEKLY_PROGRAM_SLUGS)
+
+export function kidsWeeklyLandingPathForCamp(slug: string | null | undefined) {
+  if (!slug || !KIDS_WEEKLY_PROGRAM_SLUG_SET.has(slug)) return null
+  return KIDS_WEEKLY_LANDING_PATH
+}
+
+export function shouldListKidsWeeklyCampAsStandalone(slug: string | null | undefined) {
+  return kidsWeeklyLandingPathForCamp(slug) === null
+}
 
 export type KidsWeeklyProgramKey = keyof typeof KIDS_WEEKLY_PROGRAMS
 

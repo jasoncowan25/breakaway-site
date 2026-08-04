@@ -2,9 +2,12 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  KIDS_WEEKLY_LANDING_PATH,
   KIDS_WEEKLY_PROGRAMS,
   buildKidsWeeklyProgram,
   canRenderKidsWeeklyLanding,
+  kidsWeeklyLandingPathForCamp,
+  shouldListKidsWeeklyCampAsStandalone,
 } from "../lib/kids-weekly-camp.ts"
 
 function camp(overrides = {}) {
@@ -47,4 +50,22 @@ test("the public route requires at least one published child camp unless preview
   assert.equal(canRenderKidsWeeklyLanding(camp(), null, false), true)
   assert.equal(canRenderKidsWeeklyLanding(camp({ publicVisibility: "unpublished" }), null, false), false)
   assert.equal(canRenderKidsWeeklyLanding(camp({ publicVisibility: "unpublished" }), null, true), true)
+})
+
+test("routes both weekly child camps to the single public landing page", () => {
+  assert.equal(
+    kidsWeeklyLandingPathForCamp(KIDS_WEEKLY_PROGRAMS.allLevels.slug),
+    KIDS_WEEKLY_LANDING_PATH,
+  )
+  assert.equal(
+    kidsWeeklyLandingPathForCamp(KIDS_WEEKLY_PROGRAMS.experienced.slug),
+    KIDS_WEEKLY_LANDING_PATH,
+  )
+  assert.equal(kidsWeeklyLandingPathForCamp("toronto-intermediate-intensive"), null)
+})
+
+test("keeps weekly child camps out of standalone camp listings", () => {
+  assert.equal(shouldListKidsWeeklyCampAsStandalone(KIDS_WEEKLY_PROGRAMS.allLevels.slug), false)
+  assert.equal(shouldListKidsWeeklyCampAsStandalone(KIDS_WEEKLY_PROGRAMS.experienced.slug), false)
+  assert.equal(shouldListKidsWeeklyCampAsStandalone("toronto-intermediate-intensive"), true)
 })

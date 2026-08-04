@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
+import { notFound, permanentRedirect } from "next/navigation"
 import {
   Calendar,
   Clock,
@@ -30,6 +30,7 @@ import { getPublicCampBySlug, getPublishedPublicCampNavItems, publicBadgeText } 
 import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
 import { isNewCheckoutEnabled } from "@/lib/checkout-rollout"
 import { breadcrumbJsonLd, campEventJsonLd } from "@/lib/seo"
+import { kidsWeeklyLandingPathForCamp } from "@/lib/kids-weekly-camp"
 
 // Fixed family → icon map (migration 0076). Every shot inherits its family's
 // icon — no per-shot icons.
@@ -102,6 +103,9 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
     searchParams ?? Promise.resolve({} as { preview?: string }),
   ])
   const preview = canPreview(query.preview)
+  const customLandingPath = kidsWeeklyLandingPathForCamp(slug)
+  if (customLandingPath && !preview) permanentRedirect(customLandingPath)
+
   const [camp, navCampItems, campShots] = await Promise.all([
     getPublicCampBySlug(slug, { preview }),
     getPublishedPublicCampNavItems(),
