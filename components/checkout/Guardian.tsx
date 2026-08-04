@@ -65,6 +65,9 @@ export function Guardian({
       <div className="field-row">
         <Field label="First name" req>
           <div className="inp-wrap">
+            <span className="lead">
+              <Icon name="user" size={16} />
+            </span>
             <input
               className={"inp" + pf}
               type="text"
@@ -81,6 +84,9 @@ export function Guardian({
         </Field>
         <Field label="Last name" req>
           <div className="inp-wrap">
+            <span className="lead">
+              <Icon name="user" size={16} />
+            </span>
             <input
               className={"inp" + pf}
               type="text"

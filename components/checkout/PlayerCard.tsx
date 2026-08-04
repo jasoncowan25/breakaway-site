@@ -129,6 +129,9 @@ export function PlayerCard({
       <div className="field-row">
         <Field label="First name" req>
           <div className="inp-wrap">
+            <span className="lead">
+              <Icon name="user" size={16} />
+            </span>
             <input
               className={"inp" + (isYou && prefill ? " prefilled" : "")}
               type="text"
@@ -145,6 +148,9 @@ export function PlayerCard({
         </Field>
         <Field label="Last name" req>
           <div className="inp-wrap">
+            <span className="lead">
+              <Icon name="user" size={16} />
+            </span>
             <input
               className={"inp" + (isYou && prefill ? " prefilled" : "")}
               type="text"
@@ -257,22 +263,32 @@ export function YouCard({ p, multi, tshirts, onChange }: YouCardProps) {
         </div>
         <div className="field-row">
           <Field label="First name" req>
-            <input
-              className="inp"
-              type="text"
-              placeholder="Jordan"
-              value={p.first}
-              onChange={(e) => onChange({ first: e.target.value })}
-            />
+            <div className="inp-wrap">
+              <span className="lead">
+                <Icon name="user" size={16} />
+              </span>
+              <input
+                className="inp"
+                type="text"
+                placeholder="Jordan"
+                value={p.first}
+                onChange={(e) => onChange({ first: e.target.value })}
+              />
+            </div>
           </Field>
           <Field label="Last name" req>
-            <input
-              className="inp"
-              type="text"
-              placeholder="Lee"
-              value={p.last}
-              onChange={(e) => onChange({ last: e.target.value })}
-            />
+            <div className="inp-wrap">
+              <span className="lead">
+                <Icon name="user" size={16} />
+              </span>
+              <input
+                className="inp"
+                type="text"
+                placeholder="Lee"
+                value={p.last}
+                onChange={(e) => onChange({ last: e.target.value })}
+              />
+            </div>
           </Field>
         </div>
         {tshirts && (
