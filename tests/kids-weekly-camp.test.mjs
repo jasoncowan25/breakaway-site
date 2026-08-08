@@ -7,6 +7,7 @@ import {
   buildKidsWeeklyProgram,
   canRenderKidsWeeklyLanding,
   kidsWeeklyLandingPathForCamp,
+  kidsWeeklyWeeksLabel,
   shouldListKidsWeeklyCampAsStandalone,
 } from "../lib/kids-weekly-camp.ts"
 
@@ -39,6 +40,49 @@ test("builds a live all-levels program card from one camp and its 15 sessions", 
   assert.equal(program.spotsLabel, "17 spots left")
   assert.equal(program.sessionsLabel, "15 one-hour sessions")
   assert.equal(program.ctaDisabled, false)
+})
+
+test("reads week counts off session_dates instead of assuming 15", () => {
+  const experienced = buildKidsWeeklyProgram(
+    "experienced",
+    camp({
+      slug: KIDS_WEEKLY_PROGRAMS.experienced.slug,
+      basePriceCents: 112000,
+      sessionDates: Array.from({ length: 14 }, (_, index) => `2026-09-${String(7 + index).padStart(2, "0")}`),
+    }),
+  )
+
+  assert.equal(experienced.priceLabel, "$1,120 CAD")
+  assert.equal(experienced.sessionCount, 14)
+  assert.equal(experienced.weeksLabel, "14 weeks")
+  assert.equal(experienced.sessionsLabel, "14 two-hour sessions")
+})
+
+test("shared copy widens to a range when the two programs run different weeks", () => {
+  const allLevels = buildKidsWeeklyProgram("allLevels", camp())
+  const experienced = buildKidsWeeklyProgram(
+    "experienced",
+    camp({ sessionDates: Array.from({ length: 14 }, (_, index) => `2026-09-${String(7 + index).padStart(2, "0")}`) }),
+  )
+
+  assert.equal(kidsWeeklyWeeksLabel(allLevels, experienced), "14–15")
+  assert.equal(kidsWeeklyWeeksLabel(allLevels, allLevels), "15")
+  assert.equal(kidsWeeklyWeeksLabel(allLevels, buildKidsWeeklyProgram("experienced", null)), "15")
+  assert.equal(
+    kidsWeeklyWeeksLabel(
+      buildKidsWeeklyProgram("allLevels", null),
+      buildKidsWeeklyProgram("experienced", null),
+    ),
+    null,
+  )
+})
+
+test("omits the week count rather than defaulting to 15 when a camp is missing", () => {
+  const missing = buildKidsWeeklyProgram("experienced", null)
+
+  assert.equal(missing.sessionCount, null)
+  assert.equal(missing.weeksLabel, null)
+  assert.equal(missing.sessionsLabel, "two-hour sessions")
 })
 
 test("disables only the missing or sold-out program", () => {

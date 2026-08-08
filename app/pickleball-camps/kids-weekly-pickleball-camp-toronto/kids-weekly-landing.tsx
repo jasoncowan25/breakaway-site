@@ -14,7 +14,7 @@ import {
   Users,
 } from "lucide-react"
 
-import type { buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
+import { kidsWeeklyWeeksLabel, type buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
 
 import styles from "./kids-weekly.module.css"
 
@@ -67,7 +67,7 @@ function ProgramCard({ program }: { program: Program }) {
         <div><span>Who it&apos;s for</span><strong>{allLevels ? "Brand new, or playing under a year" : "Playing one year or more"}</strong></div>
       </div>
       <p>{allLevels ? "Start with grip, serve and rally, then build into real game play by the end of the season." : "Longer sessions built around sharper drills, strategy and match play for kids who know the game."}</p>
-      <div className={styles.cardPrice}><strong>{program.priceLabel.replace(" CAD", "")}</strong><span>CAD / 15 weeks</span></div>
+      <div className={styles.cardPrice}><strong>{program.priceLabel.replace(" CAD", "")}</strong><span>{program.weeksLabel ? `CAD / ${program.weeksLabel}` : "CAD"}</span></div>
       <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{allLevels ? "1-hour sessions" : "2-hour sessions"}</span>
       <ProgramCta program={program} compact />
       <div className={styles.includes}>
@@ -81,6 +81,7 @@ function ProgramCard({ program }: { program: Program }) {
 export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
   const [selected, setSelected] = useState<"allLevels" | "experienced">("allLevels")
   const program = selected === "allLevels" ? allLevels : experienced
+  const sharedWeeks = kidsWeeklyWeeksLabel(allLevels, experienced)
   const totalSpots = [allLevels, experienced].reduce((sum, item) => {
     const value = Number.parseInt(item.spotsLabel, 10)
     return sum + (Number.isFinite(value) ? value : 0)
@@ -99,7 +100,7 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
               <p>Kids learn real pickleball skills and put them straight into games. Pro-led coaching every week at The JAR Pickleball Club — a great way to stay active with friends through the fall.</p>
               <div className={styles.heroPills}>
                 <span><Users size={15} aria-hidden="true" />Ages 9–14</span>
-                <span><CalendarDays size={15} aria-hidden="true" />15 Weekly Sessions</span>
+                <span><CalendarDays size={15} aria-hidden="true" />{sharedWeeks ? `${sharedWeeks} Weekly Sessions` : "Weekly Sessions"}</span>
                 <span><MapPin size={15} aria-hidden="true" />The JAR Pickleball Club</span>
               </div>
             </div>
@@ -116,7 +117,7 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
                 <div><span><MapPin size={17} aria-hidden="true" /></span><div><strong>The JAR Pickleball Club</strong><p>Toronto, ON</p></div></div>
               </div>
               <div className={styles.bookingPrice}>
-                <div><strong>{program.priceLabel}</strong><span>/ 15 weeks</span></div>
+                <div><strong>{program.priceLabel}</strong>{program.weeksLabel && <span>/ {program.weeksLabel}</span>}</div>
                 <span>{program.spotsLabel}</span>
               </div>
               <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.key === "allLevels" ? "1-hour sessions" : "2-hour sessions"}</span>
@@ -138,7 +139,7 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
         </section>
 
         <section id="programs" className={styles.programs}>
-          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Two weekly options for ages 9 to 14, both running 15 weeks through fall 2026.</p></div>
+          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Two weekly options for ages 9 to 14, {sharedWeeks ? `running ${sharedWeeks} weeks ` : "running "}through fall 2026.</p></div>
           <div className={styles.programGrid}><ProgramCard program={allLevels} /><ProgramCard program={experienced} /></div>
         </section>
 
@@ -146,7 +147,7 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
           <div className={styles.coachPhoto}><Image src="/images/kids-weekly/kids-camp-joey.jpg" alt="Joey Manchurek briefing a group of young players before a session" fill sizes="(max-width: 800px) 90vw, 50vw" /></div>
           <div className={styles.coachCopy}>
             <span className={styles.eyebrowDark}>Lead Instructor</span><h2>Coached By Joey Manchurek</h2><p>Joey runs every Breakaway kids program himself. Sessions are built the way a pro trains — clear focus, real reps, and enough game play that kids leave wanting the next week.</p>
-            <div className={styles.stats}><div><strong>5.0</strong><span>DUPR Rating</span></div><div><strong>500+</strong><span>Players Coached</span></div><div><strong>15</strong><span>Weeks Of Progression</span></div></div>
+            <div className={styles.stats}><div><strong>5.0</strong><span>DUPR Rating</span></div><div><strong>500+</strong><span>Players Coached</span></div>{sharedWeeks && <div><strong>{sharedWeeks}</strong><span>Weeks Of Progression</span></div>}</div>
           </div>
         </section>
 

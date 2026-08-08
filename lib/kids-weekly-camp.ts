@@ -64,6 +64,7 @@ export function buildKidsWeeklyProgram(
   const soldOut = Boolean(camp?.isSoldOut || camp?.spotsLeft === 0)
   const unavailable = !camp || !recurring || camp.basePriceCents == null
   const spots = camp?.spotsLeft
+  const sessionCount = camp?.sessionDates?.length ?? null
 
   return {
     key,
@@ -76,12 +77,36 @@ export function buildKidsWeeklyProgram(
       : spots == null
         ? `${config.capacity} spots total`
         : `${spots} ${spots === 1 ? "spot" : "spots"} left`,
-    sessionsLabel: `${camp?.sessionDates?.length ?? 15} ${config.duration} sessions`,
+    sessionCount,
+    weeksLabel: sessionCount ? `${sessionCount} weeks` : null,
+    sessionsLabel: sessionCount
+      ? `${sessionCount} ${config.duration} sessions`
+      : `${config.duration} sessions`,
     dateLabel: recurring?.dateLabel ?? "Schedule unavailable",
     scheduleLabel: recurring?.scheduleLabel ?? "Schedule unavailable",
     ctaDisabled: unavailable || soldOut,
     ctaLabel: soldOut ? "Sold out" : unavailable ? "Registration unavailable" : `Book ${key === "allLevels" ? "All Levels" : "Experienced"}`,
   }
+}
+
+/**
+ * Week count for copy that covers both programs at once (hero pill, section
+ * intro, coach stats). The two programs ran the same 15 weeks until the
+ * Experienced camp dropped Sep 21, so this collapses to a single number when
+ * they match and widens to a range when they don't. Returns null when no camp
+ * data loaded, so callers can drop the claim rather than print a stale one.
+ */
+export function kidsWeeklyWeeksLabel(
+  ...programs: Array<{ sessionCount: number | null }>
+): string | null {
+  const counts = programs
+    .map((program) => program.sessionCount)
+    .filter((count): count is number => typeof count === "number" && count > 0)
+  if (counts.length === 0) return null
+
+  const min = Math.min(...counts)
+  const max = Math.max(...counts)
+  return min === max ? String(min) : `${min}–${max}`
 }
 
 export function canRenderKidsWeeklyLanding(
