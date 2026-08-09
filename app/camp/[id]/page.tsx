@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Calendar, MapPin, Users, Video, Award, Clock } from "lucide-react"
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { use, useEffect, useState } from "react"
 import { notFound } from "next/navigation"
 
 type CampDetail = {
@@ -276,7 +276,8 @@ const campData: Record<string, CampDetail> = {
   },
 }
 
-export default function CampDetailPage({ params }: { params: { id: string } }) {
+export default function CampDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [isSticky, setIsSticky] = useState(false)
 
   useEffect(() => {
@@ -287,7 +288,7 @@ export default function CampDetailPage({ params }: { params: { id: string } }) {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const camp = campData[params.id]
+  const camp = campData[id]
 
   if (!camp) {
     notFound()
