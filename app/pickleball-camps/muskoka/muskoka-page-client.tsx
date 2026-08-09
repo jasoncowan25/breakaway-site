@@ -2,15 +2,12 @@
 
 import { useState } from "react"
 import useSWR from "swr"
-import { Navigation } from "@/components/Navigation"
-import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Calendar, Clock, Users, Check, MapPin, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { muskokaCamps, type MuskokaCamp } from "@/lib/muskoka-camps"
-import type { PublicCampNavItem } from "@/lib/public-camps"
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -229,10 +226,8 @@ type LevelFilter = "all" | "under3" | "3plus"
 
 export function MuskokaPageClient({
   camps = muskokaCamps,
-  navCampItems = [],
 }: {
   camps?: MuskokaCamp[]
-  navCampItems?: PublicCampNavItem[]
 }) {
   const [mapModalOpen, setMapModalOpen] = useState(false)
   const [levelFilter, setLevelFilter] = useState<LevelFilter>("all")
@@ -272,7 +267,6 @@ export function MuskokaPageClient({
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation campItems={navCampItems} />
 
       {/* Hero Section */}
       <section className="py-16 lg:py-24 bg-gradient-to-b from-primary/5 to-background">
@@ -526,7 +520,6 @@ export function MuskokaPageClient({
         </div>
       </section>
 
-      <Footer />
 
       {/* Map Modal */}
       <Dialog open={mapModalOpen} onOpenChange={setMapModalOpen}>

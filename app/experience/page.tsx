@@ -2,12 +2,10 @@
 
 import { useState } from "react"
 import useSWR from "swr"
-import { Navigation } from "@/components/Navigation"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, MapPin, Clock, Users, Calendar, ArrowRight } from "lucide-react"
-import { Footer } from "@/components/Footer"
 import Link from "next/link"
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -104,7 +102,6 @@ export default function ExperiencePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         {/* Hero Section */}
@@ -317,7 +314,6 @@ export default function ExperiencePage() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

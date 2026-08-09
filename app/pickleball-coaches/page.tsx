@@ -1,10 +1,8 @@
 import { Metadata } from "next"
 import { JsonLd } from "@/components/JsonLd"
-import { Navigation } from "@/components/Navigation"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Footer } from "@/components/Footer"
 import { personJsonLd } from "@/lib/seo"
 
 export const metadata: Metadata = {
@@ -42,7 +40,6 @@ export default function CoachesPage() {
             "Breakaway Pickleball lead coach, former pro hockey player, and competitive pickleball coach focused on structured skill development.",
         })}
       />
-      <Navigation />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
@@ -85,7 +82,6 @@ export default function CoachesPage() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

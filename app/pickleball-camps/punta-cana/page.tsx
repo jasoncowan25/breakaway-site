@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { JsonLd } from "@/components/JsonLd"
-import { getPublishedPublicCampNavItems } from "@/lib/public-camps"
 import { breadcrumbJsonLd, eventJsonLd, faqJsonLd } from "@/lib/seo"
 import { PuntaCanaPageClient } from "./punta-cana-page-client"
 
@@ -54,9 +53,7 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function PuntaCanaPage() {
-  const navCampItems = await getPublishedPublicCampNavItems()
-
+export default function PuntaCanaPage() {
   return (
     <>
       <JsonLd
@@ -81,7 +78,7 @@ export default async function PuntaCanaPage() {
           faqJsonLd(puntaCanaFaq),
         ]}
       />
-      <PuntaCanaPageClient navCampItems={navCampItems} />
+      <PuntaCanaPageClient />
     </>
   )
 }

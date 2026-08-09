@@ -1,9 +1,7 @@
 import { Metadata } from "next"
-import { Navigation } from "@/components/Navigation"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle } from "lucide-react"
-import { Footer } from "@/components/Footer"
 
 export const metadata: Metadata = {
   title: "The Breakaway Experience | Premium Pickleball Camps",
@@ -38,7 +36,6 @@ export default function ExperiencePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
@@ -86,7 +83,6 @@ export default function ExperiencePage() {
         </section>
       </div>
 
-      <Footer />
     </div>
   )
 }

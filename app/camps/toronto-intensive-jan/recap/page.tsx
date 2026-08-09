@@ -3,7 +3,6 @@ import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { FooterNotifySignup } from "@/components/FooterNotifySignup"
 
 export default function TorontoIntensiveRecapPage() {
   return (
@@ -209,7 +208,6 @@ export default function TorontoIntensiveRecapPage() {
         </div>
 
       {/* CTA & Notify Signup */}
-      <FooterNotifySignup showViewCampsButton />
   </main>
   )
 }

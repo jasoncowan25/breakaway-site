@@ -4,7 +4,6 @@ import { ArrowLeft, Calendar, MapPin, Users, Trophy, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Metadata } from "next"
-import { FooterNotifySignup } from "@/components/FooterNotifySignup"
 
 export const metadata: Metadata = {
   title: "Saint Martin Pop-Up Clinic Recap | Breakaway Pickleball",
@@ -188,7 +187,6 @@ export default function SaintMartinClinicRecapPage() {
         </div>
 
       {/* CTA & Notify Signup */}
-      <FooterNotifySignup showViewCampsButton />
     </main>
   )
 }

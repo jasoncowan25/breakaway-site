@@ -1,10 +1,8 @@
 import { Metadata } from "next"
 import { JsonLd } from "@/components/JsonLd"
-import { Navigation } from "@/components/Navigation"
 import { CampCard } from "@/components/CampCard"
 import { MuskokaHubCard } from "@/components/MuskokaHubCard"
-import { Footer } from "@/components/Footer"
-import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
+import { getPublishedPublicCampCards } from "@/lib/public-camps"
 import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 import { itemListJsonLd } from "@/lib/seo"
 
@@ -20,9 +18,8 @@ export const metadata: Metadata = {
 }
 
 export default async function SchedulePage() {
-  const [publishedCampCards, navCampItems, upcomingMuskokaCamps] = await Promise.all([
+  const [publishedCampCards, upcomingMuskokaCamps] = await Promise.all([
     getPublishedPublicCampCards(),
-    getPublishedPublicCampNavItems(),
     getUpcomingMuskokaCamps(),
   ])
 
@@ -48,7 +45,6 @@ export default async function SchedulePage() {
   return (
     <div className="min-h-screen bg-background">
       <JsonLd data={itemListJsonLd([...publishedCampCards, puntaCanaCamp])} />
-      <Navigation campItems={navCampItems} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
@@ -65,7 +61,6 @@ export default async function SchedulePage() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

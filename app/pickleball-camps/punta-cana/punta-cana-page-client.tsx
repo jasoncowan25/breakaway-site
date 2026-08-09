@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Navigation } from "@/components/Navigation"
-import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -15,7 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree, Loader2 } from "lucide-react"
 import Image from "next/image"
-import type { PublicCampNavItem } from "@/lib/public-camps"
 
 interface Traveller {
   fullName: string
@@ -25,7 +22,7 @@ interface Traveller {
   willPlayPickleball: boolean
 }
 
-export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: PublicCampNavItem[] }) {
+export function PuntaCanaPageClient() {
   const [roomPreference, setRoomPreference] = useState("")
   const [numTravellers, setNumTravellers] = useState(1)
   const [travellers, setTravellers] = useState<Traveller[]>([
@@ -136,7 +133,6 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Navigation campItems={navCampItems} />
 
       {/* Hero Section */}
       <section className="relative h-[500px] md:h-[600px]">
@@ -699,7 +695,6 @@ export function PuntaCanaPageClient({ navCampItems = [] }: { navCampItems?: Publ
         </div>
       </div>
 
-      <Footer hideNotifySignup={true} />
 
       {/* Gallery Modal */}
       <Dialog open={!!galleryImage} onOpenChange={() => setGalleryImage(null)}>

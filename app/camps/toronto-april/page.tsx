@@ -1,7 +1,5 @@
 "use client"
 
-import { Navigation } from "@/components/Navigation"
-import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
@@ -84,7 +82,6 @@ export default function TorontoApril() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
 
       {/* Hero Section */}
       <section className="relative h-[500px] md:h-[400px] bg-gradient-to-br from-primary to-primary/80">
@@ -371,7 +368,6 @@ export default function TorontoApril() {
       {/* Add padding to prevent content from being hidden behind mobile sticky bar */}
       <div className="lg:hidden h-20" />
 
-      <Footer hideNotifySignup={true} />
     </div>
   )
 }

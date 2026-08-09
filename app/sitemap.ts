@@ -54,6 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     sitemapEntry("/schedule", "weekly", 0.85),
     // Muskoka Hub
     sitemapEntry("/pickleball-camps/muskoka", "weekly", 0.9),
+    sitemapEntry("/pickleball-camps/muskoka/recap", "monthly", 0.7),
   ]
 
   const publishedCampCards = await getPublishedPublicCampCards(48).catch(() => [])
