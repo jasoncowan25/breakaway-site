@@ -125,7 +125,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-primary mb-6">Recently Completed Camps</h2>
 
-          <div className="grid gap-6 md:grid-cols-2 max-w-2xl">
+          <div className="grid gap-6 md:grid-cols-3 max-w-5xl">
             {HOME_COMPLETED_CAMP_CARDS.map((camp) => (
               <CampCard key={camp.id} {...camp} />
             ))}

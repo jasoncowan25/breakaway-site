@@ -157,6 +157,22 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
 
 export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
   {
+    id: "muskoka-summer-2026",
+    title: "Muskoka Summer Pickleball Camps",
+    date: "July 10 – August 6, 2026",
+    location: "Muskoka, Ontario",
+    locationFilter: "Muskoka",
+    format: "Camp",
+    skillLevel: "All Levels",
+    price: "",
+    image: "/muskoka-photos/muskoka-2026.png",
+    badges: [{ text: "Completed", variant: "secondary" }],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/muskoka/recap",
+    buttonText: "View Recap",
+    compact: true,
+  },
+  {
     id: "toronto-april",
     title: "Toronto Intermediate Intensive (3.0-3.5)",
     date: "April 11-12, 2026",
@@ -225,7 +241,11 @@ export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
   },
 ]
 
-const HOME_COMPLETED_IDS = new Set(["toronto-april", "kids-passover-camp"])
+const HOME_COMPLETED_IDS = new Set([
+  "muskoka-summer-2026",
+  "toronto-april",
+  "kids-passover-camp",
+])
 
 export const HOME_COMPLETED_CAMP_CARDS = COMPLETED_CAMP_CARDS.filter((camp) =>
   HOME_COMPLETED_IDS.has(camp.id),
