@@ -18,7 +18,7 @@ const canonical = "/pickleball-camps/kids-weekly-pickleball-camp-toronto"
 export const metadata: Metadata = {
   title: "Kids Weekly Pickleball Camp Toronto | Fall 2026",
   description:
-    "Fifteen weekly pickleball sessions for kids ages 9–14 at The JAR Pickleball Club in Toronto. Choose All Skill Levels or Experienced.",
+    "Weekly pickleball sessions for kids ages 9–14 at The JAR Pickleball Club in Toronto. Choose All Skill Levels or Experienced.",
   alternates: { canonical },
   openGraph: {
     title: "Kids Weekly Pickleball Camp — Fall 2026",

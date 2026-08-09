@@ -64,6 +64,7 @@ export function buildKidsWeeklyProgram(
   const soldOut = Boolean(camp?.isSoldOut || camp?.spotsLeft === 0)
   const unavailable = !camp || !recurring || camp.basePriceCents == null
   const spots = camp?.spotsLeft
+  const sessionCount = camp?.sessionDates?.length ?? 0
 
   return {
     key,
@@ -76,7 +77,13 @@ export function buildKidsWeeklyProgram(
       : spots == null
         ? `${config.capacity} spots total`
         : `${spots} ${spots === 1 ? "spot" : "spots"} left`,
-    sessionsLabel: `${camp?.sessionDates?.length ?? 15} ${config.duration} sessions`,
+    sessionCount,
+    sessionsLabel: sessionCount > 0
+      ? `${sessionCount} ${config.duration} sessions`
+      : "Schedule unavailable",
+    weeksLabel: sessionCount > 0
+      ? `${sessionCount} ${sessionCount === 1 ? "week" : "weeks"}`
+      : "Schedule unavailable",
     dateLabel: recurring?.dateLabel ?? "Schedule unavailable",
     scheduleLabel: recurring?.scheduleLabel ?? "Schedule unavailable",
     ctaDisabled: unavailable || soldOut,
