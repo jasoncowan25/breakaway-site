@@ -8,6 +8,13 @@ import {
   KIDS_WEEKLY_PROGRAM_SLUGS,
   shouldListKidsWeeklyCampAsStandalone,
 } from "@/lib/kids-weekly-camp"
+import {
+  STATIC_PUBLIC_CAMP_CARDS,
+  staticPublicCampNavItems,
+  type PublicCampCard,
+} from "@/lib/camp-discovery"
+
+export type { PublicCampCard } from "@/lib/camp-discovery"
 
 const PUBLIC_CAMP_REVALIDATE_SECONDS = 300
 const ACTIVE_ATTENDANCE_EXCLUSIONS = ["cancelled", "refunded", "credit_on_file", "credit_applied"]
@@ -242,97 +249,10 @@ export type PublicCamp = {
   }>
 }
 
-export type PublicCampCard = {
-  id: string
-  title: string
-  date: string
-  sortDate: string
-  endDate: string
-  location: string
-  locationFilter: string
-  format: string
-  skillLevel: string
-  price: string
-  image: string
-  badges: Array<{ text: string; variant: "default" | "destructive" | "secondary" | "accent" }>
-  coach: string
-  link: string
-  imageEnhanced: boolean
-  soldOut: boolean
-  spotsRemaining?: number
-  buttonText: string
-}
-
 export type PublicCampNavItem = {
   title: string
   href: string
 }
-
-const RESTORED_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
-  // Launched 2026-06-25. Surfaces the Kids Summer Camp on the nav, the home
-  // page, and the camps listing (nav items are derived from these cards). The
-  // landing page gate is also lifted — see
-  // app/pickleball-camps/kids-summer-pickleball-camp-toronto/page.tsx.
-  {
-    id: "kids-summer-pickleball-camp-toronto",
-    title: "Baseline x Breakaway Kids Summer Camp",
-    date: "August 17 – September 4, 2026",
-    sortDate: "2026-08-17",
-    endDate: "2026-09-04",
-    location: "The JAR Pickleball Club",
-    locationFilter: "Toronto & GTA",
-    format: "Camp",
-    skillLevel: "All Levels",
-    price: "From $575 CAD",
-    image: "/kids-passover-camp-hero.webp",
-    badges: [{ text: "Just Announced", variant: "accent" }],
-    coach: "Joey Manchurek",
-    link: "/pickleball-camps/kids-summer-pickleball-camp-toronto",
-    imageEnhanced: false,
-    soldOut: false,
-    buttonText: "Learn More",
-  },
-  {
-    id: "toronto-intermediate-intensive-sep-12-2026-3",
-    title: "Toronto Intermediate Intensive",
-    date: "September 12-13, 2026",
-    sortDate: "2026-09-12",
-    endDate: "2026-09-13",
-    location: "The JAR Pickleball Club",
-    locationFilter: "Toronto & GTA",
-    format: "Camp",
-    skillLevel: "3.0-3.5",
-    price: "$700 CAD",
-    image: "/jar3.png",
-    badges: [{ text: "New", variant: "accent" }],
-    coach: "Joey Manchurek",
-    link: "/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3",
-    imageEnhanced: false,
-    soldOut: false,
-    spotsRemaining: 16,
-    buttonText: "Learn More",
-  },
-  {
-    id: "toronto-intermediate-intensive-oct-24-2026",
-    title: "Toronto Intermediate Intensive",
-    date: "October 24-25, 2026",
-    sortDate: "2026-10-24",
-    endDate: "2026-10-25",
-    location: "The JAR Pickleball Club",
-    locationFilter: "Toronto & GTA",
-    format: "Camp",
-    skillLevel: "3.0-3.5",
-    price: "$700 CAD",
-    image: "/toronto-coaching-instruction.png",
-    badges: [{ text: "New", variant: "accent" }],
-    coach: "Joey Manchurek",
-    link: "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
-    imageEnhanced: false,
-    soldOut: false,
-    spotsRemaining: 14,
-    buttonText: "Learn More",
-  },
-]
 
 function supabaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -1022,7 +942,7 @@ export async function getPublishedPublicCampCards(limit = 24) {
   ])
 
   return dedupeCardsByLink([
-    ...RESTORED_PUBLIC_CAMP_CARDS,
+    ...STATIC_PUBLIC_CAMP_CARDS,
     ...rows.map((row) =>
       publicCampRowToCard(
         row,
@@ -1060,20 +980,7 @@ export async function getPublishedPublicCampNavItems(limit = 12): Promise<Public
   )
 
   return dedupeNavItemsByHref([
-    ...RESTORED_PUBLIC_CAMP_CARDS
-      .filter((camp) =>
-        campHasNotEnded(
-          {
-            startDate: camp.sortDate,
-            endDate: camp.endDate,
-          },
-          today,
-        ),
-      )
-      .map((camp) => ({
-        title: camp.title,
-        href: camp.link,
-      })),
+    ...staticPublicCampNavItems(today),
     ...(rows ?? [])
       .filter((row) => row.slug && shouldListKidsWeeklyCampAsStandalone(row.slug))
       .map((camp) => ({
