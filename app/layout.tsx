@@ -6,6 +6,8 @@ import { Suspense } from "react"
 import Script from "next/script"
 import { ScrollToTop } from "@/components/ScrollToTop"
 import { ResizeObserverFix } from "@/components/ResizeObserverFix"
+import { SiteChrome } from "@/components/SiteChrome"
+import { getPublishedPublicCampNavItems } from "@/lib/public-camps"
 import { DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT, SITE_URL, defaultOpenGraphImage } from "@/lib/seo"
 import "./globals.css"
 
@@ -42,11 +44,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const navCampItems = await getPublishedPublicCampNavItems().catch(() => [])
+
   return (
     <html lang="en">
       <head>
@@ -63,7 +67,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased flex flex-col min-h-screen`}>
         <ResizeObserverFix />
         <ScrollToTop />
-        <Suspense fallback={null}>{children}</Suspense>
+        <Suspense fallback={null}>
+          <SiteChrome campItems={navCampItems}>{children}</SiteChrome>
+        </Suspense>
         <Analytics />
       </body>
     </html>

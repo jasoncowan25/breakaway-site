@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Navigation } from "@/components/Navigation"
-import { Footer } from "@/components/Footer"
 import { CampCard } from "@/components/CampCard"
 import { MuskokaHubCard } from "@/components/MuskokaHubCard"
 import { Button } from "@/components/ui/button"
@@ -12,7 +10,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Filter } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import type { PublicCampCard, PublicCampNavItem } from "@/lib/public-camps"
+import type { PublicCampCard } from "@/lib/public-camps"
 import type { MuskokaCamp } from "@/lib/muskoka-camps"
 import {
   CAMP_SKILL_FILTERS,
@@ -24,7 +22,6 @@ import {
 
 type CampsPageClientProps = {
   publishedCampCards?: PublicCampCard[]
-  navCampItems?: PublicCampNavItem[]
   muskokaCamps?: MuskokaCamp[]
   initialSelectedLocations?: string[]
   initialSelectedSkillLevels?: string[]
@@ -33,7 +30,6 @@ type CampsPageClientProps = {
 
 function CampsPageContent({
   publishedCampCards = [],
-  navCampItems = [],
   muskokaCamps = [],
   initialSelectedLocations = [],
   initialSelectedSkillLevels = [],
@@ -203,7 +199,6 @@ function CampsPageContent({
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Navigation campItems={navCampItems} />
 
       <div className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -335,7 +330,6 @@ function CampsPageContent({
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

@@ -21,12 +21,10 @@ import {
 } from "lucide-react"
 
 import { JsonLd } from "@/components/JsonLd"
-import { Navigation } from "@/components/Navigation"
-import { Footer } from "@/components/Footer"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { getPublicCampBySlug, getPublishedPublicCampNavItems, publicBadgeText } from "@/lib/public-camps"
+import { getPublicCampBySlug, publicBadgeText } from "@/lib/public-camps"
 import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
 import { isNewCheckoutEnabled } from "@/lib/checkout-rollout"
 import { breadcrumbJsonLd, campEventJsonLd } from "@/lib/seo"
@@ -106,9 +104,8 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
   const customLandingPath = kidsWeeklyLandingPathForCamp(slug)
   if (customLandingPath && !preview) permanentRedirect(customLandingPath)
 
-  const [camp, navCampItems, campShots] = await Promise.all([
+  const [camp, campShots] = await Promise.all([
     getPublicCampBySlug(slug, { preview }),
-    getPublishedPublicCampNavItems(),
     fetchPublicCampShots(slug, { preview }),
   ])
 
@@ -137,7 +134,6 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
           campEventJsonLd(camp),
         ]}
       />
-      <Navigation campItems={navCampItems} />
 
       {preview && (
         <div className="border-b bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
@@ -502,7 +498,6 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
 
       <div className="h-20 lg:hidden" />
 
-      <Footer hideNotifySignup={true} />
     </div>
   )
 }

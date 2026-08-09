@@ -1,8 +1,6 @@
 "use client"
 
 import { useState, Suspense } from "react"
-import { Navigation } from "@/components/Navigation"
-import { Footer } from "@/components/Footer"
 import { CampCard } from "@/components/CampCard"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -74,6 +72,8 @@ function CampsPageContent() {
   const allCamps = dateFilter === "upcoming" ? upcomingCamps : completedCamps
 
   const filteredCamps = allCamps.filter((camp) => {
+    const campSkillLevel = "skillLevel" in camp ? camp.skillLevel : undefined
+
     if (selectedLocations.length > 0 && !selectedLocations.includes(camp.locationFilter)) {
       return false
     }
@@ -82,8 +82,8 @@ function CampsPageContent() {
     }
     if (
       selectedSkillLevels.length > 0 &&
-      camp.skillLevel &&
-      !selectedSkillLevels.some((level) => camp.skillLevel?.includes(level))
+      campSkillLevel &&
+      !selectedSkillLevels.some((level) => campSkillLevel.includes(level))
     ) {
       return false
     }
@@ -189,7 +189,6 @@ function CampsPageContent() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Navigation />
 
       <div className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -280,7 +279,6 @@ function CampsPageContent() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { MuskokaPageClient } from "./muskoka-page-client"
-import { getPublishedPublicCampNavItems } from "@/lib/public-camps"
 import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 
 // Refresh the camp feed on the standard public-camp ISR window.
@@ -27,10 +26,7 @@ export const metadata: Metadata = {
 }
 
 export default async function MuskokaPage() {
-  const [camps, navCampItems] = await Promise.all([
-    getUpcomingMuskokaCamps(),
-    getPublishedPublicCampNavItems(),
-  ])
+  const camps = await getUpcomingMuskokaCamps()
 
-  return <MuskokaPageClient camps={camps} navCampItems={navCampItems} />
+  return <MuskokaPageClient camps={camps} />
 }

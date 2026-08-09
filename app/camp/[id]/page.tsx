@@ -1,16 +1,37 @@
 "use client"
 
-import { Navigation } from "@/components/Navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Calendar, MapPin, Users, Video, Award, Clock } from "lucide-react"
 import Image from "next/image"
 import { useState, useEffect } from "react"
-import { Footer } from "@/components/Footer"
 import { notFound } from "next/navigation"
 
-const campData: Record<string, any> = {
+type CampDetail = {
+  title: string
+  location: string
+  coach: string
+  date: string
+  time?: string
+  price: string
+  spotsLeft: number
+  venue: string
+  dupr: string
+  checkoutUrl?: string
+  coachBio: string
+  image: string
+  coachImage: string
+  venueImages: string[]
+  curriculum: Array<{
+    day: string
+    sessions: Array<{ time: string; activity: string }>
+  }>
+  eventDetails?: string[]
+  description?: string
+}
+
+const campData: Record<string, CampDetail> = {
   "toronto-intermediate-jan": {
     title: "Toronto Intermediate Intensive",
     location: "Toronto",
@@ -274,7 +295,6 @@ export default function CampDetailPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
 
       {/* Hero Section */}
       <section className="relative h-[400px] bg-muted">
@@ -472,7 +492,6 @@ export default function CampDetailPage({ params }: { params: { id: string } }) {
       <div className="lg:hidden h-20" />
 
       {/* Footer Component */}
-      <Footer />
     </div>
   )
 }

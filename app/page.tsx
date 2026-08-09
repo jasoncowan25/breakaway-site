@@ -1,10 +1,8 @@
 import type { Metadata } from "next"
-import { Navigation } from "@/components/Navigation"
 import { CampFinder } from "@/components/CampFinder"
 import { ValueProps } from "@/components/ValueProps"
 import { CampCard } from "@/components/CampCard"
 import { MuskokaHubCard } from "@/components/MuskokaHubCard"
-import { Footer } from "@/components/Footer"
 import { HeroAvatars } from "@/components/HeroAvatars"
 import { HeroVideo } from "@/components/HeroVideo"
 import { JsonLd } from "@/components/JsonLd"
@@ -12,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Quote } from "lucide-react"
 import Link from "next/link"
 import { Fragment } from "react"
-import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
+import { getPublishedPublicCampCards } from "@/lib/public-camps"
 import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 import { organizationJsonLd } from "@/lib/seo"
 import { HOME_COMPLETED_CAMP_CARDS, RELATED_CAMP_LINKS } from "@/lib/camp-discovery"
@@ -28,9 +26,8 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const [publishedCampCards, navCampItems, upcomingMuskokaCamps] = await Promise.all([
+  const [publishedCampCards, upcomingMuskokaCamps] = await Promise.all([
     getPublishedPublicCampCards(),
-    getPublishedPublicCampNavItems(),
     getUpcomingMuskokaCamps(),
   ])
 
@@ -56,7 +53,6 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <JsonLd data={organizationJsonLd()} />
-      <Navigation campItems={navCampItems} />
 
       {/* Hero Section */}
       <section className="relative h-[690px] flex items-center justify-center bg-[#1e3a8a]">
@@ -193,8 +189,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <Footer />
     </div>
   )
 }

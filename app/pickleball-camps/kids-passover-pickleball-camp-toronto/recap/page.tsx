@@ -3,7 +3,6 @@ import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { FooterNotifySignup } from "@/components/FooterNotifySignup"
 
 export const metadata = {
   title: "Kids Passover Camp Recap | Breakaway Pickleball",
@@ -173,7 +172,6 @@ export default function KidsPassoverCampRecapPage() {
       </div>
 
       {/* CTA & Notify Signup */}
-      <FooterNotifySignup showViewCampsButton />
     </main>
   )
 }

@@ -1,8 +1,6 @@
-import { Navigation } from "@/components/Navigation"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Footer } from "@/components/Footer"
 
 export default function CoachesPage() {
   const coaches = [
@@ -19,7 +17,6 @@ export default function CoachesPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
@@ -62,7 +59,6 @@ export default function CoachesPage() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }
