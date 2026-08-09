@@ -41,6 +41,19 @@ test("builds a live all-levels program card from one camp and its 15 sessions", 
   assert.equal(program.ctaDisabled, false)
 })
 
+test("builds experienced program duration copy from its live 14-session schedule", () => {
+  const program = buildKidsWeeklyProgram("experienced", camp({
+    slug: KIDS_WEEKLY_PROGRAMS.experienced.slug,
+    basePriceCents: 112000,
+    sessionDates: Array.from({ length: 14 }, (_, index) => `2026-09-${String(7 + index).padStart(2, "0")}`),
+  }))
+
+  assert.equal(program.priceLabel, "$1,120 CAD")
+  assert.equal(program.sessionCount, 14)
+  assert.equal(program.sessionsLabel, "14 two-hour sessions")
+  assert.equal(program.weeksLabel, "14 weeks")
+})
+
 test("disables only the missing or sold-out program", () => {
   assert.equal(buildKidsWeeklyProgram("experienced", null).ctaDisabled, true)
   assert.equal(buildKidsWeeklyProgram("allLevels", camp({ spotsLeft: 0, isSoldOut: true })).ctaLabel, "Sold out")
