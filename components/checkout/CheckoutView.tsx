@@ -680,7 +680,7 @@ export function CheckoutView(props: CheckoutViewProps) {
                 <>
                   <b>In good hands.</b>{" "}This weekly program keeps groups small, coaching
                   focused, and every child active. Your confirmation includes the complete
-                  15-session schedule.
+                  weekly schedule.
                 </>
               ) : (
                 <>
