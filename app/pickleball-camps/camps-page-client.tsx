@@ -14,6 +14,13 @@ import { useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import type { PublicCampCard, PublicCampNavItem } from "@/lib/public-camps"
 import type { MuskokaCamp } from "@/lib/muskoka-camps"
+import {
+  CAMP_SKILL_FILTERS,
+  COMPLETED_CAMP_CARDS,
+  RELATED_CAMP_LINKS,
+  campMatchesFilters,
+  shouldShowMuskokaHub,
+} from "@/lib/camp-discovery"
 
 type CampsPageClientProps = {
   publishedCampCards?: PublicCampCard[]
@@ -79,103 +86,23 @@ function CampsPageContent({
     return new Date(a.sortDate).getTime() - new Date(b.sortDate).getTime()
   })
 
-  // Only kids passover camp has a recap - other camps show as "Completed" without recap button
-  const completedCamps = [
-    {
-      id: "toronto-april",
-      title: "Toronto Intermediate Intensive (3.0-3.5)",
-      date: "April 11-12, 2026",
-      location: "The Jar PickleBall Club",
-      locationFilter: "Toronto & GTA",
-      format: "Camp",
-      price: "",
-      image: "/images/toronto-intermediate-april-group.jpg",
-      badges: [{ text: "Completed", variant: "secondary" as const }],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-intermediate-pickleball-camp/recap",
-      buttonText: "View Recap",
-      compact: true,
-    },
-    {
-      id: "kids-passover-camp",
-      title: "Kids Passover Pickleball Camp",
-      date: "April 7-10, 2026",
-      location: "The Jar PickleBall Club",
-      locationFilter: "Toronto & GTA",
-      format: "Camp",
-      price: "",
-      image: "/images/kids-camp-group-photo.png",
-      badges: [
-        { text: "Completed", variant: "secondary" as const },
-        { text: "Ages 8-16", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/kids-passover-pickleball-camp-toronto/recap",
-      buttonText: "View Recap",
-      compact: true,
-    },
-    {
-      id: "saint-martin-clinic",
-      title: "Saint Martin Pop-Up Clinic",
-      date: "Mar 2026",
-      location: "American Tennis Club, Saint Martin",
-      locationFilter: "Saint Martin",
-      format: "Clinic",
-      price: "",
-      image: "/saint-martin-clinic-action-1.jpg",
-      badges: [{ text: "Completed", variant: "secondary" as const }],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/saint-martin-pickleball-clinic/recap",
-      buttonText: "View Recap",
-      compact: true,
-    },
-    {
-      id: "toronto-intermediate-jan",
-      title: "Toronto Intermediate Intensive",
-      date: "Jan 10-11, 2026",
-      location: "The Jar PickleBall Club",
-      locationFilter: "Toronto & GTA",
-      format: "Camp",
-      price: "",
-      image: "/images/screenshot-202026-01-12-20at-204.png",
-      badges: [{ text: "Completed", variant: "secondary" as const }],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/toronto-intensive-jan/recap",
-      buttonText: "View Recap",
-      compact: true,
-    },
-  ]
-
-  const filterCamps = (camps: typeof upcomingCamps | typeof completedCamps) => {
-    return camps.filter((camp) => {
-      if (selectedLocations.length > 0 && !selectedLocations.includes(camp.locationFilter)) {
-        return false
-      }
-      if (selectedFormats.length > 0 && !selectedFormats.includes(camp.format)) {
-        return false
-      }
-      if (selectedSkillLevels.length > 0 && "skillLevel" in camp && camp.skillLevel) {
-        const matchesSkillLevel = selectedSkillLevels.some((level) => {
-          // "2.5" filter should match "Under 3.0" and "2.5-2.75"
-          if (level === "2.5") {
-            return camp.skillLevel?.includes("Under 3.0") || camp.skillLevel?.includes("2.5")
-          }
-          return camp.skillLevel?.includes(level)
-        })
-        if (!matchesSkillLevel) {
-          return false
-        }
-      }
-      return true
-    })
-  }
+  const filterCamps = <T extends { locationFilter: string; format: string; skillLevel: string }>(camps: T[]) =>
+    camps.filter((camp) =>
+      campMatchesFilters(camp, {
+        locations: selectedLocations,
+        formats: selectedFormats,
+        skillLevels: selectedSkillLevels,
+      }),
+    )
 
   const filteredUpcomingCamps = filterCamps(upcomingCamps)
-  const filteredCompletedCamps = filterCamps(completedCamps)
-  const showMuskokaHub =
-    muskokaCamps.length > 0 &&
-    (selectedLocations.length === 0 || selectedLocations.includes("Muskoka")) &&
-    (selectedFormats.length === 0 || selectedFormats.includes("Camp"))
+  const filteredCompletedCamps = filterCamps(COMPLETED_CAMP_CARDS)
+  const showMuskokaHub = shouldShowMuskokaHub({
+    campCount: muskokaCamps.length,
+    locations: selectedLocations,
+    formats: selectedFormats,
+    skillLevels: selectedSkillLevels,
+  })
 
   const toggleLocation = (location: string) => {
     setSelectedLocations((prev) => (prev.includes(location) ? prev.filter((l) => l !== location) : [...prev, location]))
@@ -220,7 +147,7 @@ function CampsPageContent({
           <AccordionTrigger className="text-sm font-semibold">Skill Level</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-wrap gap-2">
-              {["2.5", "3.0", "3.5", "4.0+"].map((level) => (
+              {CAMP_SKILL_FILTERS.map((level) => (
                 <Button
                   key={level}
                   variant={selectedSkillLevels.includes(level) ? "default" : "outline"}
@@ -286,18 +213,15 @@ function CampsPageContent({
             Discover upcoming pickleball camps and clinics across Toronto, the GTA & Muskoka
           </p>
           <div className="mt-4 grid gap-2 text-sm sm:flex sm:flex-wrap sm:gap-x-4">
-            <a href="/pickleball-coaches" className="font-medium text-primary underline-offset-4 hover:underline">
-              Pickleball coaches
-            </a>
-            <a href="/schedule" className="font-medium text-primary underline-offset-4 hover:underline">
-              Camp schedule
-            </a>
-            <a href="/pickleball-camps/punta-cana" className="font-medium text-primary underline-offset-4 hover:underline">
-              Punta Cana pickleball retreat
-            </a>
-            <a href="/pickleball-camp-experience" className="font-medium text-primary underline-offset-4 hover:underline">
-              Pickleball camp experience
-            </a>
+            {RELATED_CAMP_LINKS.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
         </div>
 

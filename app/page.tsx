@@ -9,12 +9,13 @@ import { HeroAvatars } from "@/components/HeroAvatars"
 import { HeroVideo } from "@/components/HeroVideo"
 import { JsonLd } from "@/components/JsonLd"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Quote } from "lucide-react"
 import Link from "next/link"
+import { Fragment } from "react"
 import { getPublishedPublicCampCards, getPublishedPublicCampNavItems } from "@/lib/public-camps"
 import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 import { organizationJsonLd } from "@/lib/seo"
+import { HOME_COMPLETED_CAMP_CARDS, RELATED_CAMP_LINKS } from "@/lib/camp-discovery"
 
 export const metadata: Metadata = {
   title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
@@ -86,21 +87,14 @@ export default async function HomePage() {
 
       <section className="border-y border-border bg-muted/20 py-8">
         <div className="mx-auto grid max-w-7xl gap-2 px-4 text-center text-sm sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 sm:px-6 lg:px-8">
-          <Link href="/pickleball-coaches" className="font-medium text-primary underline-offset-4 hover:underline">
-            Pickleball coaches in Toronto
-          </Link>
-          <span className="hidden text-muted-foreground sm:inline">/</span>
-          <Link href="/schedule" className="font-medium text-primary underline-offset-4 hover:underline">
-            Camp schedule
-          </Link>
-          <span className="hidden text-muted-foreground sm:inline">/</span>
-          <Link href="/pickleball-camps/punta-cana" className="font-medium text-primary underline-offset-4 hover:underline">
-            Punta Cana pickleball retreat
-          </Link>
-          <span className="hidden text-muted-foreground sm:inline">/</span>
-          <Link href="/pickleball-camp-experience" className="font-medium text-primary underline-offset-4 hover:underline">
-            Pickleball camp experience
-          </Link>
+          {RELATED_CAMP_LINKS.map((item, index) => (
+            <Fragment key={item.href}>
+              {index > 0 && <span className="hidden text-muted-foreground sm:inline">/</span>}
+              <Link href={item.href} className="font-medium text-primary underline-offset-4 hover:underline">
+                {item.homeLabel}
+              </Link>
+            </Fragment>
+          ))}
         </div>
       </section>
 
@@ -131,55 +125,10 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-primary mb-6">Recently Completed Camps</h2>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl">
-            {/* Toronto Intermediate Intensive - April (no recap page yet) */}
-            <div className="group relative overflow-hidden rounded-lg bg-card border shadow-sm hover:shadow-md transition-shadow">
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src="/images/toronto-intermediate-april-group.jpg"
-                  alt="Toronto Intermediate Intensive April 2026 group photo"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 right-3">
-                  <Badge variant="default">Completed</Badge>
-                </div>
-              </div>
-
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-primary mb-1">Toronto Intermediate Intensive</h3>
-                <p className="text-sm text-muted-foreground mb-4">April 11-12, 2026</p>
-                <Button asChild variant="outline" className="w-full bg-transparent">
-                  <Link href="/pickleball-camps/toronto-intermediate-pickleball-camp/recap" scroll={true}>
-                    View Recap
-                  </Link>
-                </Button>
-              </div>
-            </div>
-
-            {/* Kids Passover Camp */}
-            <div className="group relative overflow-hidden rounded-lg bg-card border shadow-sm hover:shadow-md transition-shadow">
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src="/images/kids-camp-group-photo.png"
-                  alt="Kids Passover Pickleball Camp group photo"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 right-3">
-                  <Badge variant="default">Completed</Badge>
-                </div>
-              </div>
-
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-primary mb-1">Kids Passover Pickleball Camp</h3>
-                <p className="text-sm text-muted-foreground mb-4">April 7-10, 2026</p>
-
-                <Button asChild variant="outline" className="w-full bg-transparent">
-                  <Link href="/pickleball-camps/kids-passover-pickleball-camp-toronto/recap" scroll={true}>
-                    View Recap
-                  </Link>
-                </Button>
-              </div>
-            </div>
+          <div className="grid gap-6 md:grid-cols-2 max-w-2xl">
+            {HOME_COMPLETED_CAMP_CARDS.map((camp) => (
+              <CampCard key={camp.id} {...camp} />
+            ))}
           </div>
         </div>
       </section>

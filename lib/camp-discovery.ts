@@ -28,6 +28,26 @@ export type CampFilters = {
   skillLevels: string[]
 }
 
+export type CompletedCampCard = {
+  id: string
+  title: string
+  date: string
+  location: string
+  locationFilter: string
+  format: string
+  skillLevel: string
+  price: string
+  image: string
+  badges: Array<{
+    text: string
+    variant: "default" | "destructive" | "secondary" | "accent"
+  }>
+  coach: string
+  link: string
+  buttonText: string
+  compact: true
+}
+
 export const CAMP_SKILL_FILTERS = ["2.5", "3.0", "3.5", "4.0+", "Kids"] as const
 
 export const RELATED_CAMP_LINKS = [
@@ -134,6 +154,82 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     buttonText: "Learn More",
   },
 ]
+
+export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
+  {
+    id: "toronto-april",
+    title: "Toronto Intermediate Intensive (3.0-3.5)",
+    date: "April 11-12, 2026",
+    location: "The Jar PickleBall Club",
+    locationFilter: "Toronto & GTA",
+    format: "Camp",
+    skillLevel: "3.0-3.5",
+    price: "",
+    image: "/images/toronto-intermediate-april-group.jpg",
+    badges: [{ text: "Completed", variant: "secondary" }],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/toronto-intermediate-pickleball-camp/recap",
+    buttonText: "View Recap",
+    compact: true,
+  },
+  {
+    id: "kids-passover-camp",
+    title: "Kids Passover Pickleball Camp",
+    date: "April 7-10, 2026",
+    location: "The Jar PickleBall Club",
+    locationFilter: "Toronto & GTA",
+    format: "Camp",
+    skillLevel: "Kids",
+    price: "",
+    image: "/images/kids-camp-group-photo.png",
+    badges: [
+      { text: "Completed", variant: "secondary" },
+      { text: "Ages 8-16", variant: "secondary" },
+    ],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/kids-passover-pickleball-camp-toronto/recap",
+    buttonText: "View Recap",
+    compact: true,
+  },
+  {
+    id: "saint-martin-clinic",
+    title: "Saint Martin Pop-Up Clinic",
+    date: "Mar 2026",
+    location: "American Tennis Club, Saint Martin",
+    locationFilter: "Saint Martin",
+    format: "Clinic",
+    skillLevel: "3.0-4.0",
+    price: "",
+    image: "/saint-martin-clinic-action-1.jpg",
+    badges: [{ text: "Completed", variant: "secondary" }],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/saint-martin-pickleball-clinic/recap",
+    buttonText: "View Recap",
+    compact: true,
+  },
+  {
+    id: "toronto-intermediate-jan",
+    title: "Toronto Intermediate Intensive",
+    date: "Jan 10-11, 2026",
+    location: "The Jar PickleBall Club",
+    locationFilter: "Toronto & GTA",
+    format: "Camp",
+    skillLevel: "3.0-4.0",
+    price: "",
+    image: "/images/screenshot-202026-01-12-20at-204.png",
+    badges: [{ text: "Completed", variant: "secondary" }],
+    coach: "Joey Manchurek",
+    link: "/pickleball-camps/toronto-intensive-jan/recap",
+    buttonText: "View Recap",
+    compact: true,
+  },
+]
+
+const HOME_COMPLETED_IDS = new Set(["toronto-april", "kids-passover-camp"])
+
+export const HOME_COMPLETED_CAMP_CARDS = COMPLETED_CAMP_CARDS.filter((camp) =>
+  HOME_COMPLETED_IDS.has(camp.id),
+)
 
 export function campMatchesFilters(
   camp: Pick<PublicCampCard, "locationFilter" | "format" | "skillLevel">,
