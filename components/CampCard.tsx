@@ -19,13 +19,14 @@ interface CampCardProps {
   imageEnhanced?: boolean // Apply CSS filters to enhance image colors
   compact?: boolean // Simplified card format for recaps - no price, location, coach
   spotsRemaining?: number // Number of spots remaining for availability display
+  availabilityLabel?: string // Fixed promotional availability copy
   isLoadingAvailability?: boolean // Show skeleton while loading availability
   soldOut?: boolean // Whether the camp is sold out
 }
 
-export function CampCard({ id, title, date, location, price, image, badges, coach, link, buttonText, imageEnhanced, compact, spotsRemaining, isLoadingAvailability, soldOut }: CampCardProps) {
+export function CampCard({ id, title, date, location, price, image, badges, coach, link, buttonText, imageEnhanced, compact, spotsRemaining, availabilityLabel, isLoadingAvailability, soldOut }: CampCardProps) {
   const campLink = link || `/pickleball-camps/${id}`
-  const showAvailability = spotsRemaining !== undefined || isLoadingAvailability
+  const showAvailability = availabilityLabel !== undefined || spotsRemaining !== undefined || isLoadingAvailability
   const visibleBadges = badges?.filter((badge) =>
     badge.text !== "4 Players Max" &&
     !badge.text.includes("Spots Left") &&
@@ -65,7 +66,11 @@ export function CampCard({ id, title, date, location, price, image, badges, coac
 
             {showAvailability && (
               <div>
-                {isLoadingAvailability ? (
+                {availabilityLabel ? (
+                  <Badge variant="outline" className="text-xs bg-white/90 border-border text-foreground">
+                    {availabilityLabel}
+                  </Badge>
+                ) : isLoadingAvailability ? (
                   <Skeleton className="h-5 w-20" />
                 ) : soldOut ? (
                   <Badge variant="destructive" className="text-xs bg-red-600 text-white">

@@ -19,6 +19,7 @@ export type PublicCampCard = {
   imageEnhanced: boolean
   soldOut: boolean
   spotsRemaining?: number
+  availabilityLabel?: string
   buttonText: string
 }
 
@@ -87,7 +88,7 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     skillLevel: "Kids",
     price: "From $575 CAD",
     image: "/kids-passover-camp-hero.webp",
-    badges: [{ text: "Just Announced", variant: "accent" }],
+    badges: [{ text: "New", variant: "accent" }],
     coach: "Joey Manchurek",
     link: "/pickleball-camps/kids-summer-pickleball-camp-toronto",
     imageEnhanced: false,
@@ -97,7 +98,7 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
   {
     id: "kids-weekly-pickleball-camp-toronto",
     title: "Kids Weekly Pickleball Camp",
-    date: "Weekly, Sep – Dec, 2026",
+    date: "Weekly programs · Sep 7–Dec 21, 2026",
     sortDate: "2026-09-07",
     endDate: "2026-12-21",
     location: "The Jar Pickleball Club",
@@ -106,7 +107,7 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     skillLevel: "Kids",
     price: "From $600",
     image: "/images/kids-weekly/kids-camp-joey.jpg",
-    badges: [{ text: "New", variant: "accent" }],
+    badges: [{ text: "Just Announced", variant: "accent" }],
     coach: "Joey Manchurek",
     link: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
     imageEnhanced: false,
@@ -125,12 +126,12 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     skillLevel: "3.0-3.5",
     price: "$700 CAD",
     image: "/jar3.png",
-    badges: [{ text: "New", variant: "accent" }],
+    badges: [],
     coach: "Joey Manchurek",
     link: "/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3",
     imageEnhanced: false,
     soldOut: false,
-    spotsRemaining: 16,
+    availabilityLabel: "Only 16 Spots",
     buttonText: "Learn More",
   },
   {
@@ -145,12 +146,12 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     skillLevel: "3.0-3.5",
     price: "$700 CAD",
     image: "/toronto-coaching-instruction.png",
-    badges: [{ text: "New", variant: "accent" }],
+    badges: [],
     coach: "Joey Manchurek",
     link: "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
     imageEnhanced: false,
     soldOut: false,
-    spotsRemaining: 14,
+    availabilityLabel: "Only 16 Spots",
     buttonText: "Learn More",
   },
 ]

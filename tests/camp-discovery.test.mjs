@@ -31,7 +31,7 @@ test("defines one aggregate weekly kids card with the approved content", () => {
     {
       title: "Kids Weekly Pickleball Camp",
       coach: "Joey Manchurek",
-      date: "Weekly, Sep – Dec, 2026",
+      date: "Weekly programs · Sep 7–Dec 21, 2026",
       sortDate: "2026-09-07",
       endDate: "2026-12-21",
       location: "The Jar Pickleball Club",
@@ -40,6 +40,51 @@ test("defines one aggregate weekly kids card with the approved content", () => {
       skillLevel: "Kids",
       link: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
     },
+  )
+})
+
+test("publishes the approved captions and promotional badges for featured Toronto camps", () => {
+  const featuredIds = [
+    "kids-summer-pickleball-camp-toronto",
+    "kids-weekly-pickleball-camp-toronto",
+    "toronto-intermediate-intensive-sep-12-2026-3",
+    "toronto-intermediate-intensive-oct-24-2026",
+  ]
+  const featured = STATIC_PUBLIC_CAMP_CARDS.filter((camp) => featuredIds.includes(camp.id))
+
+  assert.deepEqual(
+    featured.map(({ id, date, badges, availabilityLabel }) => ({
+      id,
+      date,
+      badges,
+      availabilityLabel,
+    })),
+    [
+      {
+        id: "kids-summer-pickleball-camp-toronto",
+        date: "August 17 – September 4, 2026",
+        badges: [{ text: "New", variant: "accent" }],
+        availabilityLabel: undefined,
+      },
+      {
+        id: "kids-weekly-pickleball-camp-toronto",
+        date: "Weekly programs · Sep 7–Dec 21, 2026",
+        badges: [{ text: "Just Announced", variant: "accent" }],
+        availabilityLabel: undefined,
+      },
+      {
+        id: "toronto-intermediate-intensive-sep-12-2026-3",
+        date: "September 12-13, 2026",
+        badges: [],
+        availabilityLabel: "Only 16 Spots",
+      },
+      {
+        id: "toronto-intermediate-intensive-oct-24-2026",
+        date: "October 24-25, 2026",
+        badges: [],
+        availabilityLabel: "Only 16 Spots",
+      },
+    ],
   )
 })
 
