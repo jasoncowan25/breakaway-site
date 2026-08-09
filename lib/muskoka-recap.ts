@@ -25,6 +25,7 @@ export const MUSKOKA_RECAP = {
   ],
   facility:
     "The new indoor facility gave every group a focused place to train, and the energy stayed high from the first session to the last. Players loved the space and the community that formed around it.",
+  joeyHeading: "Joey’s Recap",
   joeyRecap:
     "Joey described the run as 12 days of nonstop action. Each day connected to the one before it, and participants embraced both the progression and the new facility. The response was enthusiastic, and everyone was already looking forward to next year.",
   closing:

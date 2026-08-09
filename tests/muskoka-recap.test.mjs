@@ -51,6 +51,7 @@ test("models the full-period Muskoka story and connected curriculum", () => {
   assert.match(MUSKOKA_RECAP.trainingDays[1].description, /fifth-shot drops/)
   assert.match(MUSKOKA_RECAP.trainingDays[2].description, /returning smashes/)
   assert.match(MUSKOKA_RECAP.facility, /new indoor facility/)
+  assert.equal(MUSKOKA_RECAP.joeyHeading, "Joey’s Recap")
   assert.match(MUSKOKA_RECAP.joeyRecap, /12 days of nonstop action/)
   assert.match(MUSKOKA_RECAP.closing, /more Muskoka programming next year/)
 })

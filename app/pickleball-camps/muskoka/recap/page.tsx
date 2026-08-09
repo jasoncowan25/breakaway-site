@@ -113,7 +113,9 @@ export default function MuskokaSummerRecapPage() {
             <p className="mt-4 text-pretty leading-7 text-muted-foreground">{MUSKOKA_RECAP.facility}</p>
           </div>
           <div className="rounded-2xl bg-blue-950 p-6 text-white sm:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lime-300">Joey&apos;s recap</p>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-lime-300">
+              {MUSKOKA_RECAP.joeyHeading}
+            </h2>
             <p className="mt-4 text-pretty text-lg leading-8 text-white/90">{MUSKOKA_RECAP.joeyRecap}</p>
           </div>
         </section>
