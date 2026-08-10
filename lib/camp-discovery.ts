@@ -107,7 +107,10 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     skillLevel: "Kids",
     price: "From $600",
     image: "/images/kids-weekly/kids-camp-joey.jpg",
-    badges: [{ text: "Just Announced", variant: "accent" }],
+    badges: [
+      { text: "Just Announced", variant: "accent" },
+      { text: "Ages 9–14", variant: "secondary" },
+    ],
     coach: "Joey Manchurek",
     link: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
     imageEnhanced: false,
