@@ -14,6 +14,7 @@
 - Baseline badge must be exactly `New`.
 - Kids Weekly badge must be exactly `Just Announced`.
 - Both Toronto Intermediate cards must omit `New` and show exactly `Only 16 Spots` regardless of registrations.
+- Kids Weekly must show `Just Announced` first and `Ages 9–14` second, with the age badge using the blue secondary treatment.
 - Do not change dates, capacity, registrations, pricing, links, images, filters, checkout, or Supabase data.
 
 ---
@@ -131,3 +132,59 @@ git push -u origin codex/kids-card-captions
 ```
 
 Open a ready pull request, merge after checks pass, and verify the same card copy on production.
+
+### Task 2: Kids Weekly age badge
+
+**Files:**
+- Modify: `tests/camp-discovery.test.mjs`
+- Modify: `lib/camp-discovery.ts`
+
+**Interfaces:**
+- Consumes: the existing `PublicCampCard.badges` array rendered in order by `CampCard`.
+- Produces: a second Kids Weekly badge `{ text: "Ages 9–14", variant: "secondary" }`.
+
+- [ ] **Step 1: Update the failing shared-data assertion**
+
+Change the Kids Weekly badge expectation to:
+
+```js
+badges: [
+  { text: "Just Announced", variant: "accent" },
+  { text: "Ages 9–14", variant: "secondary" },
+]
+```
+
+- [ ] **Step 2: Run the focused test and verify RED**
+
+Run: `node --experimental-strip-types --test tests/camp-discovery.test.mjs`
+
+Expected: FAIL because Kids Weekly exposes only the `Just Announced` badge.
+
+- [ ] **Step 3: Add the age badge to shared card data**
+
+In the Kids Weekly entry in `STATIC_PUBLIC_CAMP_CARDS`, set:
+
+```ts
+badges: [
+  { text: "Just Announced", variant: "accent" },
+  { text: "Ages 9–14", variant: "secondary" },
+],
+```
+
+- [ ] **Step 4: Run focused and complete verification**
+
+Run:
+
+```bash
+node --experimental-strip-types --test tests/camp-discovery.test.mjs
+node --experimental-strip-types --test tests/*.test.mjs
+npx tsc --noEmit
+npm run build
+git diff --check
+```
+
+Expected: the focused and complete suites pass; TypeScript, production build, and diff check exit successfully.
+
+- [ ] **Step 5: Preview and publish**
+
+Open `/` and `/pickleball-camps` in the preview pane at desktop and 390px mobile widths. Confirm `Just Announced` appears above the blue `Ages 9–14` badge with no overflow. Commit, push a ready pull request, merge after checks pass, and verify the normal production URLs.

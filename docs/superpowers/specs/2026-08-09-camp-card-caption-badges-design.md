@@ -27,3 +27,7 @@ Keep the copy in the shared static camp-card definitions in `lib/camp-discovery.
 ## Out of scope
 
 No camp dates, capacity, registration counts, checkout pricing, Supabase data, navigation, or landing-page program details change.
+
+## Follow-up: weekly youth age badge
+
+Add `Ages 9–14` as a second badge on the Kids Weekly Pickleball Camp card. Keep `Just Announced` first in the green accent treatment and render the age badge directly beneath it in the existing blue secondary treatment used by completed kids camp cards. The change flows through the shared static card definition to both the homepage and All Camps page.
