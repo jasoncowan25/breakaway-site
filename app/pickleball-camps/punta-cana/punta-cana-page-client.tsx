@@ -166,7 +166,7 @@ export function PuntaCanaPageClient() {
               </div>
 
               <Button onClick={scrollToForm} size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                Register Your Interest
+                Request Pricing
               </Button>
             </div>
 
@@ -388,7 +388,7 @@ export function PuntaCanaPageClient() {
 
             {/* Registration Form */}
             <section id="registration-form">
-              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Register Your Interest</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Request Pricing</h2>
               <Card>
                 <CardContent className="p-6 md:p-8">
                   {isSubmitted ? (
@@ -396,7 +396,7 @@ export function PuntaCanaPageClient() {
                       <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Check className="h-8 w-8 text-accent" />
                       </div>
-                      <h3 className="text-xl font-bold text-primary mb-2">Thank you for registering!</h3>
+                      <h3 className="text-xl font-bold text-primary mb-2">Thank you for your pricing request!</h3>
                       <p className="text-muted-foreground">We&apos;ve received your information and will be in touch soon with next steps.</p>
                     </div>
                   ) : (
@@ -518,7 +518,7 @@ export function PuntaCanaPageClient() {
                             Submitting...
                           </>
                         ) : (
-                          "Register Your Interest"
+                          "Request Pricing"
                         )}
                       </Button>
 
@@ -595,7 +595,7 @@ export function PuntaCanaPageClient() {
                     </div>
                   </div>
                   <Button onClick={scrollToForm} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                    Register Your Interest
+                    Request Pricing
                   </Button>
                   <p className="text-xs text-muted-foreground text-center">
                     Questions? <a href="mailto:hello@breakawaypickleball.ca" className="text-primary hover:underline">hello@breakawaypickleball.ca</a>
@@ -612,7 +612,7 @@ export function PuntaCanaPageClient() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-6">20 spots. One unforgettable week.</h2>
           <Button onClick={scrollToForm} size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 mb-4">
-            Register Your Interest
+            Request Pricing
           </Button>
           <p className="text-white/80 text-sm">
             Questions? <a href="mailto:hello@breakawaypickleball.ca" className="text-white underline hover:text-white/80">hello@breakawaypickleball.ca</a>
@@ -623,9 +623,8 @@ export function PuntaCanaPageClient() {
       {/* Mobile Sticky Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 lg:hidden z-50">
         <div className="flex items-center justify-between gap-4">
-          <p className="text-sm font-semibold text-primary">Contact for trip details</p>
-          <Button onClick={scrollToForm} className="bg-accent text-accent-foreground hover:bg-accent/90">
-            Register Interest
+          <Button onClick={scrollToForm} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+            Request Pricing
           </Button>
         </div>
       </div>

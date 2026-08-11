@@ -36,16 +36,23 @@ for (const retiredText of [
 assert.doesNotMatch(retreatText, /\$[\d,]+(?:\s+CAD)?/, "retreat page should not show a fixed dollar price")
 assert.doesNotMatch(retreatText, /\d+\s+rooms?\b/i, "retreat page should not show room availability")
 assert.ok(retreatText.includes("Number of Travellers"), "registration form should retain traveller count")
-assert.ok(retreatText.includes("Register Your Interest"), "registration action should remain available")
-assert.ok(retreatText.includes("Contact for trip details"), "mobile action should direct visitors to current details")
+for (const retiredConversionCopy of [
+  "Contact for trip details",
+  "Register Your Interest",
+  "Register Interest",
+]) {
+  assert.ok(!retreatText.includes(retiredConversionCopy), `retreat page still shows: ${retiredConversionCopy}`)
+}
+
+assert.ok(retreatText.includes("Request Pricing"), "retreat page should offer a pricing request")
 assert.doesNotMatch(retreatHtml, /pricing from \$|"priceCurrency"/i, "retreat metadata should not advertise a fixed price")
 
 for (const path of ["/", "/pickleball-camps", "/schedule"]) {
   const text = visibleText(await fetchPage(path))
   assert.match(
     text,
-    /Punta Cana Destination Retreat.*?Contact for trip details/s,
-    `${path} should show the contact label on the Punta Cana card`,
+    /Punta Cana Destination Retreat.*?Request Pricing/s,
+    `${path} should show Request Pricing on the Punta Cana card`,
   )
 }
 
