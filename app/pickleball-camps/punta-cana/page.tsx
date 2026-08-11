@@ -29,7 +29,7 @@ const puntaCanaFaq = [
 export const metadata: Metadata = {
   title: "Punta Cana Pickleball Retreat | Breakaway Pickleball",
   description:
-    "Join Breakaway's Nov 24-Dec 1, 2026 Punta Cana pickleball retreat at TRS Turquesa with Joey Manchurek. All-inclusive resort stay, daily coaching, and pricing from $2,201 CAD.",
+    "Join Breakaway's Nov 24-Dec 1, 2026 Punta Cana pickleball retreat at TRS Turquesa with Joey Manchurek. All-inclusive resort stay, daily coaching, and limited availability.",
   alternates: {
     canonical: "/pickleball-camps/punta-cana",
   },
@@ -73,7 +73,6 @@ export default function PuntaCanaPage() {
             image: "/punta-cana-resort-pool.jpg",
             locationName: "TRS Turquesa, Punta Cana, Dominican Republic",
             address: "TRS Turquesa, Punta Cana, Dominican Republic",
-            priceLabel: "From $2,201 CAD",
           }),
           faqJsonLd(puntaCanaFaq),
         ]}

@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 import { Calendar, MapPin, Users, Plane, Utensils, Waves, Trophy, Video, Award, Check, Clock, ExternalLink, Palmtree, Loader2 } from "lucide-react"
 import Image from "next/image"
@@ -23,7 +22,6 @@ interface Traveller {
 }
 
 export function PuntaCanaPageClient() {
-  const [roomPreference, setRoomPreference] = useState("")
   const [numTravellers, setNumTravellers] = useState(1)
   const [travellers, setTravellers] = useState<Traveller[]>([
     { fullName: "", dob: "", email: "", phone: "", willPlayPickleball: true }
@@ -90,7 +88,6 @@ export function PuntaCanaPageClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          roomPreference,
           numTravellers,
           travellers,
           comments,
@@ -217,7 +214,7 @@ export function PuntaCanaPageClient() {
 
             {/* Pickleball Program */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">What&apos;s in the Pickleball Program ($800 CAD / player)</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">What&apos;s in the Pickleball Program</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <Card className="hover:shadow-md transition-shadow">
                   <CardContent className="flex items-start gap-4 p-5">
@@ -283,7 +280,7 @@ export function PuntaCanaPageClient() {
                 </Card>
               </div>
               <p className="text-sm text-muted-foreground mt-4">
-                Spouses and non-players are welcome to join the trip at the resort cost only — they won&apos;t be charged the program fee.
+                Spouses and non-players are welcome to join the trip. Contact us for current trip and participation details.
               </p>
             </section>
 
@@ -346,43 +343,6 @@ export function PuntaCanaPageClient() {
               </Button>
             </section>
 
-            {/* Pricing & Rooms */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">Pricing & Room Options (All-Inclusive, per person, CAD)</h2>
-              <div className="grid md:grid-cols-3 gap-6 mb-6">
-                <Card className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-lg mb-1">Garden View — Single</h3>
-                    <p className="text-sm text-muted-foreground mb-4">King bed, ideal for solo travelers</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$2,958 CAD </p>
-                    <p className="text-sm text-muted-foreground">3 rooms available</p>
-                  </CardContent>
-                </Card>
-                <Card className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-lg mb-1">Garden View — Double</h3>
-                    <p className="text-sm text-muted-foreground mb-4">King bed, ideal for couples</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$2,201 CAD </p>
-                    <p className="text-sm text-muted-foreground">4 rooms (8 guests) available</p>
-                  </CardContent>
-                </Card>
-                <Card className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-lg mb-1">Pool View — Double</h3>
-                    <p className="text-sm text-muted-foreground mb-4">2 beds, ideal for friends sharing</p>
-                    <p className="text-2xl font-bold text-primary mb-2">$2,278 CAD </p>
-                    <p className="text-sm text-muted-foreground">6 rooms (12 guests) available</p>
-                  </CardContent>
-                </Card>
-              </div>
-              <Card className="border-2 border-accent">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-lg text-primary">Breakaway Pickleball Program Fee — $800 CAD per player</h3>
-                  <p className="text-sm text-muted-foreground mt-1">Added to the all-inclusive price for those participating in the pickleball program. Non-players join at resort cost only.</p>
-                </CardContent>
-              </Card>
-            </section>
-
             {/* What's Included */}
             <section>
               <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">What&apos;s Included</h2>
@@ -441,37 +401,19 @@ export function PuntaCanaPageClient() {
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      {/* Step 1: Room Preference and Number of Travellers */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label htmlFor="roomPreference">Room Preference</Label>
-                          <Select
-                            value={roomPreference}
-                            onValueChange={setRoomPreference}
-                          >
-                            <SelectTrigger tabIndex={1}>
-                              <SelectValue placeholder="Select your preferred room type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Garden View — Single ($2,958 CAD)">Garden View — Single ($2,958 CAD)</SelectItem>
-                              <SelectItem value="Garden View — Double ($2,201 CAD)">Garden View — Double ($2,201 CAD)</SelectItem>
-                              <SelectItem value="Pool View — Double ($2,278 CAD)">Pool View — Double ($2,278 CAD)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="numTravellers">Number of Travellers *</Label>
-                          <Input
-                            id="numTravellers"
-                            tabIndex={2}
-                            type="number"
-                            min="1"
-                            max="2"
-                            required
-                            value={numTravellers}
-                            onChange={(e) => handleNumTravellersChange(parseInt(e.target.value) || 1)}
-                          />
-                        </div>
+                      {/* Step 1: Number of Travellers */}
+                      <div className="max-w-sm space-y-2">
+                        <Label htmlFor="numTravellers">Number of Travellers *</Label>
+                        <Input
+                          id="numTravellers"
+                          tabIndex={1}
+                          type="number"
+                          min="1"
+                          max="2"
+                          required
+                          value={numTravellers}
+                          onChange={(e) => handleNumTravellersChange(parseInt(e.target.value) || 1)}
+                        />
                       </div>
 
                       {/* Step 2: Traveller Details */}
@@ -626,7 +568,7 @@ export function PuntaCanaPageClient() {
                 <AccordionItem value="payments">
                   <AccordionTrigger>How are payments handled?</AccordionTrigger>
                   <AccordionContent>
-                    After you register, we&apos;ll send you deposit and payment details. The $800 program fee is paid via Breakaway. The remaining all-inclusive balance is invoiced and paid through travel agent Joe Dias.
+                    After you register, we&apos;ll follow up with current pricing, deposit, and payment details. Travel arrangements and the all-inclusive balance are coordinated through our travel partner.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -651,10 +593,6 @@ export function PuntaCanaPageClient() {
                       <Users className="h-4 w-4 text-muted-foreground" />
                       <span>Limited to 20 spots</span>
                     </div>
-                  </div>
-                  <div className="border-t pt-4">
-                    <p className="text-lg font-bold text-primary">From $2,201 CAD</p>
-                    <p className="text-sm text-muted-foreground">+ $800 program fee</p>
                   </div>
                   <Button onClick={scrollToForm} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
                     Register Your Interest
@@ -685,10 +623,7 @@ export function PuntaCanaPageClient() {
       {/* Mobile Sticky Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 lg:hidden z-50">
         <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="font-bold text-primary">From $2,201 CAD</p>
-            <p className="text-xs text-muted-foreground">+ $800 program fee</p>
-          </div>
+          <p className="text-sm font-semibold text-primary">Contact for trip details</p>
           <Button onClick={scrollToForm} className="bg-accent text-accent-foreground hover:bg-accent/90">
             Register Interest
           </Button>

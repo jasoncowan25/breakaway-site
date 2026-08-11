@@ -12,13 +12,11 @@ interface Traveller {
 
 export async function POST(req: NextRequest) {
   try {
-    const { 
-      roomPreference,
+    const {
       numTravellers,
       travellers,
-      comments 
+      comments,
     } = await req.json() as {
-      roomPreference: string
       numTravellers: number
       travellers: Traveller[]
       comments: string
@@ -36,9 +34,7 @@ export async function POST(req: NextRequest) {
       .join(", ")
 
     // Build payload with individual traveller fields for Zapier
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const payload: Record<string, any> = {
-      room_preference: roomPreference,
+    const payload: Record<string, unknown> = {
       num_travellers: numTravellers,
       pickleball_participants: pickleballParticipants,
       comments,
