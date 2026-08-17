@@ -13,6 +13,7 @@ import {
   staticPublicCampNavItems,
   type PublicCampCard,
 } from "@/lib/camp-discovery"
+import { mergePublicCampCards } from "@/lib/public-camp-card-merge"
 
 export type { PublicCampCard } from "@/lib/camp-discovery"
 
@@ -508,15 +509,6 @@ function publicCampToCard(camp: PublicCamp): PublicCampCard {
   }
 }
 
-function dedupeCardsByLink(cards: PublicCampCard[]) {
-  const seen = new Set<string>()
-  return cards.filter((card) => {
-    if (seen.has(card.link)) return false
-    seen.add(card.link)
-    return true
-  })
-}
-
 function dedupeNavItemsByHref(items: PublicCampNavItem[]) {
   const seen = new Set<string>()
   return items.filter((item) => {
@@ -940,18 +932,16 @@ export async function getPublishedPublicCampCards(limit = 24) {
     getFacilitiesForCamps(rows, options),
     getCoachNamesForCamps(rows, options),
   ])
-
-  return dedupeCardsByLink([
-    ...STATIC_PUBLIC_CAMP_CARDS,
-    ...rows.map((row) =>
-      publicCampRowToCard(
-        row,
-        registeredCounts.get(row.id) ?? 0,
-        row.facility_id ? facilitiesById.get(row.facility_id) ?? null : null,
-        coachesByCampId.get(row.id) ?? null,
-      ),
+  const liveCards = rows.map((row) =>
+    publicCampRowToCard(
+      row,
+      registeredCounts.get(row.id) ?? 0,
+      row.facility_id ? facilitiesById.get(row.facility_id) ?? null : null,
+      coachesByCampId.get(row.id) ?? null,
     ),
-  ])
+  )
+
+  return mergePublicCampCards(STATIC_PUBLIC_CAMP_CARDS, liveCards)
     .filter((camp) =>
       campHasNotEnded({
         startDate: camp.sortDate,
