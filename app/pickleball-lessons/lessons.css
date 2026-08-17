@@ -1,0 +1,225 @@
+/* ==========================================================================
+   Breakaway Lessons page — ported from the approved Claude Design template
+   (templates/lesson-booking/LessonBooking.dc.html + marketing-site kit).
+   Brand tokens are scoped to .bp-lessons so the page runs on the newer
+   Deep Blue / Bright Lime palette without touching the site shell.
+   ========================================================================== */
+
+.bp-lessons {
+  /* ---- Brand core ---- */
+  --brand-navy: #124a7a;
+  --brand-lime: #90d123;
+  --brand-olive: #6ea626;
+  --navy-100: #e0e7ff;
+  --navy-900: #0a2a46;
+  --lime-50: #f7fee7;
+  --lime-200: #d9f99d;
+  --lime-700: #6ea626;
+  --lime-800: #3e601a;
+
+  /* ---- Neutrals ---- */
+  --neutral-0: #ffffff;
+  --neutral-50: #f8f9fa;
+  --neutral-100: #f3f4f6;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+  --neutral-500: #6b7280;
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-900: #111827;
+
+  /* ---- Semantic ---- */
+  --fg-default: var(--neutral-900);
+  --fg-muted: var(--neutral-500);
+  --fg-primary: var(--brand-navy);
+  --border-default: var(--neutral-200);
+  --primary-hover: #0f3d65;
+  --accent-hover: #7fba1f;
+  --danger: #dc2626;
+  --warning-border: #ee964b;
+  --warning-bg: #fff7ed;
+  --warning-fg: #9a4a09;
+
+  /* ---- Radii / shadows ---- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--fg-default);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bp-lessons :focus-visible { outline: 3px solid var(--brand-navy); outline-offset: 2px; border-radius: 4px; }
+.bp-lessons button, .bp-lessons input, .bp-lessons select, .bp-lessons textarea { font: inherit; color: inherit; }
+.bp-lessons a { color: var(--brand-navy); }
+.bp-lessons a:hover { color: var(--primary-hover); }
+.bp-lessons h1, .bp-lessons h2, .bp-lessons h3, .bp-lessons h4 { color: inherit; }
+
+@keyframes bpSpin { to { transform: rotate(360deg); } }
+@keyframes bpFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes cpFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cpRise { from { opacity: 0; transform: translateY(14px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes cpSwap { from { opacity: 0; } to { opacity: 1; } }
+
+/* ==== Buttons (marketing-site kit) ==== */
+.bp-lessons .bp-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-weight: 500; border-radius: var(--radius-md); border: 1px solid transparent;
+  cursor: pointer; transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  white-space: nowrap; text-decoration: none;
+}
+.bp-lessons .bp-btn--md { height: 36px; padding: 0 16px; font-size: 14px; }
+.bp-lessons .bp-btn--lg { height: 44px; padding: 0 24px; font-size: 14px; }
+.bp-lessons .bp-btn--primary { background: var(--brand-navy); color: #fff; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.bp-lessons .bp-btn--primary:hover { background: var(--primary-hover); }
+.bp-lessons .bp-btn--outline { background: transparent; color: var(--brand-navy); border-color: var(--brand-navy); }
+.bp-lessons .bp-btn--outline:hover { background: var(--brand-navy); color: #fff; }
+.bp-lessons .bp-btn--ghost { background: transparent; color: var(--brand-navy); }
+.bp-lessons .bp-btn--ghost:hover { color: var(--brand-lime); }
+.bp-lessons .bp-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.bp-lessons .bp-btn--block { width: 100%; }
+.bp-lessons .bp-btn--tall { min-height: 54px; font-size: 16px; font-weight: 600; }
+
+/* ==== Form fields (kit, sized up by the capture treatment) ==== */
+.bp-lessons .bp-field { display: flex; flex-direction: column; gap: 7px; }
+.bp-lessons .bp-label { font-size: 14px; font-weight: var(--fw-semibold); color: var(--neutral-700); }
+.bp-lessons .bp-req { color: #ef4444; }
+.bp-lessons .bp-input,
+.bp-lessons .bp-select select {
+  height: 54px; border: 1.5px solid var(--neutral-300); border-radius: var(--radius-lg);
+  background: #fff; padding: 0 16px; font-size: 16px; color: var(--fg-default);
+  width: 100%; transition: border-color 150ms ease, box-shadow 150ms ease;
+  appearance: none; -webkit-appearance: none;
+}
+.bp-lessons .bp-select select { padding-right: 44px; font-weight: var(--fw-semibold); }
+.bp-lessons .bp-input:focus,
+.bp-lessons .bp-select select:focus {
+  outline: none; border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, transparent);
+}
+.bp-lessons .bp-input::placeholder { color: var(--neutral-400); }
+.bp-lessons .bp-input[aria-invalid='true'] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--danger) 16%, transparent);
+}
+.bp-lessons .bp-select { position: relative; }
+.bp-lessons .bp-select svg { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--fg-muted); }
+.bp-lessons .bp-check-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--neutral-700); cursor: pointer; position: relative; }
+.bp-lessons .bp-check {
+  width: 20px; height: 20px; border: 1px solid var(--neutral-300); border-radius: 4px;
+  display: flex; align-items: center; justify-content: center; background: #fff;
+  color: transparent; transition: all 150ms ease; flex-shrink: 0;
+}
+.bp-lessons .bp-check--on { background: var(--brand-navy); border-color: var(--brand-navy); color: #fff; }
+
+/* ==== Chips ==== */
+.bp-lessons .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.bp-lessons .chip {
+  appearance: none; font-size: 15px; font-weight: var(--fw-semibold); color: var(--neutral-700);
+  background: #fff; border: 1.5px solid var(--neutral-300); border-radius: var(--radius-full);
+  min-height: 48px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; cursor: pointer; white-space: nowrap;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+.bp-lessons .chip:hover { border-color: var(--brand-navy); color: var(--brand-navy); }
+.bp-lessons .chip .tick {
+  width: 0; opacity: 0; margin-left: -8px; height: 16px; border-radius: var(--radius-full);
+  display: grid; place-items: center; flex: none; overflow: hidden; background: var(--brand-lime);
+  transition: width 150ms ease, opacity 150ms ease, margin 150ms ease;
+}
+.bp-lessons .chip .tick svg { width: 11px; height: 11px; color: var(--navy-900); display: block; }
+.bp-lessons .chip[aria-pressed='true'], .bp-lessons .chip[aria-checked='true'] {
+  background: var(--brand-navy); border-color: var(--brand-navy); color: #fff; box-shadow: var(--shadow-md);
+}
+.bp-lessons .chip[aria-pressed='true'] .tick, .bp-lessons .chip[aria-checked='true'] .tick { width: 16px; opacity: 1; margin-left: 0; }
+
+/* ==== Free text fields ==== */
+.bp-lessons .field { display: flex; flex-direction: column; gap: 7px; }
+.bp-lessons .lbl { font-size: 14px; font-weight: var(--fw-semibold); color: var(--neutral-700); }
+.bp-lessons .lbl .opt { color: var(--neutral-400); font-weight: var(--fw-medium); }
+.bp-lessons .inp {
+  width: 100%; height: 54px; padding: 0 16px; font-size: 16px; color: var(--neutral-900);
+  background: #fff; border: 1.5px solid var(--neutral-300); border-radius: var(--radius-lg);
+  outline: none; transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+.bp-lessons .inp::placeholder { color: var(--neutral-400); }
+.bp-lessons .inp:focus { border-color: var(--brand-navy); box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, transparent); }
+.bp-lessons textarea.inp { height: auto; min-height: 112px; padding: 14px 16px; line-height: 1.55; resize: vertical; }
+.bp-lessons .hint { font-size: 12.5px; line-height: 1.5; color: var(--neutral-400); margin: 0; }
+.bp-lessons .err { font-size: 12.5px; font-weight: 500; color: var(--danger); margin: 0; }
+
+/* ==== Progress crumbs ==== */
+.bp-lessons [data-crumb] { background: transparent; border: 1px solid transparent; color: var(--neutral-400); font-weight: 500; cursor: not-allowed; }
+.bp-lessons [data-crumb][data-state='done'] { color: var(--brand-navy); font-weight: 600; cursor: pointer; }
+.bp-lessons [data-crumb][data-state='current'] { background: #fff; border-color: var(--border-default); color: var(--brand-navy); font-weight: 700; cursor: default; }
+.bp-lessons [data-dot] { background: var(--neutral-200); color: var(--neutral-400); }
+.bp-lessons [data-crumb][data-state='done'] [data-dot] { background: var(--brand-lime); color: var(--navy-900); }
+.bp-lessons [data-crumb][data-state='current'] [data-dot] { background: var(--brand-navy); color: #fff; }
+
+/* ==== Coach cards ==== */
+.bp-lessons [data-coachcard] { border: 1px solid var(--border-default); }
+.bp-lessons [data-coachcard][data-sel='true'] { border: 2px solid var(--brand-navy); box-shadow: var(--shadow-md); }
+.bp-lessons [data-check] { background: var(--neutral-100); color: transparent; border: 1px solid var(--border-default); }
+.bp-lessons [data-coachcard][data-sel='true'] [data-check] { background: var(--brand-lime); color: var(--navy-900); border-color: transparent; }
+.bp-lessons [data-cpopen] img { transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.bp-lessons [data-cpopen]:hover img { transform: scale(1.07); }
+.bp-lessons [data-cpopen]:hover [data-cppill] { background: var(--brand-navy); }
+.bp-lessons [data-nopref] { background: #fff; border: 1px dashed var(--neutral-300); }
+.bp-lessons [data-nopref][aria-pressed='true'] { background: var(--lime-50); border: 2px solid var(--brand-navy); }
+.bp-lessons [data-reviewsbtn]:hover { background: var(--neutral-100); }
+
+/* ==== Date/choice pickers ==== */
+.bp-lessons [data-nav] { background: #fff; border: 1px solid var(--neutral-300); color: var(--neutral-700); cursor: pointer; }
+.bp-lessons [data-nav]:disabled { background: var(--neutral-50); border-color: var(--border-default); color: var(--neutral-300); cursor: not-allowed; }
+.bp-lessons [data-date] { background: #fff; border: 1px solid var(--border-default); color: var(--fg-default); cursor: pointer; }
+.bp-lessons [data-date][aria-pressed='true'] { background: var(--brand-navy); border-color: var(--brand-navy); color: #fff; }
+.bp-lessons [data-date]:disabled { background: var(--neutral-50); border: 1px dashed var(--border-default); color: var(--neutral-300); cursor: not-allowed; }
+.bp-lessons [data-datenote] { color: var(--neutral-400); }
+.bp-lessons [data-datenote][data-kind='taken'] { color: var(--brand-navy); }
+.bp-lessons [data-date][aria-pressed='true'] [data-datenote] { color: rgba(255, 255, 255, 0.8); }
+.bp-lessons [data-choice] { background: #fff; border: 1.5px solid var(--border-default); transition: border-color 150ms ease, box-shadow 150ms ease; }
+.bp-lessons [data-choice][data-open='true'] { border-color: var(--brand-navy); box-shadow: var(--shadow-md); }
+.bp-lessons [data-choicehead] { background: none; border: 0; cursor: pointer; }
+.bp-lessons [data-choicehead]:disabled { cursor: not-allowed; }
+.bp-lessons [data-choicehead]:disabled [data-rank] { opacity: 0.6; }
+.bp-lessons [data-rank] { background: var(--neutral-200); color: var(--neutral-500); }
+.bp-lessons [data-rank][data-filled='true'] { background: var(--brand-navy); color: #fff; }
+.bp-lessons [data-choicesum] { color: var(--fg-muted); }
+.bp-lessons [data-choicesum][data-filled='true'] { color: var(--fg-default); font-weight: 600; }
+.bp-lessons [data-choiceaction] { color: var(--brand-navy); }
+.bp-lessons [data-void] { background: repeating-linear-gradient(135deg, var(--neutral-50), var(--neutral-50) 5px, var(--neutral-100) 5px, var(--neutral-100) 10px); border: 1px dashed var(--neutral-300); }
+.bp-lessons [data-tbadge] { background: var(--neutral-200); color: var(--neutral-600); }
+.bp-lessons [data-tbadge][data-first='true'] { background: var(--brand-navy); color: #fff; }
+.bp-lessons [aria-expanded='true'] [data-chev] { transform: rotate(180deg); }
+.bp-lessons [data-igfollow]:hover { background: var(--accent-hover); }
+.bp-lessons [data-resetlink]:hover { color: #fff; }
+
+/* ==== Coach photo lightbox ==== */
+.bp-lessons [data-cpnav]:hover { background: #fff !important; transform: translateY(-50%) scale(1.06); }
+.bp-lessons [data-cpthumb] { border: 2px solid transparent; opacity: 0.62; }
+.bp-lessons [data-cpthumb]:hover { opacity: 1; }
+.bp-lessons [data-cpthumb][aria-current='true'] { border-color: #90d123; opacity: 1; }
+.bp-lessons [data-cpclose]:hover { background: #e5e7eb !important; }
+
+/* ==== Responsive ==== */
+@media (max-width: 720px) {
+  .bp-lessons [data-cpwrap] { padding: 0 !important; align-items: flex-end !important; }
+  .bp-lessons [data-cppanel] { width: 100% !important; max-height: 94vh !important; border-radius: 18px 18px 0 0 !important; }
+  .bp-lessons [data-cpstage] { min-height: 46vh !important; }
+}
+@media (max-width: 980px) {
+  .bp-lessons [data-m='full'] { width: 100% !important; max-width: none !important; flex: 1 1 100% !important; position: static !important; }
+  .bp-lessons [data-m='stack'] { flex-direction: column !important; align-items: stretch !important; }
+  .bp-lessons [data-m='stack'] > * { flex: 0 0 auto !important; }
+  .bp-lessons [data-m='onecol'] { grid-template-columns: 1fr !important; }
+}

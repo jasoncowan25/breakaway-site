@@ -12,6 +12,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/lessons',
+        destination: '/pickleball-lessons',
+        permanent: true,
+      },
+      {
         source: '/Toronto',
         destination: '/pickleball-camps',
         permanent: true,

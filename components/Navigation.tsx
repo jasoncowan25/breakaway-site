@@ -56,6 +56,9 @@ export function Navigation({ campItems = EMPTY_CAMP_ITEMS }: NavigationProps) {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            <Link href="/pickleball-lessons" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+              Lessons
+            </Link>
             <Link href="/pickleball-coaches" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Coaches
             </Link>
