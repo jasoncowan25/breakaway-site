@@ -13,6 +13,7 @@ import {
   staticPublicCampNavItems,
   type PublicCampCard,
 } from "@/lib/camp-discovery"
+import { resolveFacilityPhotos } from "@/lib/facility-photos"
 import { mergePublicCampCards } from "@/lib/public-camp-card-merge"
 
 export type { PublicCampCard } from "@/lib/camp-discovery"
@@ -412,12 +413,6 @@ function subtitleForCamp(row: CampRow) {
     return `2-Day Advanced Training • Intermediate Players (${skill})`
   }
   return `${skill} skill level • ${row.location ?? "Breakaway"} camp`
-}
-
-function facilityPhotosForCamp(facility: FacilityRow | null, fallback: string) {
-  if (facility?.name.toLowerCase().includes("jar")) return JAR_VENUE_PHOTOS
-  const photos = [facility?.photo_url, ...(facility?.photos ?? [])].filter(Boolean) as string[]
-  return photos.length > 0 ? photos : [fallback]
 }
 
 function venueCopyForCamp(facility: FacilityRow | null, venue: string) {
@@ -884,7 +879,7 @@ function publicCampRowToCard(
   const heroImageUrl =
     row.thumbnail_image_url ||
     row.hero_image_url ||
-    facilityPhotosForCamp(facility, "/toronto-coaching-instruction.png")[0]
+    resolveFacilityPhotos(facility, "/toronto-coaching-instruction.png", JAR_VENUE_PHOTOS)[0]
 
   return {
     id: canonicalCampSlug(row.slug, row.id)!,
@@ -1086,7 +1081,11 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
   const modules = getPublicCampModules(row.module_ids, row.title)
   const facility = facilityRows?.[0] ?? null
   const coach = coachRows?.[0] ?? null
-  const facilityPhotos = facilityPhotosForCamp(facility, "/toronto-coaching-instruction.png")
+  const facilityPhotos = resolveFacilityPhotos(
+    facility,
+    "/toronto-coaching-instruction.png",
+    JAR_VENUE_PHOTOS,
+  )
   // A banner image chosen/uploaded in admin wins; otherwise fall back to the
   // facility's photos, then the hardcoded default.
   const heroImageUrl =
