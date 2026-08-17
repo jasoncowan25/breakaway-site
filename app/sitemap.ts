@@ -49,8 +49,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Main pages
     sitemapEntry("/", "weekly", 1.0),
     sitemapEntry("/pickleball-camps", "weekly", 0.9),
+    sitemapEntry("/pickleball-lessons", "weekly", 0.9),
     sitemapEntry("/pickleball-coaches", "monthly", 0.8),
-    sitemapEntry("/pickleball-camp-experience", "monthly", 0.8),
     sitemapEntry("/schedule", "weekly", 0.85),
     // Muskoka Hub
     sitemapEntry("/pickleball-camps/muskoka", "weekly", 0.9),
