@@ -62,12 +62,6 @@ export function Navigation({ campItems = EMPTY_CAMP_ITEMS }: NavigationProps) {
             <Link href="/pickleball-coaches" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Coaches
             </Link>
-            <Link
-              href="/pickleball-camp-experience"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              The Experience
-            </Link>
             {/* <Link href="/schedule" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Schedule
             </Link> */}

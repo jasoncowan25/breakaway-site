@@ -58,20 +58,22 @@ await assertPage("/schedule", [
   ["Muskoka", "Muskoka hub/card"],
 ])
 
-const redirect = await fetch(new URL("/experience", baseUrl), { redirect: "manual" })
-assert.ok([301, 308].includes(redirect.status), "/experience should permanently redirect")
-assert.equal(
-  redirect.headers.get("location"),
-  "/pickleball-camp-experience",
-  "/experience should redirect to /pickleball-camp-experience",
-)
+for (const retired of ["/experience", "/pickleball-camp-experience"]) {
+  const redirect = await fetch(new URL(retired, baseUrl), { redirect: "manual" })
+  assert.ok([301, 308].includes(redirect.status), `${retired} should permanently redirect`)
+  assert.equal(
+    redirect.headers.get("location"),
+    "/pickleball-camps",
+    `${retired} should redirect to /pickleball-camps`,
+  )
+}
 
 const { text: sitemap } = await fetchText("/sitemap.xml")
 for (const path of [
   "/pickleball-camps/punta-cana",
   "/pickleball-coaches",
   "/schedule",
-  "/pickleball-camp-experience",
+  "/pickleball-lessons",
   "/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3",
   "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
 ]) {
@@ -79,5 +81,10 @@ for (const path of [
   assertIncludes(sitemap, url, "sitemap")
   assert.equal(sitemap.indexOf(url), sitemap.lastIndexOf(url), `sitemap should include ${url} once`)
 }
+
+assert.ok(
+  !sitemap.includes("/pickleball-camp-experience"),
+  "sitemap should no longer list the retired experience page",
+)
 
 console.log("SEO smoke checks passed")

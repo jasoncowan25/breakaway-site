@@ -20,9 +20,6 @@ export function Footer({ hideNotifySignup = false }: { hideNotifySignup?: boolea
             <Link href="/pickleball-coaches" className="text-[#111827]/70 hover:text-[#1e3a8a] transition-colors">
               Coaches
             </Link>
-            <Link href="/pickleball-camp-experience" className="text-[#111827]/70 hover:text-[#1e3a8a] transition-colors">
-              The Experience
-            </Link>
           </nav>
 
           <p className="mt-6 text-sm text-[#111827]/70">

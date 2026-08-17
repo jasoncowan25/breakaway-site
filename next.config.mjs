@@ -80,7 +80,12 @@ const nextConfig = {
       },
       {
         source: '/experience',
-        destination: '/pickleball-camp-experience',
+        destination: '/pickleball-camps',
+        permanent: true,
+      },
+      {
+        source: '/pickleball-camp-experience',
+        destination: '/pickleball-camps',
         permanent: true,
       },
       {
