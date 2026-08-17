@@ -41,6 +41,7 @@ export type KidsWeeklyCampLike = Pick<
   ApiCamp,
   | "slug"
   | "basePriceCents"
+  | "capacity"
   | "spotsLeft"
   | "isSoldOut"
   | "sessionDates"
@@ -63,7 +64,7 @@ export function buildKidsWeeklyProgram(
     : null
   const soldOut = Boolean(camp?.isSoldOut || camp?.spotsLeft === 0)
   const unavailable = !camp || !recurring || camp.basePriceCents == null
-  const spots = camp?.spotsLeft
+  const capacity = camp?.capacity ?? config.capacity
   const sessionCount = camp?.sessionDates?.length ?? 0
 
   return {
@@ -72,11 +73,7 @@ export function buildKidsWeeklyProgram(
     eyebrow: config.eyebrow,
     checkoutHref: `/checkout/${config.slug}`,
     priceLabel: formatMoney(camp?.basePriceCents),
-    spotsLabel: soldOut
-      ? "Sold out"
-      : spots == null
-        ? `${config.capacity} spots total`
-        : `${spots} ${spots === 1 ? "spot" : "spots"} left`,
+    spotsLabel: soldOut ? "Sold out" : `${capacity} spots`,
     sessionCount,
     sessionsLabel: sessionCount > 0
       ? `${sessionCount} ${config.duration} sessions`

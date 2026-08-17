@@ -36,7 +36,7 @@ test("builds a live all-levels program card from one camp and its 15 sessions", 
 
   assert.equal(program.checkoutHref, "/checkout/toronto-kids-weekly-all-levels-sep-10-2026")
   assert.equal(program.priceLabel, "$600 CAD")
-  assert.equal(program.spotsLabel, "17 spots left")
+  assert.equal(program.spotsLabel, "20 spots")
   assert.equal(program.sessionsLabel, "15 one-hour sessions")
   assert.equal(program.ctaDisabled, false)
 })
@@ -45,10 +45,13 @@ test("builds experienced program duration copy from its live 14-session schedule
   const program = buildKidsWeeklyProgram("experienced", camp({
     slug: KIDS_WEEKLY_PROGRAMS.experienced.slug,
     basePriceCents: 112000,
+    capacity: 10,
+    spotsLeft: 9,
     sessionDates: Array.from({ length: 14 }, (_, index) => `2026-09-${String(7 + index).padStart(2, "0")}`),
   }))
 
   assert.equal(program.priceLabel, "$1,120 CAD")
+  assert.equal(program.spotsLabel, "10 spots")
   assert.equal(program.sessionCount, 14)
   assert.equal(program.sessionsLabel, "14 two-hour sessions")
   assert.equal(program.weeksLabel, "14 weeks")
