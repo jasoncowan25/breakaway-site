@@ -196,8 +196,6 @@
 .bp-lessons [data-cpopen]:hover [data-cppill] { background: var(--brand-navy); }
 .bp-lessons [data-nopref] { background: #fff; border: 1px dashed var(--neutral-300); }
 .bp-lessons [data-nopref][aria-pressed='true'] { background: var(--lime-50); border: 2px solid var(--brand-navy); }
-.bp-lessons [data-reviewsbtn]:hover { background: var(--neutral-100); }
-
 /* ==== Date/choice pickers ==== */
 .bp-lessons [data-nav] { background: #fff; border: 1px solid var(--neutral-300); color: var(--neutral-700); cursor: pointer; }
 .bp-lessons [data-nav]:disabled { background: var(--neutral-50); border-color: var(--border-default); color: var(--neutral-300); cursor: not-allowed; }

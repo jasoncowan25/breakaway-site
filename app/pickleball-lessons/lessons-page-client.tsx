@@ -31,12 +31,6 @@ function Tick() {
   )
 }
 
-function Star({ fill }: { fill: string }) {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill={fill}><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.1 6-5.3-3-5.3 3 1.1-6L3.3 9.4l6.1-.8Z" /></svg>
-  )
-}
-
 function Field({
   label,
   required,
@@ -466,14 +460,6 @@ export function LessonsPageClient() {
                                 {D.photos(c.id).length}
                               </span>
                             </button>
-                            {!!c.reviewCount && (
-                              <button type="button" data-reviewsbtn="" onClick={() => { const nx = ex ? null : c.id; setExpanded(nx); if (nx) D.track('coach_reviews_viewed', { coach: c.id }) }} aria-expanded={ex} aria-label={`Read ${c.reviewCount} review${c.reviewCount === 1 ? '' : 's'} for ${c.name}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, background: 'none', border: 0, borderRadius: 8, padding: '3px 6px', cursor: 'pointer', transition: 'background 140ms ease' }}>
-                                <span style={{ display: 'flex', gap: 2 }} aria-hidden="true">
-                                  {[0, 1, 2, 3, 4].map((k) => <Star key={k} fill="#F2B01E" />)}
-                                </span>
-                                <span style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--brand-navy)', lineHeight: 1.3, textDecoration: 'underline', textDecorationColor: 'rgba(10,42,70,.4)', textUnderlineOffset: 2 }}>{c.reviewCount} review{c.reviewCount === 1 ? '' : 's'}</span>
-                              </button>
-                            )}
                           </div>
                           <button type="button" onClick={() => { chooseCoach(c.id); D.track('coach_selected', { coach: c.id, source: 'step1' }) }} aria-pressed={on} style={{ flex: 1, minWidth: 0, display: 'flex', gap: 18, alignItems: 'flex-start', background: 'none', border: 0, padding: 0, cursor: 'pointer', textAlign: 'left' }}>
                             <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -515,30 +501,7 @@ export function LessonsPageClient() {
                             <div style={{ marginBottom: 12 }}>
                               <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: 'var(--brand-navy)' }}>About {c.firstName}</h3>
                             </div>
-                            <p style={{ margin: '0 0 16px', fontSize: 14.5, lineHeight: 1.6, color: 'var(--neutral-600)', maxWidth: '70ch', textWrap: 'pretty' }}>{c.bio}</p>
-                            <div style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', background: '#fff', padding: '14px 16px' }}>
-                              {c.reviewCount ? (
-                                <>
-                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px 10px', alignItems: 'center', paddingBottom: 12 }}>
-                                    <span style={{ display: 'flex', gap: 2 }} aria-hidden="true">
-                                      {[0, 1, 2, 3, 4].map((k) => <Star key={k} fill="#6EA626" />)}
-                                    </span>
-                                    <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--neutral-700)' }}>{(c.rating ?? 5).toFixed(1)} out of 5 · {c.reviewCount} player review{c.reviewCount === 1 ? '' : 's'}</span>
-                                  </div>
-                                  {(c.reviews || []).map((review) => (
-                                    <figure key={review.initials} style={{ margin: 0, padding: '13px 0', borderTop: '1px solid var(--neutral-100)' }}>
-                                      <blockquote style={{ margin: '0 0 8px', fontSize: 13.5, lineHeight: 1.6, color: 'var(--neutral-600)', maxWidth: '70ch', textWrap: 'pretty' }}>{review.text}</blockquote>
-                                      <figcaption style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--fg-muted)' }}>— {review.initials}</figcaption>
-                                    </figure>
-                                  ))}
-                                </>
-                              ) : (
-                                <>
-                                  <p style={{ margin: '0 0 3px', fontSize: 13.5, fontWeight: 700, color: 'var(--neutral-700)' }}>No reviews yet</p>
-                                  <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.5, color: 'var(--fg-muted)' }}>Be the first to review {c.firstName}. Verified player reviews will appear here once lessons have been completed.</p>
-                                </>
-                              )}
-                            </div>
+                            <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6, color: 'var(--neutral-600)', maxWidth: '70ch', textWrap: 'pretty' }}>{c.bio}</p>
                           </div>
                         )}
                       </div>

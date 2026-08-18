@@ -10,12 +10,6 @@ export interface CoachPhoto {
   alt: string
 }
 
-export interface CoachReview {
-  initials: string
-  stars: number
-  text: string
-}
-
 export interface LessonCoach {
   id: string
   slug: string
@@ -32,9 +26,6 @@ export interface LessonCoach {
   ratingLabel: string
   bio: string
   hourlyRate: number
-  rating: number | null
-  reviewCount: number
-  reviews?: CoachReview[]
   locations: string[]
   cities: string[]
   nextAvailable: string
@@ -84,37 +75,13 @@ export const coaches: LessonCoach[] = [
     ],
     description:
       'Former pro hockey player turned competitive pickleball player, bringing leadership and a technical, game-focused approach.',
-    levelLabel: 'Intermediate–advanced',
+    levelLabel: 'Best for: Intermediate–Advanced',
     selectorDescriptor: 'Intermediate to advanced coaching',
     levelRange: '3.0 – 4.5+',
     playerRating: '5.00',
     ratingLabel: 'DUPR 5.00',
     bio: 'Former pro hockey player (OHL Oshawa Generals captain; later ECHL). Grew up playing tennis and table tennis before transitioning quickly to competitive pickleball. Actively competes in tournaments, with a coaching focus on leadership, skill development and helping players reach their potential.',
     hourlyRate: 125,
-    rating: 5,
-    reviewCount: 4,
-    reviews: [
-      {
-        initials: 'LG',
-        stars: 5,
-        text: 'Joey, your leadership and coaching style is of the highest caliber and your highly professional team successfully supports the coaching system you’ve established. You have created a program that really reinforces the key components of the game to elevate the skill set of beginner, intermediate and advanced players. And manage to make it fun!!',
-      },
-      {
-        initials: 'MM',
-        stars: 5,
-        text: 'Joey commands the room, whether its demo’g the shot, showing video to further demonstrate key shots or positioning, or Coaching. Joey seemed omnipresent, pretty tricky to pull that off!',
-      },
-      {
-        initials: 'DF',
-        stars: 5,
-        text: 'The instructor to participant level was excellent with near constant supervision and coaching in every exercise. We got detailed instruction on each of the main shots in pickleball and then the opportunity to practice these shots at length to perfect them.',
-      },
-      {
-        initials: 'MA',
-        stars: 5,
-        text: 'I cannot say enough good things about the pickleball camp and Joey’s coaching! He was so informative, patient and kind, even after 6 hours of instruction. I learned so much and would do it again in a heartbeat!',
-      },
-    ],
     locations: ['jar', 'dill', 'muskoka'],
     cities: ['toronto', 'muskoka'],
     nextAvailable: 'Wednesday, August 12',
@@ -137,15 +104,13 @@ export const coaches: LessonCoach[] = [
     ],
     description:
       'Rising competitive player with strong fundamentals, a patient style and a passion for helping others improve.',
-    levelLabel: 'Beginner–intermediate',
+    levelLabel: 'Best for: Beginner–Intermediate',
     selectorDescriptor: 'Beginner to intermediate coaching',
     levelRange: '2.0 – 3.5',
     playerRating: '4.50',
     ratingLabel: 'DUPR 4.50',
     bio: 'Sam is a rising young player climbing the competitive ranks quickly. He regularly competes in Toronto and Florida and brings strong fundamentals, patience and a genuine passion for helping others improve.',
     hourlyRate: 100,
-    rating: null,
-    reviewCount: 0,
     locations: ['jar', 'dill'],
     cities: ['toronto'],
     nextAvailable: 'Tuesday, August 18',
