@@ -39,6 +39,7 @@ export interface LessonCoach {
   cities: string[]
   nextAvailable: string
   leadDays: number
+  blockedWeekdays: number[]
   active: boolean
   bookingAvailable: boolean
 }
@@ -117,7 +118,8 @@ export const coaches: LessonCoach[] = [
     locations: ['jar', 'dill', 'muskoka'],
     cities: ['toronto', 'muskoka'],
     nextAvailable: 'Wednesday, August 12',
-    leadDays: 17,
+    leadDays: 21,
+    blockedWeekdays: [],
     active: true,
     bookingAvailable: true,
   },
@@ -141,13 +143,14 @@ export const coaches: LessonCoach[] = [
     playerRating: '4.50',
     ratingLabel: 'DUPR 4.50',
     bio: 'Sam is a rising young player climbing the competitive ranks quickly. He regularly competes in Toronto and Florida and brings strong fundamentals, patience and a genuine passion for helping others improve.',
-    hourlyRate: 75,
+    hourlyRate: 100,
     rating: null,
     reviewCount: 0,
     locations: ['jar', 'dill'],
     cities: ['toronto'],
     nextAvailable: 'Tuesday, August 18',
-    leadDays: 6,
+    leadDays: 4,
+    blockedWeekdays: [6],
     active: true,
     bookingAvailable: true,
   },
@@ -228,6 +231,46 @@ export function photos(id: string): CoachPhoto[] {
 
 export function coachesForCity(cityId: string): LessonCoach[] {
   return coaches.filter((c) => c.cities.indexOf(cityId) !== -1)
+}
+
+function addIsoDays(isoDate: string, days: number): string {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  const date = new Date(Date.UTC(year, month - 1, day))
+  date.setUTCDate(date.getUTCDate() + days)
+  return date.toISOString().slice(0, 10)
+}
+
+function isoWeekday(isoDate: string): number {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  return new Date(Date.UTC(year, month - 1, day)).getUTCDay()
+}
+
+function coachCanTakeDate(c: LessonCoach, requestedDate: string, today: string): boolean {
+  return requestedDate >= addIsoDays(today, c.leadDays) && !c.blockedWeekdays.includes(isoWeekday(requestedDate))
+}
+
+export function isRequestDateAllowed(
+  coachChoice: string,
+  cityId: string,
+  requestedDate: string,
+  today: string,
+): boolean {
+  const selected = coachChoice && coachChoice !== 'none' ? coach(coachChoice) : null
+  const candidates = selected
+    ? [selected]
+    : coachesForCity(cityId).filter((candidate) => candidate.active && candidate.bookingAvailable)
+
+  return candidates.some(
+    (candidate) => candidate.cities.includes(cityId) && coachCanTakeDate(candidate, requestedDate, today),
+  )
+}
+
+export function earliestRequestDate(coachChoice: string, cityId: string, today: string): string {
+  for (let offset = 0; offset <= 366; offset += 1) {
+    const candidate = addIsoDays(today, offset)
+    if (isRequestDateAllowed(coachChoice, cityId, candidate, today)) return candidate
+  }
+  return addIsoDays(today, 367)
 }
 
 export function money(n: number): string {

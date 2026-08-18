@@ -156,21 +156,12 @@ export function LessonsPageClient() {
     return out
   }, [choices])
 
-  const leadDays = useMemo(() => {
-    if (f.coach && f.coach !== 'none') {
-      const c = D.coach(f.coach)
-      return c && c.leadDays ? c.leadDays : 7
-    }
-    const all = D.coachesForCity(city).map((c) => c.leadDays || 7)
-    return all.length ? Math.min(...all) : 7
-  }, [f.coach, city])
-
-  const earliest = useMemo(() => {
-    const d = new Date()
-    d.setHours(0, 0, 0, 0)
-    d.setDate(d.getDate() + leadDays)
-    return d
-  }, [leadDays])
+  const todayIso = useMemo(() => iso(new Date()), [])
+  const earliestIso = useMemo(
+    () => D.earliestRequestDate(f.coach, city, todayIso),
+    [f.coach, city, todayIso],
+  )
+  const earliest = useMemo(() => fromIso(earliestIso), [earliestIso])
 
   const setChoice = (i: number, patch: Partial<Choice>) =>
     setChoices((prev) => {
@@ -185,6 +176,16 @@ export function LessonsPageClient() {
       setErrors({})
       return next
     })
+
+  const chooseCoach = (coachId: string) => {
+    if (f.coach !== coachId) {
+      setChoices(EMPTY_CHOICES.map((choice) => ({ ...choice, times: [] })))
+      setOpenChoice(0)
+      setWeekOffset(0)
+    }
+    setF({ coach: coachId })
+    clearErr('coach')
+  }
 
   const goStep = (n: number) => {
     if (n === 2 && !f.coach) {
@@ -275,7 +276,7 @@ export function LessonsPageClient() {
 
   const photoCoachObj = photoCoach ? D.coach(photoCoach) : null
 
-  const eIso = iso(earliest)
+  const eIso = earliestIso
   const stripBase = weekStart(earliest)
 
   const sectionMax: CSSProperties = { maxWidth: 1280, margin: '0 auto' }
@@ -286,25 +287,26 @@ export function LessonsPageClient() {
       {!success && (
         <section id="top" style={{ background: 'var(--neutral-50)', borderBottom: '1px solid var(--border-default)', padding: '44px 24px 0' }}>
           <div style={sectionMax}>
-            <nav aria-label="Progress" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, fontSize: 13.5, marginBottom: 26 }}>
+            <nav aria-label="Progress" className="bp-stepper">
               {crumbLabels.map((label, i) => {
                 const n = i + 1
                 const cur = step === n
                 const done = step > n
                 return (
-                  <button
-                    key={label}
-                    type="button"
-                    data-crumb=""
-                    data-state={cur ? 'current' : done ? 'done' : 'locked'}
-                    onClick={() => { if (n < step) goStep(n) }}
-                    disabled={n > step}
-                    aria-current={cur ? 'step' : undefined}
-                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px 8px 8px', borderRadius: 9999, fontSize: 13.5, minHeight: 40 }}
-                  >
-                    <span data-dot="" style={{ width: 22, height: 22, borderRadius: 9999, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11.5, fontWeight: 700, flexShrink: 0 }}>{n}</span>
-                    {label}
-                  </button>
+                  <div key={label} className="bp-stepper__segment" data-last={i === crumbLabels.length - 1 ? 'true' : 'false'}>
+                    <button
+                      type="button"
+                      data-crumb=""
+                      data-state={cur ? 'current' : done ? 'done' : 'locked'}
+                      onClick={() => { if (n < step) goStep(n) }}
+                      disabled={n > step}
+                      aria-current={cur ? 'step' : undefined}
+                    >
+                      <span data-dot="">{n}</span>
+                      <span>{label}</span>
+                    </button>
+                    {i < crumbLabels.length - 1 && <span data-step-line="" data-state={done ? 'done' : 'upcoming'} />}
+                  </div>
                 )
               })}
             </nav>
@@ -325,6 +327,9 @@ export function LessonsPageClient() {
                         if (!v || (v === 'muskoka' && !mus.open)) return
                         setCity(v)
                         setF({ city: v, coach: '' })
+                        setChoices(EMPTY_CHOICES.map((choice) => ({ ...choice, times: [] })))
+                        setOpenChoice(0)
+                        setWeekOffset(0)
                         D.track('lesson_city_selected', { city: v })
                       }}
                     >
@@ -470,7 +475,7 @@ export function LessonsPageClient() {
                               </button>
                             )}
                           </div>
-                          <button type="button" onClick={() => { setF({ coach: c.id }); clearErr('coach'); D.track('coach_selected', { coach: c.id, source: 'step1' }) }} aria-pressed={on} style={{ flex: 1, minWidth: 0, display: 'flex', gap: 18, alignItems: 'flex-start', background: 'none', border: 0, padding: 0, cursor: 'pointer', textAlign: 'left' }}>
+                          <button type="button" onClick={() => { chooseCoach(c.id); D.track('coach_selected', { coach: c.id, source: 'step1' }) }} aria-pressed={on} style={{ flex: 1, minWidth: 0, display: 'flex', gap: 18, alignItems: 'flex-start', background: 'none', border: 0, padding: 0, cursor: 'pointer', textAlign: 'left' }}>
                             <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
                               <span style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 12px', alignItems: 'baseline' }}>
                                 <span style={{ fontSize: 19, fontWeight: 700, color: 'var(--brand-navy)' }}>{c.name}</span>
@@ -480,7 +485,7 @@ export function LessonsPageClient() {
                               <span style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 18px', fontSize: 13.5, color: 'var(--fg-muted)', paddingTop: 2 }}>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6EA626" strokeWidth="1.8"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 11h18" /></svg>
-                                  Next available: {D.shortDate(c.nextAvailable)}
+                                  Next available: {shortDate(D.earliestRequestDate(c.id, city, todayIso))}
                                 </span>
                                 <span>{c.ratingLabel || c.playerRating}</span>
                               </span>
@@ -499,15 +504,16 @@ export function LessonsPageClient() {
                             {ex ? 'Hide profile' : `About ${c.firstName}`}
                             <span data-chev="" style={{ display: 'flex', flexShrink: 0, color: 'var(--fg-muted)', transition: 'transform 200ms ease' }}><Chevron /></span>
                           </button>
-                          <span style={{ fontSize: 13, color: 'var(--fg-muted)' }}>{c.locations.map((l) => D.locations[l].short || D.locations[l].name).join(' · ')}</span>
+                          <span style={{ fontSize: 13, color: 'var(--fg-muted)' }}>
+                            {city === 'toronto'
+                              ? 'Includes court fees at local Toronto facility.'
+                              : 'Includes court fees at our Muskoka facility.'}
+                          </span>
                         </div>
                         {ex && (
                           <div style={{ borderTop: '1px solid var(--neutral-100)', padding: 20, background: 'var(--neutral-50)', animation: 'bpFade .18s ease' }}>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 16px', alignItems: 'center', marginBottom: 12 }}>
+                            <div style={{ marginBottom: 12 }}>
                               <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: 'var(--brand-navy)' }}>About {c.firstName}</h3>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 9999, padding: '4px 11px', fontSize: 12.5, fontWeight: 600, color: 'var(--neutral-700)' }}>
-                                Player level<span style={{ fontWeight: 700, color: 'var(--brand-navy)' }}>{c.levelRange}</span>
-                              </span>
                             </div>
                             <p style={{ margin: '0 0 16px', fontSize: 14.5, lineHeight: 1.6, color: 'var(--neutral-600)', maxWidth: '70ch', textWrap: 'pretty' }}>{c.bio}</p>
                             <div style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', background: '#fff', padding: '14px 16px' }}>
@@ -538,7 +544,7 @@ export function LessonsPageClient() {
                       </div>
                     )
                   })}
-                  <button type="button" onClick={() => { setF({ coach: 'none' }); clearErr('coach'); D.track('coach_selected', { coach: 'none', source: 'step1' }) }} aria-pressed={f.coach === 'none'} data-nopref="" style={{ display: 'flex', alignItems: 'center', gap: 14, borderRadius: 'var(--radius-lg)', padding: '18px 20px', minHeight: 64, cursor: 'pointer', transition: 'all 150ms ease' }}>
+                  <button type="button" onClick={() => { chooseCoach('none'); D.track('coach_selected', { coach: 'none', source: 'step1' }) }} aria-pressed={f.coach === 'none'} data-nopref="" style={{ display: 'flex', alignItems: 'center', gap: 14, borderRadius: 'var(--radius-lg)', padding: '18px 20px', minHeight: 64, cursor: 'pointer', transition: 'all 150ms ease' }}>
                     <span style={{ width: 44, height: 44, borderRadius: 9999, background: 'var(--navy-100)', color: 'var(--brand-navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, flexShrink: 0 }}>?</span>
                     <span style={{ display: 'flex', flexDirection: 'column', gap: 3, textAlign: 'left' }}>
                       <span style={{ fontSize: 16.5, fontWeight: 700, color: 'var(--brand-navy)' }}>No preference</span>
@@ -596,9 +602,18 @@ export function LessonsPageClient() {
                         const d = new Date(ws)
                         d.setDate(d.getDate() + k)
                         const dIso = iso(d)
-                        const before = d < earliest
+                        const before = dIso < eIso
+                        const allowed = D.isRequestDateAllowed(f.coach, city, dIso, todayIso)
                         const other = choices.reduce((acc, o, ix) => (ix !== i && o.date === dIso ? ix : acc), -1)
-                        return { dow: DOW[d.getDay()], day: d.getDate(), iso: dIso, selected: activeIso === dIso, disabled: before, kind: before ? 'booked' : other > -1 ? 'taken' : 'open', note: before ? 'Booked' : other > -1 ? ORDN[other] : '' }
+                        return {
+                          dow: DOW[d.getDay()],
+                          day: d.getDate(),
+                          iso: dIso,
+                          selected: activeIso === dIso,
+                          disabled: !allowed,
+                          kind: !allowed ? 'booked' : other > -1 ? 'taken' : 'open',
+                          note: before ? 'Too soon' : !allowed ? 'Unavailable' : other > -1 ? ORDN[other] : '',
+                        }
                       })
                       return (
                         <div key={i} data-choice="" data-open={open ? 'true' : 'false'} style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden' }}>

@@ -159,12 +159,32 @@
 .bp-lessons .err { font-size: 12.5px; font-weight: 500; color: var(--danger); margin: 0; }
 
 /* ==== Progress crumbs ==== */
-.bp-lessons [data-crumb] { background: transparent; border: 1px solid transparent; color: var(--neutral-400); font-weight: 500; cursor: not-allowed; }
+.bp-lessons .bp-stepper {
+  display: flex; align-items: center; width: min(100%, 430px); margin: 0 0 26px;
+  font-size: 13.5px;
+}
+.bp-lessons .bp-stepper__segment { display: flex; align-items: center; flex: 1 1 auto; min-width: 0; }
+.bp-lessons .bp-stepper__segment[data-last='true'] { flex: 0 0 auto; }
+.bp-lessons [data-crumb] {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0;
+  appearance: none; background: transparent; border: 0; color: var(--neutral-400);
+  font: inherit; font-weight: 500; cursor: not-allowed; white-space: nowrap;
+}
 .bp-lessons [data-crumb][data-state='done'] { color: var(--brand-navy); font-weight: 600; cursor: pointer; }
-.bp-lessons [data-crumb][data-state='current'] { background: #fff; border-color: var(--border-default); color: var(--brand-navy); font-weight: 700; cursor: default; }
-.bp-lessons [data-dot] { background: var(--neutral-200); color: var(--neutral-400); }
+.bp-lessons [data-crumb][data-state='current'] { color: var(--brand-navy); font-weight: 700; cursor: default; }
+.bp-lessons [data-dot] {
+  width: 25px; height: 25px; border-radius: 9999px; display: inline-flex; align-items: center;
+  justify-content: center; flex-shrink: 0; background: #fff; color: var(--neutral-400);
+  border: 1.5px solid var(--neutral-300); font-size: 11.5px; font-weight: 700;
+}
 .bp-lessons [data-crumb][data-state='done'] [data-dot] { background: var(--brand-lime); color: var(--navy-900); }
-.bp-lessons [data-crumb][data-state='current'] [data-dot] { background: var(--brand-navy); color: #fff; }
+.bp-lessons [data-crumb][data-state='done'] [data-dot] { border-color: var(--brand-lime); }
+.bp-lessons [data-crumb][data-state='current'] [data-dot] { background: var(--brand-navy); border-color: var(--brand-navy); color: #fff; }
+.bp-lessons [data-step-line] {
+  height: 1.5px; min-width: 28px; flex: 1 1 68px; margin: 0 12px;
+  background: var(--neutral-300); border-radius: 9999px;
+}
+.bp-lessons [data-step-line][data-state='done'] { background: var(--brand-lime); }
 
 /* ==== Coach cards ==== */
 .bp-lessons [data-coachcard] { border: 1px solid var(--border-default); }
