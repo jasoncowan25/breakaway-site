@@ -67,12 +67,20 @@ export function CoachRoster() {
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-accent">Private coaching & camps</p>
             <h2 className="mt-1 text-2xl font-bold text-white">Train With Our Coaches</h2>
           </div>
-          <Link
-            href="/pickleball-camps"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-bold text-accent-foreground transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-          >
-            Find Your Camp
-          </Link>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <Link
+              href="/pickleball-lessons"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/70 bg-transparent px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+            >
+              Private Lessons
+            </Link>
+            <Link
+              href="/pickleball-camps"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-bold text-accent-foreground transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+            >
+              Find Your Camp
+            </Link>
+          </div>
         </div>
       </section>
     </main>
