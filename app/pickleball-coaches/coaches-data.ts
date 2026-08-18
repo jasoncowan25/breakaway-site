@@ -35,7 +35,7 @@ export const coachRoster: CoachRosterProfile[] = [
     bio: 'Rising quickly through the competitive ranks, Sam regularly competes in Toronto and Florida. He brings strong fundamentals, patience and a genuine passion for helping players improve.',
     badges: [
       { label: 'Rising Star', tone: 'credential' },
-      { label: 'Tournament Competitor', tone: 'credential' },
+      { label: '4.5 Rated', tone: 'credential' },
     ],
   },
 ]
