@@ -17,7 +17,7 @@ export const coachRoster: CoachRosterProfile[] = [
   {
     name: 'Joey Manchurek',
     slug: 'joey-manchurek',
-    role: 'Founder & Lead Coach · Toronto',
+    role: 'Founder & Head Pro · Toronto',
     image: '/images/coaches/joey-avatar.png',
     imagePosition: 'center 32%',
     bio: 'Former pro hockey player with a background in tennis and table tennis. Joey is an active tournament competitor who brings a high-performance approach to skill development, strategy and helping players reach their potential.',
