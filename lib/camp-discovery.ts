@@ -64,11 +64,6 @@ export const RELATED_CAMP_LINKS = [
     href: "/pickleball-camps/punta-cana",
   },
   {
-    label: "Pickleball camp experience",
-    homeLabel: "Pickleball camp experience",
-    href: "/pickleball-camp-experience",
-  },
-  {
     label: "Pickleball Kids Weekly",
     homeLabel: "Pickleball Kids Weekly",
     href: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",

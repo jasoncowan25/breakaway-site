@@ -14,11 +14,11 @@ export function Footer({ hideNotifySignup = false }: { hideNotifySignup?: boolea
             <Link href="/pickleball-camps" className="text-[#111827]/70 hover:text-[#1e3a8a] transition-colors">
               Camps
             </Link>
+            <Link href="/pickleball-lessons" className="text-[#111827]/70 hover:text-[#1e3a8a] transition-colors">
+              Lessons
+            </Link>
             <Link href="/pickleball-coaches" className="text-[#111827]/70 hover:text-[#1e3a8a] transition-colors">
               Coaches
-            </Link>
-            <Link href="/pickleball-camp-experience" className="text-[#111827]/70 hover:text-[#1e3a8a] transition-colors">
-              The Experience
             </Link>
           </nav>
 
