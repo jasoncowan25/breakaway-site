@@ -529,7 +529,7 @@ export function LessonsPageClient() {
                 <div>
                   <div style={{ display: 'flex', gap: 13, alignItems: 'center', border: '1px solid var(--warning-border)', background: 'var(--warning-bg)', borderRadius: 'var(--radius-lg)', padding: '13px 17px', marginBottom: 22 }}>
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
-                    <p style={{ margin: 0, fontSize: 14.5, fontWeight: 700, color: 'var(--warning-fg)' }}>Next opening: {pretty(eIso)}</p>
+                    <p style={{ margin: 0, fontSize: 14.5, fontWeight: 700, color: 'var(--warning-fg)' }}>Currently booking: {MONTHS[earliest.getMonth()]} {earliest.getDate()} and later</p>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
                     {choices.map((c, i) => {
@@ -605,7 +605,7 @@ export function LessonsPageClient() {
                                 {weekOffset === 0 && (
                                   <div data-void="" style={{ display: 'flex', alignItems: 'center', gap: 9, borderRadius: 9, padding: '9px 12px', marginBottom: 9 }}>
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.4" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="m15 18-6-6 6-6" /></svg>
-                                    <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--fg-muted)' }}>No availability before {MONTHS[earliest.getMonth()].slice(0, 3)} {earliest.getDate()}</span>
+                                    <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--fg-muted)' }}>Booking starts {MONTHS[earliest.getMonth()].slice(0, 3)} {earliest.getDate()}</span>
                                   </div>
                                 )}
                                 <div role="group" aria-label="Requested date" style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', gap: 8, marginBottom: 22 }}>
@@ -698,7 +698,7 @@ export function LessonsPageClient() {
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap', marginBottom: 5 }}>
-                          <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: 'var(--brand-navy)', letterSpacing: '-.01em' }}>Get booked faster by text</h3>
+                          <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: 'var(--brand-navy)', letterSpacing: '-.01em' }}>Confirm faster by text</h3>
                           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--brand-navy)', background: 'var(--brand-lime)', borderRadius: 999, padding: '3px 9px' }}>Recommended</span>
                         </div>
                         <p style={{ margin: '0 0 14px', fontSize: 14.5, lineHeight: 1.55, color: 'var(--neutral-600)', maxWidth: '62ch' }}>Coaches are often on court. Texting helps them confirm your time sooner.</p>
