@@ -37,6 +37,18 @@ test("finds the first requestable date for the selected coach", () => {
   assert.equal(lessons.earliestRequestDate("none", "toronto", TODAY), "2026-08-21")
 })
 
+test("limits Muskoka lessons to July and August of the current season", () => {
+  assert.equal(lessons.cityState("muskoka", 6).open, false)
+  assert.equal(lessons.cityState("muskoka", 7).open, true)
+  assert.equal(lessons.cityState("muskoka", 8).open, true)
+  assert.equal(lessons.cityState("muskoka", 9).open, false)
+
+  assert.equal(lessons.isRequestDateAllowed("joey", "muskoka", "2026-08-31", TODAY), false)
+  assert.equal(lessons.isRequestDateAllowed("joey", "muskoka", "2026-09-07", TODAY), false)
+  assert.equal(lessons.isRequestDateAllowed("joey", "muskoka", "2027-07-01", TODAY), false)
+  assert.equal(lessons.earliestRequestDate("joey", "muskoka", TODAY), null)
+})
+
 test("publishes two bookable coach profiles with usable roster images", async () => {
   const rosterModule = await import("../app/pickleball-coaches/coaches-data.ts").catch(() => null)
   assert.ok(rosterModule, "expected a shared coach-roster data module")

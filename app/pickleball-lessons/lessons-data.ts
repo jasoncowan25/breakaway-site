@@ -52,7 +52,7 @@ export interface LessonCity {
 export const config = {
   oneClickBookingsEnabled: false,
   requestFormEnabled: true,
-  muskokaSeasonStartMonth: 6,
+  muskokaSeasonStartMonth: 7,
   muskokaSeasonEndMonth: 8,
   responseWindowHours: 24,
   cancellationWindowHours: 72,
@@ -137,12 +137,12 @@ export const cities: LessonCity[] = [
     name: 'Muskoka',
     order: 2,
     isDefault: false,
-    activeMonths: [6, 7, 8],
+    activeMonths: [7, 8],
     blurb: 'Spend your summer improving your game with private coaching in Muskoka.',
-    offSeasonLabel: 'Returns in June',
-    offSeasonHeading: 'Muskoka lessons return in June.',
+    offSeasonLabel: 'Check back in spring',
+    offSeasonHeading: 'Muskoka lessons are closed for the season.',
     offSeasonMessage:
-      'Private lessons in Muskoka are offered during June, July and August. Toronto lessons remain available throughout the year.',
+      'Private lessons in Muskoka are offered only in July and August. Check back again in the spring for next summer\'s availability.',
     locations: ['muskoka'],
     coaches: ['joey'],
   },
@@ -220,6 +220,13 @@ export function isRequestDateAllowed(
   requestedDate: string,
   today: string,
 ): boolean {
+  const requestedMonth = Number(requestedDate.slice(5, 7))
+  const requestedYear = Number(requestedDate.slice(0, 4))
+  const todayYear = Number(today.slice(0, 4))
+  const requestedCity = cities.find((candidate) => candidate.id === cityId)
+  if (!requestedCity?.activeMonths.includes(requestedMonth)) return false
+  if (cityId === 'muskoka' && requestedYear !== todayYear) return false
+
   const selected = coachChoice && coachChoice !== 'none' ? coach(coachChoice) : null
   const candidates = selected
     ? [selected]
@@ -230,12 +237,12 @@ export function isRequestDateAllowed(
   )
 }
 
-export function earliestRequestDate(coachChoice: string, cityId: string, today: string): string {
+export function earliestRequestDate(coachChoice: string, cityId: string, today: string): string | null {
   for (let offset = 0; offset <= 366; offset += 1) {
     const candidate = addIsoDays(today, offset)
     if (isRequestDateAllowed(coachChoice, cityId, candidate, today)) return candidate
   }
-  return addIsoDays(today, 367)
+  return null
 }
 
 export function money(n: number): string {
@@ -311,7 +318,7 @@ export function validate(f: LessonForm, month: number): Record<string, string> {
   if (!f.phone || f.phone.replace(/\D/g, '').length < 10) e.phone = 'Please enter a valid phone number.'
   const filled = (f.slots || []).filter((s) => s.date && s.time)
   if (!filled.length) e.slots = 'Please choose at least one requested date and time.'
-  if (f.city === 'muskoka' && !cityState('muskoka', month).open) e.city = 'Muskoka lessons return in June. Please select Toronto.'
+  if (f.city === 'muskoka' && !cityState('muskoka', month).open) e.city = 'Muskoka lessons are offered only in July and August. Please select Toronto.'
   return e
 }
 

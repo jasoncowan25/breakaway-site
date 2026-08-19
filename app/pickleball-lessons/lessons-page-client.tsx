@@ -103,7 +103,7 @@ const FAQ_DATA: [string, string][] = [
   ['Can I book a lesson with a friend?', 'Yes. A private lesson can include up to three players, including you. Each additional player adds $20 per hour to the lesson rate. We send one payment link to the person who submitted the request — they pay the full lesson total, and the other players can repay them separately.'],
   ['When do I pay?', 'Lessons are prepaid, but no payment is required when you submit a lesson request. After your lesson is confirmed, we will send you a secure credit-card payment link.'],
   ['How quickly will I hear back?', 'We usually respond to lesson requests within 24 hours.'],
-  ['Where are lessons offered?', 'Lessons are offered in Toronto throughout the year. Muskoka lessons are offered during June, July and August.'],
+  ['Where are lessons offered?', 'Lessons are offered in Toronto throughout the year. Muskoka lessons are offered during July and August.'],
   ['What happens if I need to cancel?', 'You can cancel up to 72 hours before your lesson for a full refund. Lessons cancelled less than 72 hours before the start time are non-refundable, but they may be transferred to someone who can attend at the scheduled time.'],
   ['Do I need to know my pickleball rating?', 'No. You do not need to submit a pickleball rating when requesting a lesson.'],
   ['Can each player pay their own share?', 'Not at the moment. We send one payment link to the person who submitted the request, so that person pays the full lesson total and the other players can repay them separately.'],
@@ -128,7 +128,14 @@ export function LessonsPageClient() {
   useEffect(() => setMonth(D.currentMonth()), [])
 
   const f = form
+  const todayIso = useMemo(() => iso(new Date()), [])
   const mus = D.cityState('muskoka', month)
+  const muskokaNextDate = useMemo(
+    () => D.earliestRequestDate('none', 'muskoka', todayIso),
+    [todayIso],
+  )
+  const muskokaHasAvailability = muskokaNextDate !== null
+  const nextMuskokaYear = Number(todayIso.slice(0, 4)) + 1
   const success = status === 'success'
   const sel = f.coach && f.coach !== 'none' ? D.coach(f.coach) : null
   const price = D.pricing(f.coach, f.players)
@@ -150,12 +157,11 @@ export function LessonsPageClient() {
     return out
   }, [choices])
 
-  const todayIso = useMemo(() => iso(new Date()), [])
   const earliestIso = useMemo(
     () => D.earliestRequestDate(f.coach, city, todayIso),
     [f.coach, city, todayIso],
   )
-  const earliest = useMemo(() => fromIso(earliestIso), [earliestIso])
+  const earliest = useMemo(() => (earliestIso ? fromIso(earliestIso) : null), [earliestIso])
 
   const setChoice = (i: number, patch: Partial<Choice>) =>
     setChoices((prev) => {
@@ -271,7 +277,7 @@ export function LessonsPageClient() {
   const photoCoachObj = photoCoach ? D.coach(photoCoach) : null
 
   const eIso = earliestIso
-  const stripBase = weekStart(earliest)
+  const stripBase = earliest ? weekStart(earliest) : null
 
   const sectionMax: CSSProperties = { maxWidth: 1280, margin: '0 auto' }
 
@@ -331,7 +337,9 @@ export function LessonsPageClient() {
                         const cs = D.cityState(c.id, month)
                         return (
                           <option key={c.id} value={c.id}>
-                            {c.name + (cs.open ? '' : ' — Returns in June')}
+                            {c.name + (c.id === 'muskoka' && !muskokaHasAvailability
+                              ? ' — Fully booked'
+                              : cs.open ? '' : ` — ${cs.label}`)}
                           </option>
                         )
                       })}
@@ -341,11 +349,11 @@ export function LessonsPageClient() {
                 </label>
               </div>
             </div>
-            {city === 'muskoka' && !mus.open && (
+            {city === 'muskoka' && (!mus.open || !muskokaHasAvailability) && (
               <div style={{ margin: '0 0 22px', background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', borderRadius: 'var(--radius-lg)', padding: '16px 18px', display: 'flex', flexWrap: 'wrap', gap: 14, alignItems: 'center' }}>
                 <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-                  <p style={{ margin: '0 0 3px', fontSize: 15, fontWeight: 700, color: '#7c3a06' }}>{mus.heading}</p>
-                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: 'var(--warning-fg)' }}>{mus.message}</p>
+                  <p style={{ margin: '0 0 3px', fontSize: 15, fontWeight: 700, color: '#7c3a06' }}>Muskoka lessons are finished for this summer.</p>
+                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: 'var(--warning-fg)' }}>Muskoka private lessons run only in July and August. Joey is fully booked for the rest of this summer. Check back again in spring {nextMuskokaYear} for next summer&rsquo;s availability.</p>
                 </div>
                 <button type="button" className="bp-btn bp-btn--primary bp-btn--lg" onClick={() => { setCity('toronto'); setF({ city: 'toronto' }) }}>View Toronto Lessons</button>
               </div>
@@ -471,7 +479,10 @@ export function LessonsPageClient() {
                               <span style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 18px', fontSize: 13.5, color: 'var(--fg-muted)', paddingTop: 2 }}>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6EA626" strokeWidth="1.8"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 11h18" /></svg>
-                                  Next available: {shortDate(D.earliestRequestDate(c.id, city, todayIso))}
+                                  {(() => {
+                                    const nextDate = D.earliestRequestDate(c.id, city, todayIso)
+                                    return nextDate ? `Next available: ${shortDate(nextDate)}` : 'No more Muskoka lessons this summer'
+                                  })()}
                                 </span>
                                 <span>{c.ratingLabel || c.playerRating}</span>
                               </span>
@@ -525,8 +536,10 @@ export function LessonsPageClient() {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', marginBottom: 6 }}>
                   <h2 style={{ margin: 0, fontSize: 23, color: 'var(--brand-navy)', fontWeight: 700 }}>Choose your dates</h2>
                 </div>
-                <p style={{ margin: '0 0 22px', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-muted)', maxWidth: 600 }}>Add up to 3 options. We&rsquo;ll confirm the first available.</p>
-                <div>
+                {earliest && eIso && stripBase ? (
+                  <>
+                    <p style={{ margin: '0 0 22px', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-muted)', maxWidth: 600 }}>Add up to 3 options. We&rsquo;ll confirm the first available.</p>
+                    <div>
                   <div style={{ display: 'flex', gap: 13, alignItems: 'center', border: '1px solid var(--warning-border)', background: 'var(--warning-bg)', borderRadius: 'var(--radius-lg)', padding: '13px 17px', marginBottom: 22 }}>
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
                     <p style={{ margin: 0, fontSize: 14.5, fontWeight: 700, color: 'var(--warning-fg)' }}>Currently booking: {MONTHS[earliest.getMonth()]} {earliest.getDate()} and later</p>
@@ -657,7 +670,18 @@ export function LessonsPageClient() {
                     I&rsquo;m flexible within an hour or two of my preferred times
                   </label>
                   {errors.slots && <p className="err" style={{ marginTop: 10 }} role="alert">{errors.slots}</p>}
-                </div>
+                    </div>
+                  </>
+                ) : (
+                  <div role="status" style={{ marginTop: 18, border: '1px solid var(--warning-border)', background: 'var(--warning-bg)', borderRadius: 'var(--radius-xl)', padding: '28px 26px' }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 9999, background: '#fff', color: '#c2410c', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, border: '1px solid var(--warning-border)' }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                    </div>
+                    <h3 style={{ margin: '0 0 8px', fontSize: 20, color: 'var(--brand-navy)', fontWeight: 700 }}>No more Muskoka lesson times this summer</h3>
+                    <p style={{ margin: '0 0 20px', fontSize: 15, lineHeight: 1.65, color: 'var(--warning-fg)', maxWidth: 650 }}>Muskoka lessons are offered only in July and August. Joey&rsquo;s calendar is booked for the next three weeks, which takes us past the end of the season. Check back again in spring {nextMuskokaYear} for next summer&rsquo;s availability.</p>
+                    <button type="button" className="bp-btn bp-btn--primary bp-btn--lg" onClick={() => { setCity('toronto'); setF({ city: 'toronto', coach: '' }); setStep(1); setChoices(EMPTY_CHOICES); setOpenChoice(0); setWeekOffset(0) }}>View Toronto Lessons</button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -809,9 +833,9 @@ export function LessonsPageClient() {
                   {price.players > 1 && (
                     <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55, color: 'var(--neutral-600)' }}>The person submitting the request pays the full lesson total after the coach confirms. Other players can repay them separately.</p>
                   )}
-                  <button type="button" className="bp-btn bp-btn--primary bp-btn--lg bp-btn--block bp-btn--tall" onClick={() => { if (step < 3) goStep(step + 1); else submit() }} disabled={status === 'sending'}>
+                  <button type="button" className="bp-btn bp-btn--primary bp-btn--lg bp-btn--block bp-btn--tall" onClick={() => { if (step < 3) goStep(step + 1); else submit() }} disabled={status === 'sending' || (step === 2 && !earliest)}>
                     {status === 'sending' && <span style={{ width: 16, height: 16, border: '2.5px solid rgba(255,255,255,.35)', borderTopColor: '#fff', borderRadius: 9999, display: 'inline-block', animation: 'bpSpin .7s linear infinite' }} />}
-                    {status === 'sending' ? 'Sending Request…' : step === 3 ? 'Request My Lesson' : 'Continue'}
+                    {status === 'sending' ? 'Sending Request…' : step === 2 && !earliest ? 'No Dates Available' : step === 3 ? 'Request My Lesson' : 'Continue'}
                   </button>
                   {step > 1 && (
                     <button type="button" className="bp-btn bp-btn--ghost bp-btn--lg bp-btn--block" onClick={() => goStep(step - 1)}>Back</button>
