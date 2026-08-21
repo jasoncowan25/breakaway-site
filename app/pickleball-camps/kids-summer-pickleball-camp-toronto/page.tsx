@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import KidsSummerCampClient from "./kids-summer-client"
 
-// Launched 2026-06-25. The card is restored in lib/public-camps.ts.
+// Keep the direct route available while the camp is retired from discovery surfaces.
 const KIDS_SUMMER_CAMP_HIDDEN = false
 
 export const metadata: Metadata = {
