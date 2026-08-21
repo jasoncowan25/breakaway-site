@@ -72,25 +72,6 @@ export const RELATED_CAMP_LINKS = [
 
 export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
   {
-    id: "kids-summer-pickleball-camp-toronto",
-    title: "Baseline x Breakaway Kids Summer Camp",
-    date: "August 17 – September 4, 2026",
-    sortDate: "2026-08-17",
-    endDate: "2026-09-04",
-    location: "The JAR Pickleball Club",
-    locationFilter: "Toronto & GTA",
-    format: "Camp",
-    skillLevel: "Kids",
-    price: "From $575 CAD",
-    image: "/kids-passover-camp-hero.webp",
-    badges: [{ text: "New", variant: "accent" }],
-    coach: "Joey Manchurek",
-    link: "/pickleball-camps/kids-summer-pickleball-camp-toronto",
-    imageEnhanced: false,
-    soldOut: false,
-    buttonText: "Learn More",
-  },
-  {
     id: "kids-weekly-pickleball-camp-toronto",
     title: "Kids Weekly Pickleball Camp",
     date: "Weekly programs · Sep 7–Dec 21, 2026",
