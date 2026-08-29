@@ -13,6 +13,7 @@ import type { Stripe, StripeElements } from "@stripe/stripe-js"
 import { CheckoutView } from "@/components/checkout/CheckoutView"
 import { Icon } from "@/components/Icon"
 import { checkoutAmount } from "@/lib/checkout-amount"
+import { checkoutPaymentQuoteError } from "@/lib/checkout-payment-quote"
 import type {
   Account,
   Agreements,
@@ -364,6 +365,12 @@ function CheckoutClientInner({
       if (!body.clientSecret || !body.paymentIntentId || !body.registrationId) {
         throw new Error("Payment was missing secure confirmation details.")
       }
+      const quoteError = checkoutPaymentQuoteError({
+        expectedTotalCents: Math.round(checkoutAmount(subtotal).total * 100),
+        amountTotalCents: body.amountTotalCents,
+        currency: body.currency,
+      })
+      if (quoteError) throw new Error(quoteError)
       setPaymentSession(body as CheckoutSession)
       return true
     } catch (err) {

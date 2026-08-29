@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { fetchPublicCampBySlug, type ApiCamp } from "@/lib/breakaway-api"
@@ -10,6 +11,12 @@ import "@/styles/checkout.css"
 import "@/styles/checkout-integration.css"
 
 export const dynamic = "force-dynamic"
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 type PageProps = {
   params: Promise<{ slug: string }>
