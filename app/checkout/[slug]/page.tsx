@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 
 import { fetchPublicCampBySlug, type ApiCamp } from "@/lib/breakaway-api"
+import { resolveCheckoutOffer, type CheckoutOffer } from "@/lib/checkout-offers"
 import { formatRecurringCampDates, formatSessionTime } from "@/lib/session-time"
 
 import { CheckoutClient, type CheckoutCampView } from "./checkout-client"
@@ -12,7 +13,7 @@ export const dynamic = "force-dynamic"
 
 type PageProps = {
   params: Promise<{ slug: string }>
-  searchParams?: Promise<{ preview?: string }>
+  searchParams?: Promise<{ preview?: string; offer?: string }>
 }
 
 function canPreview(token: string | undefined) {
@@ -75,7 +76,7 @@ function subtitleForCamp(camp: ApiCamp) {
   return camp.fullLabel
 }
 
-function toCheckoutCampView(camp: ApiCamp): CheckoutCampView | null {
+function toCheckoutCampView(camp: ApiCamp, offer: CheckoutOffer | null): CheckoutCampView | null {
   if (!camp.slug) return null
 
   const capacity = camp.capacity ?? 0
@@ -96,7 +97,9 @@ function toCheckoutCampView(camp: ApiCamp): CheckoutCampView | null {
       : formatSessionTime(camp.sessionLabel) ?? "Time announced after registration",
     venue: camp.venue ?? camp.facility?.name ?? "Breakaway",
     location: camp.location ?? camp.facility?.city ?? "Breakaway",
-    priceLabel: formatMoney(camp.basePriceCents),
+    priceLabel: formatMoney(offer?.unitPriceCents ?? camp.basePriceCents),
+    offerCode: offer?.code ?? null,
+    offerLabel: offer?.label ?? null,
     capacity,
     spotsLeft,
     isSoldOut: camp.isSoldOut,
@@ -124,6 +127,8 @@ function localPreviewCamp(slug: string): CheckoutCampView | null {
     venue: "The JAR Pickleball Club",
     location: "Toronto & GTA",
     priceLabel: "$700 CAD",
+    offerCode: null,
+    offerLabel: null,
     capacity: 16,
     spotsLeft: 16,
     isSoldOut: false,
@@ -140,18 +145,22 @@ function localPreviewCamp(slug: string): CheckoutCampView | null {
 export default async function CheckoutPage({ params, searchParams }: PageProps) {
   const [{ slug }, query] = await Promise.all([
     params,
-    searchParams ?? Promise.resolve({} as { preview?: string }),
+    searchParams ?? Promise.resolve({} as { preview?: string; offer?: string }),
   ])
   const preview = canPreview(query.preview)
   const camp = await fetchPublicCampBySlug(slug, { noStore: true })
 
   if (!camp) {
+    if (query.offer) notFound()
     const fallback = preview ? localPreviewCamp(slug) : null
     if (!fallback) notFound()
     return <CheckoutClient camp={fallback} />
   }
 
-  const view = toCheckoutCampView(camp)
+  const offer = resolveCheckoutOffer(camp.id, query.offer)
+  if (query.offer && !offer) notFound()
+
+  const view = toCheckoutCampView(camp, offer)
   if (!view) notFound()
 
   return <CheckoutClient camp={view} />

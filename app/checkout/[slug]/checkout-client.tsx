@@ -31,6 +31,8 @@ export type CheckoutCampView = {
   venue: string
   location: string
   priceLabel: string
+  offerCode: string | null
+  offerLabel: string | null
   capacity: number
   spotsLeft: number
   isSoldOut: boolean
@@ -115,7 +117,7 @@ function toDesignCamp(camp: CheckoutCampView): Camp {
   const { skill, skillSub } = skillParts(camp)
 
   return {
-    eyebrow: "Breakaway Pickleball",
+    eyebrow: camp.offerLabel ? `${camp.offerLabel} offer` : "Breakaway Pickleball",
     title: camp.title,
     coachLead: camp.coachName,
     coachPhoto: camp.coachName.toLowerCase().includes("joey") ? "/coach-joey.jpg" : "/placeholder-user.jpg",
@@ -344,6 +346,7 @@ function CheckoutClientInner({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           campId: camp.id,
+          offerCode: camp.offerCode ?? undefined,
           checkoutMode,
           accountOptIn: checkoutMode !== "kids",
           payer: {
