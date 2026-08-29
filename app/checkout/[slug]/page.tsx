@@ -91,7 +91,10 @@ function toCheckoutCampView(camp: ApiCamp, offer: CheckoutOffer | null): Checkou
   const skillLabel = skillLabelForCamp(camp)
   const subtitle = subtitleForCamp(camp)
   const coach = camp.coaches.find((item) => item.isFeatured) ?? camp.coaches[0]
-  const recurring = formatRecurringCampDates(camp.sessionDates, camp.sessionLabel)
+  const recurring = formatRecurringCampDates(
+    offer?.sessionDates ?? camp.sessionDates,
+    offer?.sessionLabel ?? camp.sessionLabel,
+  )
 
   return {
     id: camp.id,
@@ -100,7 +103,9 @@ function toCheckoutCampView(camp: ApiCamp, offer: CheckoutOffer | null): Checkou
     subtitle,
     dateLabel: recurring?.dateLabel ?? formatDateRange(camp.startDate, camp.endDate),
     timeLabel: recurring
-      ? `${recurring.scheduleLabel} · ${recurring.sessionCountLabel}`
+      ? [recurring.scheduleLabel, recurring.sessionCountLabel, offer?.scheduleNote]
+          .filter(Boolean)
+          .join(" · ")
       : formatSessionTime(camp.sessionLabel) ?? "Time announced after registration",
     venue: camp.venue ?? camp.facility?.name ?? "Breakaway",
     location: camp.location ?? camp.facility?.city ?? "Breakaway",

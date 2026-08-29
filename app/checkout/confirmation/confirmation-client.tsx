@@ -28,6 +28,7 @@ type ConfirmationStatus = {
     coachLead?: string | null
     sessionDates?: string[]
     sessionLabel?: string | null
+    scheduleNote?: string | null
   } | null
 }
 
@@ -102,7 +103,9 @@ function successCamp(status: ConfirmationStatus | null): Camp {
     photo: "/jar3.png",
     date: recurring?.dateLabel ?? dateLabel(status?.camp?.startDate ?? null, status?.camp?.endDate ?? null),
     dateSub: recurring
-      ? `${recurring.scheduleLabel} · ${recurring.sessionCountLabel}`
+      ? [recurring.scheduleLabel, recurring.sessionCountLabel, status?.camp?.scheduleNote]
+          .filter(Boolean)
+          .join(" · ")
       : status?.paymentStatus
         ? `Payment ${status.paymentStatus.replace(/_/g, " ")}`
         : "Confirmation pending",
