@@ -17,6 +17,20 @@ test("resolves the $480 reduced-weeks checkout for the all-levels weekly camp", 
   )
 })
 
+test("resolves the $960 reduced-weeks checkout for the experienced weekly camp", () => {
+  assert.deepEqual(
+    resolveCheckoutOffer(
+      "d77526f5-1e63-48bd-8d50-4ce3ebcd593a",
+      "reduced-weeks-960",
+    ),
+    {
+      code: "reduced-weeks-960",
+      label: "Reduced weeks",
+      unitPriceCents: 96000,
+    },
+  )
+})
+
 test("does not display the reduced rate for another camp", () => {
   assert.equal(
     resolveCheckoutOffer("another-camp", "reduced-weeks-480"),

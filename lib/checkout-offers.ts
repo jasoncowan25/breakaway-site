@@ -18,5 +18,15 @@ export function resolveCheckoutOffer(
       unitPriceCents: 48000,
     }
   }
+  if (
+    campId === "d77526f5-1e63-48bd-8d50-4ce3ebcd593a"
+    && offerCode === "reduced-weeks-960"
+  ) {
+    return {
+      code: offerCode,
+      label: "Reduced weeks",
+      unitPriceCents: 96000,
+    }
+  }
   return null
 }
