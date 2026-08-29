@@ -75,9 +75,15 @@ test("shows the corrected 12-week Monday schedule for the experienced offer", ()
   assert.equal(offer?.scheduleNote, "No class September 21 or October 12")
 })
 
-test("does not display the reduced rate for another camp", () => {
-  assert.equal(
-    resolveCheckoutOffer("another-camp", "reduced-weeks-480"),
-    null,
-  )
+test("does not display either reduced rate for another or opposite camp", () => {
+  const cases = [
+    ["another-camp", "reduced-weeks-480"],
+    ["another-camp", "reduced-weeks-960"],
+    ["a828af29-f41f-42e6-a83d-86a4e40baee9", "reduced-weeks-960"],
+    ["d77526f5-1e63-48bd-8d50-4ce3ebcd593a", "reduced-weeks-480"],
+  ]
+
+  for (const [campId, offerCode] of cases) {
+    assert.equal(resolveCheckoutOffer(campId, offerCode), null)
+  }
 })
