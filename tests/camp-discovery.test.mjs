@@ -31,9 +31,9 @@ test("defines one aggregate weekly kids card with the approved content", () => {
     {
       title: "Kids Weekly Pickleball Camp",
       coach: "Joey Manchurek",
-      date: "Weekly programs · Sep 7–Dec 21, 2026",
-      sortDate: "2026-09-07",
-      endDate: "2026-12-21",
+      date: "Weekly programs · Sep 10–Dec 17, 2026",
+      sortDate: "2026-09-10",
+      endDate: "2026-12-17",
       location: "The Jar Pickleball Club",
       price: "From $600",
       image: "/images/kids-weekly/kids-camp-joey.jpg",
@@ -61,7 +61,7 @@ test("publishes the approved captions and promotional badges for featured Toront
     [
       {
         id: "kids-weekly-pickleball-camp-toronto",
-        date: "Weekly programs · Sep 7–Dec 21, 2026",
+        date: "Weekly programs · Sep 10–Dec 17, 2026",
         badges: [
           { text: "Just Announced", variant: "accent" },
           { text: "Ages 9–14", variant: "secondary" },

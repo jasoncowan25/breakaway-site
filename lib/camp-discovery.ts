@@ -74,9 +74,9 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
   {
     id: "kids-weekly-pickleball-camp-toronto",
     title: "Kids Weekly Pickleball Camp",
-    date: "Weekly programs · Sep 7–Dec 21, 2026",
-    sortDate: "2026-09-07",
-    endDate: "2026-12-21",
+    date: "Weekly programs · Sep 10–Dec 17, 2026",
+    sortDate: "2026-09-10",
+    endDate: "2026-12-17",
     location: "The Jar Pickleball Club",
     locationFilter: "Toronto & GTA",
     format: "Camp",
