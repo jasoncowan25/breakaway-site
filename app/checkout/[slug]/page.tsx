@@ -1,7 +1,12 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { fetchPublicCampBySlug, type ApiCamp } from "@/lib/breakaway-api"
+import { fetchPublicCampBySlug, fetchPublicCheckoutLink, type ApiCamp } from "@/lib/breakaway-api"
+import {
+  checkoutLinkUnavailableMessage,
+  checkoutOfferFromLink,
+  looksLikeCheckoutLinkCode,
+} from "@/lib/checkout-links"
 import { resolveCheckoutOffer, type CheckoutOffer } from "@/lib/checkout-offers"
 import { formatRecurringCampDates, formatSessionTime } from "@/lib/session-time"
 
@@ -83,11 +88,17 @@ function subtitleForCamp(camp: ApiCamp) {
   return camp.fullLabel
 }
 
-function toCheckoutCampView(camp: ApiCamp, offer: CheckoutOffer | null): CheckoutCampView | null {
+function toCheckoutCampView(
+  camp: ApiCamp,
+  offer: CheckoutOffer | null,
+  options: { bypassCapacity?: boolean } = {},
+): CheckoutCampView | null {
   if (!camp.slug) return null
 
   const capacity = camp.capacity ?? 0
-  const spotsLeft = camp.spotsLeft ?? capacity
+  // A custom link with seat counting turned off books regardless of how full
+  // the camp is (the admin accepted the oversubscription when creating it).
+  const spotsLeft = options.bypassCapacity ? Math.max(1, capacity || 6) : (camp.spotsLeft ?? capacity)
   const skillLabel = skillLabelForCamp(camp)
   const subtitle = subtitleForCamp(camp)
   const coach = camp.coaches.find((item) => item.isFeatured) ?? camp.coaches[0]
@@ -114,7 +125,7 @@ function toCheckoutCampView(camp: ApiCamp, offer: CheckoutOffer | null): Checkou
     offerLabel: offer?.label ?? null,
     capacity,
     spotsLeft,
-    isSoldOut: camp.isSoldOut,
+    isSoldOut: options.bypassCapacity ? false : camp.isSoldOut,
     heroImageUrl: camp.childrenEligible && recurring ? "/images/kids-camp-group-photo.png" : heroImageForCamp(camp),
     skillLabel,
     coachName: coach?.displayName ?? "Breakaway coach",
@@ -154,6 +165,93 @@ function localPreviewCamp(slug: string): CheckoutCampView | null {
   }
 }
 
+function CheckoutLinkUnavailable({
+  message,
+  campTitle,
+  campSlug,
+}: {
+  message: string
+  campTitle: string
+  campSlug: string | null
+}) {
+  return (
+    <div className="co-scope">
+      <div className="backdrop bg-clean" style={{ justifyContent: "center" }}>
+        <div className="shell view" style={{ maxWidth: 560, margin: "0 auto", padding: "48px 20px" }}>
+          <div
+            className="panel"
+            style={{ padding: "36px 32px", textAlign: "center", borderRadius: 16, background: "#fff", border: "1px solid #e5e7eb" }}
+          >
+            <div
+              style={{
+                width: 52,
+                height: 52,
+                margin: "0 auto 18px",
+                borderRadius: 999,
+                background: "#eef4fb",
+                color: "#124A7A",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                <path d="m2 2 20 20" />
+              </svg>
+            </div>
+            <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", margin: "0 0 8px", color: "#111827" }}>
+              Checkout link unavailable
+            </h1>
+            <p style={{ fontSize: 15, color: "#4b5563", margin: "0 0 6px", lineHeight: 1.5 }}>{message}</p>
+            <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 22px" }}>{campTitle}</p>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+              <a
+                href="mailto:hello@breakawaypickleball.ca?subject=Camp%20registration"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  height: 42,
+                  padding: "0 18px",
+                  borderRadius: 10,
+                  background: "#124A7A",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  textDecoration: "none",
+                }}
+              >
+                Contact us to register
+              </a>
+              {campSlug && (
+                <a
+                  href={`/pickleball-camps/${campSlug}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    height: 42,
+                    padding: "0 18px",
+                    borderRadius: 10,
+                    border: "1px solid #d1d5db",
+                    color: "#111827",
+                    fontWeight: 600,
+                    fontSize: 14,
+                    textDecoration: "none",
+                    background: "#fff",
+                  }}
+                >
+                  View camp page
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default async function CheckoutPage({ params, searchParams }: PageProps) {
   const [{ slug }, query] = await Promise.all([
     params,
@@ -163,6 +261,27 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
   const camp = await fetchPublicCampBySlug(slug, { noStore: true })
 
   if (!camp) {
+    // /checkout/<code> — a private custom checkout link minted from the admin.
+    if (looksLikeCheckoutLinkCode(slug)) {
+      const resolved = await fetchPublicCheckoutLink(slug)
+      if (resolved) {
+        if (!resolved.link.available) {
+          return (
+            <CheckoutLinkUnavailable
+              message={checkoutLinkUnavailableMessage(resolved.link.unavailableReason)}
+              campTitle={resolved.camp.title}
+              campSlug={resolved.camp.slug}
+            />
+          )
+        }
+        const linkOffer = checkoutOfferFromLink(resolved.link, resolved.camp.sessionLabel)
+        const linkView = toCheckoutCampView(resolved.camp, linkOffer, {
+          bypassCapacity: !resolved.link.countsTowardCapacity,
+        })
+        if (!linkView) notFound()
+        return <CheckoutClient camp={linkView} />
+      }
+    }
     if (query.offer) notFound()
     const fallback = preview ? localPreviewCamp(slug) : null
     if (!fallback) notFound()

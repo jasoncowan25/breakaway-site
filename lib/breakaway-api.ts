@@ -4,6 +4,8 @@
 // flattened public-camp data with availability + checkout URL already computed
 // server-side, so the marketing site never needs Supabase/Stripe credentials.
 
+import type { ApiCheckoutLink } from "@/lib/checkout-links"
+
 const API_BASE = (
   process.env.NEXT_PUBLIC_BREAKAWAY_API_URL ??
   process.env.BREAKAWAY_API_URL ??
@@ -177,6 +179,21 @@ export async function fetchPublicCampBySlug(
     options,
   )
   return data?.camp ?? null
+}
+
+// ── Custom checkout links ───────────────────────────────────────────────────
+// Private /checkout/<code> URLs minted from the admin. The API returns the
+// link terms plus the camp in the same shape as /camps/[slug]. Never cached:
+// a link can close (checkout limit / disabled) at any moment.
+
+export async function fetchPublicCheckoutLink(
+  code: string,
+): Promise<{ link: ApiCheckoutLink; camp: ApiCamp } | null> {
+  const data = await apiGet<{ link: ApiCheckoutLink; camp: ApiCamp }>(
+    `/api/v1/public/checkout-links/${encodeURIComponent(code)}`,
+    { noStore: true },
+  )
+  return data?.link && data.camp ? { link: data.link, camp: data.camp } : null
 }
 
 // ── Camp shots ───────────────────────────────────────────────────────────────
