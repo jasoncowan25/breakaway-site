@@ -3,6 +3,8 @@ import { notFound } from "next/navigation"
 
 import { fetchPublicCampBySlug } from "@/lib/breakaway-api"
 import {
+  KIDS_WEEKLY_DEFAULT_PROGRAM,
+  KIDS_WEEKLY_PROGRAM_KEYS,
   KIDS_WEEKLY_PROGRAMS,
   buildKidsWeeklyProgram,
   canRenderKidsWeeklyLanding,
@@ -15,7 +17,7 @@ const canonical = "/pickleball-camps/kids-weekly-pickleball-camp-toronto"
 export const metadata: Metadata = {
   title: "Kids Weekly Pickleball Camp Toronto | Fall 2026",
   description:
-    "Weekly pickleball sessions for kids ages 9–14 at The JAR Pickleball Club in Toronto. Choose All Skill Levels or Experienced.",
+    "Weekly pickleball sessions for kids ages 9–14 at The JAR Pickleball Club in Toronto. Choose All Skill Levels on Mondays or Thursdays, or Experienced on Mondays.",
   alternates: { canonical },
   openGraph: {
     title: "Kids Weekly Pickleball Camp — Fall 2026",
@@ -51,19 +53,18 @@ function canPreview(token: string | undefined) {
 export default async function KidsWeeklyCampPage({ searchParams }: PageProps) {
   const query = await (searchParams ?? Promise.resolve({} as { preview?: string }))
   const preview = canPreview(query.preview)
-  const [allLevelsCamp, experiencedCamp] = await Promise.all([
-    fetchPublicCampBySlug(KIDS_WEEKLY_PROGRAMS.allLevels.slug, { noStore: true, preview }),
-    fetchPublicCampBySlug(KIDS_WEEKLY_PROGRAMS.experienced.slug, { noStore: true, preview }),
-  ])
+  const camps = await Promise.all(
+    KIDS_WEEKLY_PROGRAM_KEYS.map((key) =>
+      fetchPublicCampBySlug(KIDS_WEEKLY_PROGRAMS[key].slug, { noStore: true, preview }),
+    ),
+  )
 
-  if (!canRenderKidsWeeklyLanding(allLevelsCamp, experiencedCamp, preview)) notFound()
+  if (!canRenderKidsWeeklyLanding(camps, preview)) notFound()
 
   return (
-    <>
-      <KidsWeeklyLanding
-        allLevels={buildKidsWeeklyProgram("allLevels", allLevelsCamp)}
-        experienced={buildKidsWeeklyProgram("experienced", experiencedCamp)}
-      />
-    </>
+    <KidsWeeklyLanding
+      programs={KIDS_WEEKLY_PROGRAM_KEYS.map((key, index) => buildKidsWeeklyProgram(key, camps[index]))}
+      defaultKey={KIDS_WEEKLY_DEFAULT_PROGRAM}
+    />
   )
 }

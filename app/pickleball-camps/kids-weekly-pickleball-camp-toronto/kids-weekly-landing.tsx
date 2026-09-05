@@ -14,15 +14,16 @@ import {
   Users,
 } from "lucide-react"
 
-import type { buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
+import type { KidsWeeklyProgramKey, buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
 
 import styles from "./kids-weekly.module.css"
 
 type Program = ReturnType<typeof buildKidsWeeklyProgram>
 
 type Props = {
-  allLevels: Program
-  experienced: Program
+  /** Landing-page order. */
+  programs: Program[]
+  defaultKey: KidsWeeklyProgramKey
 }
 
 const experienceSteps = [
@@ -32,7 +33,7 @@ const experienceSteps = [
 ]
 
 const faqs = [
-  ["Which program should my child join?", "If they've played a year or more, choose Experienced. Everyone else — including complete beginners — should start in All Skill Levels."],
+  ["Which program should my child join?", "If they've played a year or more, choose Experienced. Everyone else — including complete beginners — should start in All Skill Levels, on whichever night suits your week: Mondays over 12 weeks or Thursdays over 15."],
   ["What do they need to bring?", "Indoor court shoes, a water bottle, and a paddle if they have one. We keep loaner paddles and balls at the club."],
   ["What if we miss a week?", "Sessions build week to week but stand on their own, so a missed night is fine. Let us know in advance and we'll catch them up."],
   ["Can siblings or friends register together?", "Yes. Add siblings joining the same program in one checkout. Friends can register separately and email us their names — we'll group them where the skill match works."],
@@ -51,41 +52,42 @@ function ProgramCta({ program, compact = false }: { program: Program; compact?: 
 }
 
 function ProgramCard({ program }: { program: Program }) {
-  const allLevels = program.key === "allLevels"
-  const includes = allLevels
-    ? [program.scheduleLabel, program.dateLabel, program.sessionsLabel, "Fundamentals: serve, return, dinking, volleys", "Paddles available to borrow"]
-    : [program.scheduleLabel, program.dateLabel, program.sessionsLabel, "Strategy, court positioning and shot selection", "Capped at 10 players for more court time"]
-
   return (
     <article className={styles.programCard}>
       <div className={styles.cardHeading}>
-        <h3>{program.name}</h3>
-        <span>{program.spotsLabel}</span>
+        <div>
+          <span className={styles.cardEyebrow}>
+            {program.eyebrow}
+            {program.badge && <em>{program.badge}</em>}
+          </span>
+          <h3>{program.name}</h3>
+        </div>
+        <span className={styles.spotsPill}>{program.spotsLabel}</span>
       </div>
       <div className={styles.whoFor}>
         <Users size={19} aria-hidden="true" />
-        <div><span>Who it&apos;s for</span><strong>{allLevels ? "Brand new, or playing under a year" : "Playing one year or more"}</strong></div>
+        <div><span>Who it&apos;s for</span><strong>{program.whoFor}</strong></div>
       </div>
-      <p>{allLevels ? "Start with grip, serve and rally, then build into real game play by the end of the season." : "Longer sessions built around sharper drills, strategy and match play for kids who know the game."}</p>
+      <p>{program.description}</p>
       <div className={styles.cardPrice}><strong>{program.priceLabel.replace(" CAD", "")}</strong><span>CAD / {program.weeksLabel}</span></div>
-      <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{allLevels ? "1-hour sessions" : "2-hour sessions"}</span>
+      <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.durationBadge}</span>
       <ProgramCta program={program} compact />
       <div className={styles.includes}>
         <b>This program includes:</b>
-        {includes.map((item) => <span key={item}><CheckCircle2 size={18} aria-hidden="true" />{item}</span>)}
+        {program.includes.map((item) => <span key={item}><CheckCircle2 size={18} aria-hidden="true" />{item}</span>)}
       </div>
     </article>
   )
 }
 
-export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
-  const [selected, setSelected] = useState<"allLevels" | "experienced">("allLevels")
-  const program = selected === "allLevels" ? allLevels : experienced
-  const totalSpots = [allLevels, experienced].reduce((sum, item) => {
+export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
+  const [selected, setSelected] = useState<KidsWeeklyProgramKey>(defaultKey)
+  const program = programs.find((item) => item.key === selected) ?? programs[0]
+  const totalSpots = programs.reduce((sum, item) => {
     const value = Number.parseInt(item.spotsLabel, 10)
     return sum + (Number.isFinite(value) ? value : 0)
   }, 0)
-  const sessionCounts = [allLevels.sessionCount, experienced.sessionCount].filter((count) => count > 0)
+  const sessionCounts = programs.map((item) => item.sessionCount).filter((count) => count > 0)
   const shortestProgram = sessionCounts.length > 0 ? Math.min(...sessionCounts) : null
   const longestProgram = sessionCounts.length > 0 ? Math.max(...sessionCounts) : null
   const sessionRange = shortestProgram === longestProgram
@@ -113,19 +115,23 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
             <aside id="book" className={styles.bookingCard} aria-label="Reserve a spot">
               <div className={styles.bookingHeading}><h2>Reserve A Spot</h2><span>{program.ctaDisabled ? "Check availability" : "Registration Open"}</span></div>
               <div className={styles.programTabs} role="tablist" aria-label="Choose a program">
-                <button role="tab" aria-selected={selected === "allLevels"} onClick={() => setSelected("allLevels")}>All Skill Levels</button>
-                <button role="tab" aria-selected={selected === "experienced"} onClick={() => setSelected("experienced")}>Experienced</button>
+                {programs.map((item) => (
+                  <button key={item.key} role="tab" aria-selected={selected === item.key} onClick={() => setSelected(item.key)}>
+                    <span>{item.shortName}</span>
+                    <small>{item.day}</small>
+                  </button>
+                ))}
               </div>
               <div className={styles.bookingFacts}>
-                <div><span><CalendarDays size={17} aria-hidden="true" /></span><div><strong>{program.scheduleLabel.split(" · ")[0]}</strong><p>{program.dateLabel}</p></div></div>
-                <div><span><Clock3 size={17} aria-hidden="true" /></span><div><strong>{program.scheduleLabel.split(" · ").slice(1).join(" · ")}</strong><p>{program.sessionsLabel}</p></div></div>
+                <div><span><CalendarDays size={17} aria-hidden="true" /></span><div><strong>{program.day}</strong><p>{program.dateLabel}</p></div></div>
+                <div><span><Clock3 size={17} aria-hidden="true" /></span><div><strong>{program.timeLabel}</strong><p>{program.sessionsLabel}</p></div></div>
                 <div><span><MapPin size={17} aria-hidden="true" /></span><div><strong>The JAR Pickleball Club</strong><p>Toronto, ON</p></div></div>
               </div>
               <div className={styles.bookingPrice}>
                 <div><strong>{program.priceLabel}</strong><span>/ {program.weeksLabel}</span></div>
                 <span>{program.spotsLabel}</span>
               </div>
-              <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.key === "allLevels" ? "1-hour sessions" : "2-hour sessions"}</span>
+              <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.durationBadge}</span>
               <ProgramCta program={program} />
               <p className={styles.secureCopy}>Secure checkout. Your spot is confirmed instantly.</p>
             </aside>
@@ -135,17 +141,17 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
         <section className={styles.values} aria-label="Program benefits">
           <div><span><Award aria-hidden="true" /></span><h3>Pro-Led Coaching</h3><p>Every session is run by Joey Manchurek and the Breakaway coaching staff</p></div>
           <div><span><HeartPulse aria-hidden="true" /></span><h3>Skills Then Games</h3><p>Kids drill the fundamentals, then play them out in rally games and match play</p></div>
-          <div><span><Users aria-hidden="true" /></span><h3>Active With Friends</h3><p>Weekly court time that builds confidence, friendships and a love of the game</p></div>
+          <div><span><Users aria-hidden="true" /></span><h3>Active With Friends</h3><p>A weekly indoor program that keeps kids moving all through the fall</p></div>
         </section>
 
         <section id="session" className={styles.experience}>
-          <div className={styles.sectionIntro}><span>The Experience</span><h2>Here&apos;s How A Session Runs</h2><p>Every week follows the same rhythm, so kids know what to expect and can focus on getting better.</p></div>
+          <div className={styles.sectionIntro}><span>The Experience</span><h2>Here&apos;s How A Session Runs</h2><p>The same structure every week, so kids know what to expect and coaches can build on last week&apos;s work.</p></div>
           <div className={styles.steps}>{experienceSteps.map(([title, body], index) => <div key={title}><span>{index + 1}</span><h3>{title}</h3><p>{body}</p></div>)}</div>
         </section>
 
         <section id="programs" className={styles.programs}>
-          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Two weekly options for ages 9 to 14, both running through fall 2026.</p></div>
-          <div className={styles.programGrid}><ProgramCard program={allLevels} /><ProgramCard program={experienced} /></div>
+          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Three weekly options for ages 9 to 14 at The JAR Pickleball Club. Pick the night that fits your week and the track that fits your child.</p></div>
+          <div className={styles.programGrid}>{programs.map((item) => <ProgramCard key={item.key} program={item} />)}</div>
         </section>
 
         <section id="coach" className={styles.coach}>
@@ -163,7 +169,7 @@ export function KidsWeeklyLanding({ allLevels, experienced }: Props) {
 
         <section className={styles.closingCta}>
           <Image src="/images/kids-weekly/kids-camp-joey.jpg" alt="" fill sizes="100vw" />
-          <div><h2>Give Them A Game They&apos;ll Keep Playing</h2><p>{totalSpots || 30} spots across both programs. Registration closes when the courts are full.</p><Link href="#book">Book Now <ArrowRight size={17} aria-hidden="true" /></Link></div>
+          <div><h2>Give Them A Game They&apos;ll Keep Playing</h2><p>{totalSpots || 50} spots across all three programs. Registration closes when the courts are full.</p><Link href="#book">Book Now <ArrowRight size={17} aria-hidden="true" /></Link></div>
         </section>
       </main>
     </div>
