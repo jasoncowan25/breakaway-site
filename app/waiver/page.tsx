@@ -3,7 +3,7 @@ import { AlertTriangle, Calendar, MapPin, Users, Info } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Waiver | Breakaway Pickleball Camps",
-  description: "Review the Breakaway Pickleball Camps participant waiver and assumption of risk.",
+  description: "Review the Breakaway Pickleball Camps participant and facility waivers and assumption of risk.",
   robots: {
     index: false,
     follow: false,
@@ -233,6 +233,144 @@ export default function WaiverPage() {
               By accepting this waiver, I acknowledge that I have read and understood this Agreement, that I am agreeing
               voluntarily, and that I understand I am waiving substantial legal rights.
             </p>
+
+            <hr className="my-8 border-gray-300" />
+
+            <section aria-labelledby="facility-waiver">
+              <h2 id="facility-waiver" className="text-xl font-bold text-blue-950">
+                Facility Waiver
+              </h2>
+
+              <h3 className="text-lg font-semibold text-blue-950">
+                Release of Liability, Waiver of Claims, and Assumption of Risks
+              </h3>
+
+              <p className="font-semibold text-red-900">
+                BY SIGNING THIS DOCUMENT, YOU WILL WAIVE CERTAIN LEGAL RIGHTS, INCLUDING THE RIGHT TO SUE OR CLAIM
+                COMPENSATION
+              </p>
+
+              <p className="font-semibold text-red-900">PLEASE READ CAREFULLY!</p>
+
+              <p className="text-gray-700">
+                In consideration of 1000614977 Ontario Inc. (d/b/a The Jar Pickleball Club), a company incorporated in
+                the Province of Ontario (the &quot;Company&quot;) permitting the individual named below (&quot;I&quot; or
+                &quot;me&quot;) to access the premises and use the facilities located at 900 Caledonia Road, Unit 5
+                Toronto, ON, M6B 3Y1, Canada (the “Club”) and participate in pickleball matches, pickleball training,
+                stretching, fitness activities, exercise, weight lifting, using the sauna, using the cold plunge,
+                consuming food and beverages and other attractions, events, classes, sessions, activities, services or
+                facilities of any kind whatsoever at the Club, including but not limited to its courts, amenities,
+                lounges, kitchen, changerooms, washrooms, entryways and parking lot, or that are otherwise sponsored,
+                endorsed or operated by the Company (collectively, the “Activities”), and for other good and valuable
+                consideration, I agree to all the terms and conditions set forth in this agreement (this
+                &quot;Agreement&quot;).
+              </p>
+
+              <p className="text-gray-700">
+                The Company has adopted policies, procedures, rules, and regulations, including those posted on the
+                Company’s website at{" "}
+                <a
+                  href="http://www.thejarpickleball.com/membership"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-900 underline underline-offset-2 hover:text-blue-700"
+                >
+                  www.thejarpickleball.com
+                </a>
+                , the Company’s mobile application or the premises of the Club or provided to me in writing
+                (collectively, “Policies”) designed to provide for the safe, enjoyable, and healthy use of the Club
+                facilities, services and events by me and the Club’s members and guests. I acknowledge and agree that
+                the Policies are subject to change from time to time in the sole discretion of the Company and that I
+                will read and comply with the then-current Policies whenever I participate in the Activities.
+              </p>
+
+              <h3 className="text-lg font-semibold text-blue-950">ASSUMPTION OF RISKS</h3>
+
+              <p className="font-semibold text-gray-900">
+                I AM AWARE AND UNDERSTAND THAT THE ACTIVITIES INVOLVE MANY RISKS, DANGERS, AND HAZARDS, INCLUDING BUT
+                NOT LIMITED TO THE RISK OF SERIOUS INJURY, DISABILITY, DEATH, PROPERTY DAMAGE, LOST OR STOLEN PROPERTY,
+                THE TRANSMISSION OF COMMUNICABLE DISEASES, COLLISION WITH OTHER PERSONS OR OBJECTS, BEING STRUCK BY A
+                PADDLE OR BALL, STROKE, HEART ATTACK, OTHER LIFE THREATENING CONDITIONS CAUSED BY PHYSICAL EXERTION,
+                STRAINS, SPRAINS, FRACTURES, TORN MUSCLES OF LIGAMENTS, ALLERGIC REACTIONS, BURNS, SCRAPES, BRUISES,
+                LACERATIONS, EYE INJURY, BRAIN INJURY, SPINAL CORD INJURY, HEAT STRESS, DEHYDRATION, HEARING LOSS, LOSS
+                OF BALANCE OR CONTROL, SLIPS, TRIPS, FALLS, PAIN AND SUFFERING, EMOTIONAL DISTRESS, EQUIPMENT FAILURE,
+                NEGLIGENT FIRST AID, FAILURE TO PLAY SAFELY OR WITHIN ONE’S OWN ABILITY, NEGLIGENCE OF OTHER PERSONS,
+                NEGLIGENCE ON THE PART OF THE RELEASEES (DEFINED BELOW), TRAVEL OR TRANSPORT TO AND FROM THE CLUB, AND
+                NEGLIGENCE OF THE COMPANY INCLUDING FAILURE OF THE COMPANY TO SAFEGUARD OR PROTECT ME FROM THE RISKS,
+                DANGERS AND HAZARDS OF THE ACTIVITIES. I ACKNOWLEDGE THAT I AM VOLUNTARILY PARTICIPATING IN THE
+                ACTIVITIES. I FREELY ACCEPT AND FULLY ASSUME ANY AND ALL OF THE RISKS, DANGERS, AND HAZARDS INVOLVED AND
+                THE POSSIBILITY OF INJURY, DEATH, DISEASE, PROPERTY DAMAGE OR LOSS, WHETHER CAUSED BY THE NEGLIGENCE OF
+                THE COMPANY OR OTHERWISE.
+              </p>
+
+              <p className="text-gray-700">
+                I hereby expressly waive and release any and all claims which I have or may in the future have against
+                the Company, its affiliates, and their respective directors, officers, employees, agents,
+                representatives, shareholders, successors, and assigns (collectively, &quot;Releasees&quot;), on account
+                of injury, disability, disease, death, or property damage arising out of or attributable to the
+                Activities, due to any cause whatsoever, including without limitation the negligence of the Company or
+                any other Releasee (“Negligence Claims”), breach of contract, or breach of any statutory or other duty
+                of care owing under occupiers liability legislation or otherwise. I covenant not to make or bring any
+                such claim against the Company or any other Releasee, and forever release and discharge the Company and
+                all other Releasees from liability under such claims.
+              </p>
+
+              <p className="text-gray-700">
+                I understand that Negligence Claims include but are not limited to the Company’s (1) negligent design,
+                construction (including renovation or alteration), repair, maintenance, operation, supervision,
+                monitoring, or provision of the Activities; (2) negligent failure to warn of or remove hazardous,
+                unsafe, dangerous, or defective conditions; (3) negligent failure to provide or keep premises in a
+                reasonably safe condition; (4) negligent provision of or failure to provide emergency care; (5)
+                negligent hiring, selection, training, instruction, certification, supervision, or retention of
+                employees, independent contractors or volunteers; (6) negligent collection, use, disclosure, or storage
+                of personal, sensitive, or other information (including negligent failure to implement or maintain
+                information security controls); or (7) other negligent act(s) or omission(s).
+              </p>
+
+              <p className="font-semibold text-gray-900">
+                I SHALL DEFEND, INDEMNIFY AND HOLD HARMLESS THE COMPANY AND ALL OTHER RELEASEES AGAINST ANY AND ALL
+                LOSSES, DAMAGES, LIABILITIES, DEFICIENCIES, CLAIMS, ACTIONS, JUDGMENTS, SETTLEMENTS, INTEREST, AWARDS,
+                PENALTIES, FINES, COSTS, OR EXPENSES OF WHATEVER KIND, INCLUDING REASONABLE LEGAL FEES, IN CONNECTION
+                WITH ANY THIRD PARTY CLAIM, SUIT, ACTION, OR PROCEEDING ARISING OUT OF OR RESULTING FROM THE ACTIVITIES.
+              </p>
+
+              <p className="text-gray-700">
+                I confirm that I am: (a) in good health, in proper physical and mental condition, and do not have any
+                medical or other conditions that would impair my ability to participate in the Activities; and (b) not
+                experiencing symptoms of any bacterial or viral diseases (such as cough, shortness of breath, fever or
+                other symptoms), do not have a confirmed or suspected case of a bacterial or viral disease, and have
+                not come in contact in the last fourteen days with a person who has been confirmed or suspected of
+                having a bacterial or viral disease. I will comply with all federal, provincial and local laws, orders,
+                directives and guidelines related to the Activities while participating in the Activities. I will also
+                follow all instructions, recommendations, and cautions of the Company at all times during my
+                participation in the Activities. If at any time I believe conditions to be unsafe, that I am no longer
+                in proper physical condition to participate in the Activities, or I begin experiencing symptoms of a
+                bacterial or viral disease, I will immediately discontinue further participation in the Activities. I
+                have been advised by the Company to wear and will wear all protective equipment that is required by the
+                rules and regulations of the governing body for my sport.
+              </p>
+
+              <p className="text-gray-700">
+                This Agreement, together with any membership agreement or coaching agreement that I have entered into
+                with the Company, constitutes the entire agreement of the Company and me with respect to the subject
+                matter contained herein and supersedes all prior and contemporaneous understandings, agreements,
+                representations, and warranties, both written and oral, with respect to such subject matter. If any term
+                or provision of this Agreement is held to be invalid, illegal, or unenforceable in any jurisdiction,
+                such invalidity, illegality, or unenforceability shall not affect any other term or provision of this
+                Agreement or invalidate or render unenforceable such term or provision in any other jurisdiction. This
+                Agreement is binding on and shall enure to the benefit of me and my heirs and next-of-kin, and the
+                Company and its successors and assigns. This Agreement shall be governed by and construed in accordance
+                with the laws of the Province of Ontario and the federal laws of Canada applicable therein. Any claim or
+                cause of action arising under this Agreement may be brought only in the courts of the Province of
+                Ontario, and I hereby consent to the exclusive jurisdiction of such courts.
+              </p>
+
+              <p className="font-semibold text-gray-900">
+                I ACKNOWLEDGE THAT I HAVE READ AND UNDERSTOOD ALL OF THE TERMS OF THIS AGREEMENT AND THAT I AM
+                VOLUNTARILY WAIVING SUBSTANTIAL LEGAL RIGHTS (ON MY BEHALF AND ON BEHALF OF MY HEIRS, EXECUTORS,
+                ADMINISTRATORS, AND NEXTOF-KIN), INCLUDING THE RIGHT TO SUE THE COMPANY AND THE RELEASEES.
+              </p>
+            </section>
           </div>
         </div>
 

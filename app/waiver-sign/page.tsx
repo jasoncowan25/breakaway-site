@@ -50,7 +50,7 @@ export default function WaiverSignPage() {
       event_type: "Pickleball",
       event_dates: "January 10–11, 2026",
       venue: "The Jar Pickleball Club, 900 Caledonia Rd #5, Toronto, ON",
-      waiver_version: "2026-01-05",
+      waiver_version: "2026-09-11",
       source: "waiver-sign",
       page_url: typeof window !== "undefined" ? window.location.href : "",
       user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "",
@@ -152,7 +152,7 @@ export default function WaiverSignPage() {
               />
               <Label htmlFor="accept" className="cursor-pointer text-sm leading-relaxed text-foreground">
                 I have read and agree to the Breakaway Pickleball Camps Release of Liability, Waiver of Claims &
-                Assumption of Risk.
+                Assumption of Risk and the Facility Waiver.
               </Label>
             </div>
           </div>
