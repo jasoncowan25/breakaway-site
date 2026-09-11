@@ -216,7 +216,10 @@ export async function fetchPublicCampShots(
 ): Promise<ApiCampShot[]> {
   const data = await apiGet<{ shots: ApiCampShot[] }>(
     `/api/v1/public/camps/${encodeURIComponent(slug)}/shots`,
-    options,
+    // Shot assignments are edited independently from the camp row. Always
+    // bypass the site's Data Cache so an admin save is visible on the next
+    // page request instead of leaving "What You'll Master" on an old list.
+    { ...options, noStore: true },
   )
   return data?.shots ?? []
 }
