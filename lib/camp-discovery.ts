@@ -84,7 +84,7 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     price: "From $600",
     image: "/images/kids-weekly/kids-camp-joey.jpg",
     badges: [
-      { text: "Just Announced", variant: "accent" },
+      { text: "Ongoing", variant: "accent" },
       { text: "Ages 9–14", variant: "secondary" },
     ],
     coach: "Joey Manchurek",

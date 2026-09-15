@@ -63,7 +63,7 @@ test("publishes the approved captions and promotional badges for featured Toront
         id: "kids-weekly-pickleball-camp-toronto",
         date: "Weekly programs · Sep 10–Dec 17, 2026",
         badges: [
-          { text: "Just Announced", variant: "accent" },
+          { text: "Ongoing", variant: "accent" },
           { text: "Ages 9–14", variant: "secondary" },
         ],
         availabilityLabel: undefined,
