@@ -1,3 +1,4 @@
+import { getRecaps, recapCard } from "@/lib/recaps/get"
 import type { Metadata } from "next"
 import { CampFinder } from "@/components/CampFinder"
 import { ValueProps } from "@/components/ValueProps"
@@ -26,9 +27,10 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const [publishedCampCards, upcomingMuskokaCamps] = await Promise.all([
+  const [publishedCampCards, upcomingMuskokaCamps, recaps] = await Promise.all([
     getPublishedPublicCampCards(),
     getUpcomingMuskokaCamps(),
+    getRecaps(),
   ])
 
   const puntaCanaCamp = {
@@ -49,6 +51,9 @@ export default async function HomePage() {
     soldOut: false,
     buttonText: "Learn More",
   }
+
+  const managedRecaps = recaps.map(recapCard)
+  const recentRecaps = [...managedRecaps, ...HOME_COMPLETED_CAMP_CARDS.filter(camp => !managedRecaps.some(recap => recap.link === camp.link))].sort((a, b) => b.sortDate.localeCompare(a.sortDate)).slice(0, HOME_COMPLETED_CAMP_CARDS.length)
 
   return (
     <div className="min-h-screen bg-background">
@@ -122,7 +127,7 @@ export default async function HomePage() {
           <h2 className="text-2xl font-bold text-primary mb-6">Recently Completed Camps</h2>
 
           <div className="grid gap-6 md:grid-cols-3 max-w-5xl">
-            {HOME_COMPLETED_CAMP_CARDS.map((camp) => (
+            {recentRecaps.map((camp) => (
               <CampCard key={camp.id} {...camp} />
             ))}
           </div>

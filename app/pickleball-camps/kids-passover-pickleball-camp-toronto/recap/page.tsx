@@ -1,10 +1,11 @@
+import { legacyRecapOverride, PublishedRecap, recapMetadata } from "@/components/recaps/PublishedRecap"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
-export const metadata = {
+const legacyMetadata = {
   title: "Kids Passover Camp Recap | Breakaway Pickleball",
   description:
     "Recap of our Kids Passover Pickleball Camp at The Jar PickleBall Club. New skills, new friendships, and lots of fun on the court!",
@@ -16,7 +17,14 @@ export const metadata = {
   },
 }
 
-export default function KidsPassoverCampRecapPage() {
+export const dynamic = 'force-dynamic'
+export async function generateMetadata() {
+  const recap = await legacyRecapOverride('kids-passover-pickleball-camp-toronto')
+  return recap ? recapMetadata(recap) : legacyMetadata
+}
+export default async function LegacyRecapPage() {
+  const recap = await legacyRecapOverride('kids-passover-pickleball-camp-toronto')
+  if (recap) return <PublishedRecap recap={recap} />
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section with Group Photo */}

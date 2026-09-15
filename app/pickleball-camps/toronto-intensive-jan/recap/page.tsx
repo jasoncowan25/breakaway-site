@@ -1,3 +1,4 @@
+import { legacyRecapOverride, PublishedRecap, recapMetadata } from "@/components/recaps/PublishedRecap"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Trophy } from "lucide-react"
@@ -5,14 +6,21 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Metadata } from "next"
 
-export const metadata: Metadata = {
+const legacyMetadata: Metadata = {
   title: "Toronto Intermediate Intensive Recap | Breakaway Pickleball",
   description: "Recap of the Toronto Intermediate Intensive — January 10-11, 2026.",
   alternates: { canonical: "/pickleball-camps/toronto-intensive-jan/recap" },
   openGraph: { url: "/pickleball-camps/toronto-intensive-jan/recap" },
 }
 
-export default function TorontoIntensiveRecapPage() {
+export const dynamic = 'force-dynamic'
+export async function generateMetadata() {
+  const recap = await legacyRecapOverride('toronto-intensive-jan')
+  return recap ? recapMetadata(recap) : legacyMetadata
+}
+export default async function LegacyRecapPage() {
+  const recap = await legacyRecapOverride('toronto-intensive-jan')
+  if (recap) return <PublishedRecap recap={recap} />
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section with Group Photo */}

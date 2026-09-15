@@ -1,3 +1,4 @@
+import { getRecaps, recapCard } from "@/lib/recaps/get"
 import { Metadata } from "next"
 import { JsonLd } from "@/components/JsonLd"
 import CampsPageClient from "./camps-page-client"
@@ -34,10 +35,11 @@ function locationsFromParam(location?: string) {
 export default async function CampsPage({ searchParams }: CampsPageProps) {
   const paramsPromise: NonNullable<CampsPageProps["searchParams"]> =
     searchParams ?? Promise.resolve({})
-  const [publishedCampCards, upcomingMuskokaCamps, params] = await Promise.all([
+  const [publishedCampCards, upcomingMuskokaCamps, params, recaps] = await Promise.all([
     getPublishedPublicCampCards(),
     getUpcomingMuskokaCamps(),
     paramsPromise,
+    getRecaps(),
   ])
 
   const puntaCanaCard = {
@@ -50,6 +52,7 @@ export default async function CampsPage({ searchParams }: CampsPageProps) {
       <JsonLd data={itemListJsonLd([...publishedCampCards, puntaCanaCard])} />
       <CampsPageClient
         publishedCampCards={publishedCampCards}
+        recapCards={recaps.map(recapCard)}
         muskokaCamps={upcomingMuskokaCamps}
         initialSelectedLocations={locationsFromParam(params.location)}
         initialSelectedSkillLevels={params.skill ? [params.skill] : []}

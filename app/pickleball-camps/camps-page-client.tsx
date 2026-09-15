@@ -22,6 +22,7 @@ import {
 
 type CampsPageClientProps = {
   publishedCampCards?: PublicCampCard[]
+  recapCards?: ReturnType<typeof import("@/lib/recaps/get").recapCard>[]
   muskokaCamps?: MuskokaCamp[]
   initialSelectedLocations?: string[]
   initialSelectedSkillLevels?: string[]
@@ -30,6 +31,7 @@ type CampsPageClientProps = {
 
 function CampsPageContent({
   publishedCampCards = [],
+  recapCards = [],
   muskokaCamps = [],
   initialSelectedLocations = [],
   initialSelectedSkillLevels = [],
@@ -92,7 +94,8 @@ function CampsPageContent({
     )
 
   const filteredUpcomingCamps = filterCamps(upcomingCamps)
-  const filteredCompletedCamps = filterCamps(COMPLETED_CAMP_CARDS)
+  const completedCamps = [...recapCards, ...COMPLETED_CAMP_CARDS.filter(camp => !recapCards.some(recap => recap.link === camp.link))].sort((a, b) => b.sortDate.localeCompare(a.sortDate))
+  const filteredCompletedCamps = filterCamps(completedCamps)
   const showMuskokaHub = shouldShowMuskokaHub({
     campCount: muskokaCamps.length,
     locations: selectedLocations,

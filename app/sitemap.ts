@@ -1,3 +1,4 @@
+import { getRecaps } from "@/lib/recaps/get"
 import type { MetadataRoute } from "next"
 import { getPublishedPublicCampCards } from "@/lib/public-camps"
 import { absoluteUrl } from "@/lib/seo"
@@ -77,5 +78,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((camp) => camp.hasRecap)
     .map((camp) => sitemapEntry(`/pickleball-camps/${camp.slug}/recap`, "monthly", 0.7))
 
-  return dedupeSitemap([...staticPages, ...campPageUrls, ...currentCampUrls, ...recapUrls])
+  const managedRecaps = (await getRecaps()).map(recap => ({ ...sitemapEntry(`/pickleball-camps/${recap.slug}/recap`, "monthly", 0.7), lastModified: new Date(recap.publishedAt) }))
+  return dedupeSitemap([...staticPages, ...campPageUrls, ...currentCampUrls, ...managedRecaps, ...recapUrls])
 }

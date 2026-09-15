@@ -30,6 +30,7 @@ export type CampFilters = {
 }
 
 export type CompletedCampCard = {
+  sortDate: string
   id: string
   title: string
   date: string
@@ -138,6 +139,7 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
 export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
   {
     id: "muskoka-summer-2026",
+    sortDate: "2026-07-10",
     title: "Muskoka Summer Pickleball Camps",
     date: "July 10 – August 6, 2026",
     location: "Muskoka, Ontario",
@@ -154,6 +156,7 @@ export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
   },
   {
     id: "toronto-april",
+    sortDate: "2026-04-11",
     title: "Toronto Intermediate Intensive (3.0-3.5)",
     date: "April 11-12, 2026",
     location: "The Jar PickleBall Club",
@@ -170,6 +173,7 @@ export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
   },
   {
     id: "kids-passover-camp",
+    sortDate: "2026-04-07",
     title: "Kids Passover Pickleball Camp",
     date: "April 7-10, 2026",
     location: "The Jar PickleBall Club",
@@ -189,6 +193,7 @@ export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
   },
   {
     id: "saint-martin-clinic",
+    sortDate: "2026-03-01",
     title: "Saint Martin Pop-Up Clinic",
     date: "Mar 2026",
     location: "American Tennis Club, Saint Martin",
@@ -205,6 +210,7 @@ export const COMPLETED_CAMP_CARDS: CompletedCampCard[] = [
   },
   {
     id: "toronto-intermediate-jan",
+    sortDate: "2026-01-10",
     title: "Toronto Intermediate Intensive",
     date: "Jan 10-11, 2026",
     location: "The Jar PickleBall Club",

@@ -1,3 +1,4 @@
+import { legacyRecapOverride, PublishedRecap, recapMetadata } from "@/components/recaps/PublishedRecap"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, MapPin, Users, Trophy, Award } from "lucide-react"
@@ -5,14 +6,21 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Metadata } from "next"
 
-export const metadata: Metadata = {
+const legacyMetadata: Metadata = {
   title: "Saint Martin Pop-Up Clinic Recap | Breakaway Pickleball",
   description: "Recap of the Saint Martin Pop-Up Pickleball Clinic — March 2026.",
   alternates: { canonical: "/pickleball-camps/saint-martin-pickleball-clinic/recap" },
   openGraph: { url: "/pickleball-camps/saint-martin-pickleball-clinic/recap" },
 }
 
-export default function SaintMartinClinicRecapPage() {
+export const dynamic = 'force-dynamic'
+export async function generateMetadata() {
+  const recap = await legacyRecapOverride('saint-martin-pickleball-clinic')
+  return recap ? recapMetadata(recap) : legacyMetadata
+}
+export default async function LegacyRecapPage() {
+  const recap = await legacyRecapOverride('saint-martin-pickleball-clinic')
+  if (recap) return <PublishedRecap recap={recap} />
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section with Action Photo */}
