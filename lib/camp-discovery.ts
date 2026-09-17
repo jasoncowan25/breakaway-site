@@ -64,36 +64,9 @@ export const RELATED_CAMP_LINKS = [
     homeLabel: "Punta Cana pickleball retreat",
     href: "/pickleball-camps/punta-cana",
   },
-  {
-    label: "Pickleball Kids Weekly",
-    homeLabel: "Pickleball Kids Weekly",
-    href: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
-  },
 ] as const
 
 export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
-  {
-    id: "kids-weekly-pickleball-camp-toronto",
-    title: "Kids Weekly Pickleball Camp",
-    date: "Weekly programs · Sep 10–Dec 17, 2026",
-    sortDate: "2026-09-10",
-    endDate: "2026-12-17",
-    location: "The Jar Pickleball Club",
-    locationFilter: "Toronto & GTA",
-    format: "Camp",
-    skillLevel: "Kids",
-    price: "From $600",
-    image: "/images/kids-weekly/kids-camp-joey.jpg",
-    badges: [
-      { text: "Ongoing", variant: "accent" },
-      { text: "Ages 9–14", variant: "secondary" },
-    ],
-    coach: "Joey Manchurek",
-    link: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
-    imageEnhanced: false,
-    soldOut: false,
-    buttonText: "Learn More",
-  },
   {
     id: "toronto-intermediate-intensive-sep-12-2026-3",
     title: "Toronto Intermediate Intensive",

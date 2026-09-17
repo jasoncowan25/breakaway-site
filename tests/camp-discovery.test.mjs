@@ -10,42 +10,8 @@ import {
   staticPublicCampNavItems,
 } from "../lib/camp-discovery.ts"
 
-test("defines one aggregate weekly kids card with the approved content", () => {
-  const weekly = STATIC_PUBLIC_CAMP_CARDS.find(
-    (camp) => camp.id === "kids-weekly-pickleball-camp-toronto",
-  )
-
-  assert.deepEqual(
-    {
-      title: weekly?.title,
-      coach: weekly?.coach,
-      date: weekly?.date,
-      sortDate: weekly?.sortDate,
-      endDate: weekly?.endDate,
-      location: weekly?.location,
-      price: weekly?.price,
-      image: weekly?.image,
-      skillLevel: weekly?.skillLevel,
-      link: weekly?.link,
-    },
-    {
-      title: "Kids Weekly Pickleball Camp",
-      coach: "Joey Manchurek",
-      date: "Weekly programs · Sep 10–Dec 17, 2026",
-      sortDate: "2026-09-10",
-      endDate: "2026-12-17",
-      location: "The Jar Pickleball Club",
-      price: "From $600",
-      image: "/images/kids-weekly/kids-camp-joey.jpg",
-      skillLevel: "Kids",
-      link: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
-    },
-  )
-})
-
 test("publishes the approved captions and promotional badges for featured Toronto camps", () => {
   const featuredIds = [
-    "kids-weekly-pickleball-camp-toronto",
     "toronto-intermediate-intensive-sep-12-2026-3",
     "toronto-intermediate-intensive-oct-24-2026",
   ]
@@ -59,15 +25,6 @@ test("publishes the approved captions and promotional badges for featured Toront
       availabilityLabel,
     })),
     [
-      {
-        id: "kids-weekly-pickleball-camp-toronto",
-        date: "Weekly programs · Sep 10–Dec 17, 2026",
-        badges: [
-          { text: "Ongoing", variant: "accent" },
-          { text: "Ages 9–14", variant: "secondary" },
-        ],
-        availabilityLabel: undefined,
-      },
       {
         id: "toronto-intermediate-intensive-sep-12-2026-3",
         date: "September 12-13, 2026",
@@ -84,16 +41,16 @@ test("publishes the approved captions and promotional badges for featured Toront
   )
 })
 
-test("categorizes the upcoming weekly youth program as Kids", () => {
+test("keeps the Kids filter available without promoting the started weekly program", () => {
   const kids = STATIC_PUBLIC_CAMP_CARDS
     .filter((camp) => camp.skillLevel === "Kids")
     .map((camp) => camp.id)
 
-  assert.deepEqual(kids, ["kids-weekly-pickleball-camp-toronto"])
+  assert.deepEqual(kids, [])
   assert.ok(CAMP_SKILL_FILTERS.includes("Kids"))
 })
 
-test("Kids filtering returns only the weekly kids program", () => {
+test("Kids filtering excludes the started weekly kids program", () => {
   const result = STATIC_PUBLIC_CAMP_CARDS
     .filter((camp) =>
       campMatchesFilters(camp, {
@@ -104,7 +61,7 @@ test("Kids filtering returns only the weekly kids program", () => {
     )
     .map((camp) => camp.id)
 
-  assert.deepEqual(result, ["kids-weekly-pickleball-camp-toronto"])
+  assert.deepEqual(result, [])
   assert.equal(
     shouldShowMuskokaHub({
       campCount: 8,
@@ -116,37 +73,16 @@ test("Kids filtering returns only the weekly kids program", () => {
   )
 })
 
-test("adds the weekly program to related links and active static navigation", () => {
-  assert.deepEqual(
-    RELATED_CAMP_LINKS.find((link) => link.href.includes("kids-weekly")),
-    {
-      label: "Pickleball Kids Weekly",
-      homeLabel: "Pickleball Kids Weekly",
-      href: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
-    },
+test("hides the started weekly program from related links and active static navigation", () => {
+  assert.equal(RELATED_CAMP_LINKS.some((link) => link.href.includes("kids-weekly")), false)
+  assert.equal(
+    staticPublicCampNavItems("2026-09-17").some((item) => item.href.includes("kids-weekly")),
+    false,
   )
   assert.equal(
-    staticPublicCampNavItems("2026-08-09").some(
-      (item) => item.title === "Kids Weekly Pickleball Camp",
+    staticPublicCampNavItems("2026-09-17").some(
+      (item) => item.href === "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
     ),
     true,
-  )
-  assert.equal(
-    staticPublicCampNavItems("2026-12-22").some(
-      (item) => item.title === "Kids Weekly Pickleball Camp",
-    ),
-    false,
-  )
-  assert.equal(
-    STATIC_PUBLIC_CAMP_CARDS.some(
-      (camp) => camp.id === "kids-summer-pickleball-camp-toronto",
-    ),
-    false,
-  )
-  assert.equal(
-    staticPublicCampNavItems("2026-08-21").some(
-      (item) => item.href === "/pickleball-camps/kids-summer-pickleball-camp-toronto",
-    ),
-    false,
   )
 })
