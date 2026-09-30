@@ -225,6 +225,16 @@ export function ConfirmationClient() {
   const portalEligible = !kidsMode && Boolean(status?.portalEligible || portalUrl)
   const orderLabel = confirmationId ? confirmationId.slice(-8).toUpperCase() : undefined
 
+  function portalHandoffMessage(code: unknown): string {
+    if (code === "portal_handoff_not_available") {
+      return "There's nothing to open in My Breakaway for this booking. Your confirmation and receipt are in your email."
+    }
+    if (code === "checkout_projection_in_progress") {
+      return "Your booking is still being saved. Give it a few seconds and try again."
+    }
+    return "We couldn't open your account from here. Use the sign-in link in your email."
+  }
+
   async function openPortal() {
     // Show the button's loading state immediately on click (covers both the
     // instant-redirect and the async portal-handoff paths) instead of flashing
@@ -250,13 +260,14 @@ export function ConfirmationClient() {
           body: JSON.stringify({ payment_intent_client_secret: paymentIntentClientSecret }),
         },
       )
-      const body = await response.json()
+      const body = await response.json().catch(() => null)
       if (!response.ok || !body?.portalUrl) {
-        throw new Error(body?.error ?? "Could not open your account.")
+        throw new Error(portalHandoffMessage(body?.error))
       }
       window.location.href = body.portalUrl
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not open your account.")
+      // Never show a raw error code; the message is always a plain sentence.
+      setError(err instanceof Error && err.message ? err.message : portalHandoffMessage(null))
       setIsOpeningPortal(false)
     }
   }

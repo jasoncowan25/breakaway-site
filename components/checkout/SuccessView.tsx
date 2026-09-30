@@ -61,8 +61,19 @@ export function SuccessView({
       ? `${nameList} ${names.length > 1 ? "are" : "is"} in.`
       : "They're all set."
     : `You're going${prefill || players[0].first ? `, ${prefill ? acct.first : players[0].first}` : ""}.`;
-  const accountCreated = !kidsMode && (prefill || acctOptIn || isResolving);
   const isMuskoka = /muskoka/i.test(`${camp.location} ${camp.locSub}`);
+  // My Breakaway is only for people with their own booking: never for kids
+  // camps, never for Muskoka (no portal), and not for a payer who only booked
+  // someone else — each other player gets their own sign-in email instead.
+  const payerEmail = (prefill ? acct.email : players[0]?.email) ?? "";
+  const payerIsPlayer = players.some(
+    (p) => (p.email ?? "").trim().toLowerCase() === payerEmail.trim().toLowerCase(),
+  );
+  const accountCreated =
+    !kidsMode && !isMuskoka && payerIsPlayer && (prefill || acctOptIn || isResolving);
+  const otherPlayers = players.filter(
+    (p) => (p.email ?? "").trim().toLowerCase() !== payerEmail.trim().toLowerCase(),
+  ).length;
   const SkeletonLine = ({ className = "" }: { className?: string }) => (
     <span className={`skel ${className}`} aria-hidden="true" />
   );
@@ -143,16 +154,20 @@ export function SuccessView({
           {/* The API emails each other adult player their own My Breakaway
               sign-in link (never for kids camps or Muskoka, which doesn't use
               the portal). Keep this copy in step with what's actually sent. */}
-          {!kidsMode && !isMuskoka && players.length > 1 && (
+          {!kidsMode && !isMuskoka && otherPlayers > 0 && (
             <div className="emails-note">
               <span className="ei">
                 <Icon name="mail" size={16} />
               </span>
               <span>
-                We also emailed the{" "}
-                {players.length - 1 === 1
-                  ? "other player"
-                  : `other ${players.length - 1} players`}{" "}
+                We also emailed{" "}
+                {payerIsPlayer
+                  ? otherPlayers === 1
+                    ? "the other player"
+                    : `the other ${otherPlayers} players`
+                  : otherPlayers === 1
+                    ? "the player"
+                    : `all ${otherPlayers} players`}{" "}
                 a link to sign in to My Breakaway and see their camp.
               </span>
             </div>
