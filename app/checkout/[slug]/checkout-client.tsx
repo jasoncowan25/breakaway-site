@@ -56,6 +56,12 @@ type CheckoutSession = {
   currency: string
 }
 
+/** When each "Confirm & agree" box was ticked; null while unticked. */
+type AgreedAt = {
+  terms: string | null
+  eyewear: string | null
+}
+
 type LivePayer = {
   firstName: string
   lastName: string
@@ -138,6 +144,14 @@ function toDesignCamp(camp: CheckoutCampView): Camp {
     isRecurring: camp.isRecurring,
     urgencyBadge:
       !camp.isSoldOut && camp.spotsLeft > 0 && camp.spotsLeft <= 4 ? "Selling fast" : undefined,
+  }
+}
+
+function stampAgreedAt(prev: AgreedAt, next: Agreements): AgreedAt {
+  const now = new Date().toISOString()
+  return {
+    terms: next.terms ? (prev.terms ?? now) : null,
+    eyewear: next.eyewear ? (prev.eyewear ?? now) : null,
   }
 }
 
@@ -238,6 +252,7 @@ function CheckoutClientInner({
   const [leaving, setLeaving] = useState<string[]>([])
   const [savedCardOpen, setSavedCardOpen] = useState(false)
   const [agree, setAgreeState] = useState<Agreements>({ terms: false, eyewear: false, marketing: false })
+  const [agreedAt, setAgreedAt] = useState<AgreedAt>({ terms: null, eyewear: null })
   const [error, setError] = useState("")
   const [isPreparingPayment, setIsPreparingPayment] = useState(false)
   const [isPaying, setIsPaying] = useState(false)
@@ -358,6 +373,13 @@ function CheckoutClientInner({
             phone: clean(payer.phone) || undefined,
           },
           players: playerPayload(players, checkoutMode),
+          // The API refuses checkout without both acknowledgments and records
+          // them on the registration (the auditable record of acceptance).
+          agreements: {
+            termsAcceptedAt: agreedAt.terms ?? new Date().toISOString(),
+            eyewearAcknowledgedAt: agreedAt.eyewear ?? new Date().toISOString(),
+            waiverVersion: kidsMode ? "u18" : "adult",
+          },
         }),
       })
 
@@ -511,7 +533,9 @@ function CheckoutClientInner({
           setSavedCardOpen={setSavedCardOpen}
           setAgree={(updater) => {
             resetPayment()
-            setAgreeState(updater)
+            const next = updater(agree)
+            setAgreeState(next)
+            setAgreedAt((at) => stampAgreedAt(at, next))
           }}
           onContinuePayment={startPaymentSession}
           onEditDetails={clearPreparedPayment}
