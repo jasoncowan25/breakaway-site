@@ -237,7 +237,7 @@ function CheckoutClientInner({
   const [entering, setEntering] = useState<string[]>([])
   const [leaving, setLeaving] = useState<string[]>([])
   const [savedCardOpen, setSavedCardOpen] = useState(false)
-  const [agree, setAgreeState] = useState<Agreements>({ terms: false, marketing: false })
+  const [agree, setAgreeState] = useState<Agreements>({ terms: false, eyewear: false, marketing: false })
   const [error, setError] = useState("")
   const [isPreparingPayment, setIsPreparingPayment] = useState(false)
   const [isPaying, setIsPaying] = useState(false)
@@ -320,6 +320,7 @@ function CheckoutClientInner({
       return `Only ${camp.spotsLeft} ${camp.spotsLeft === 1 ? "spot is" : "spots are"} left.`
     }
     if (!agree.terms) return "Accept the booking terms to continue."
+    if (!agree.eyewear) return "Acknowledge the protective eyewear notice to continue."
     return ""
   }
 

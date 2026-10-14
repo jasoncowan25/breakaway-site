@@ -90,6 +90,8 @@ export interface Guardian {
 
 export interface Agreements {
   terms: boolean;
+  /** Protective eyewear is recommended but optional; the booker accepts the risk. Required. */
+  eyewear: boolean;
   marketing: boolean;
 }
 

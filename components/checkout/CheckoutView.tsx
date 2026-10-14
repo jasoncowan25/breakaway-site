@@ -143,7 +143,9 @@ function DetailsSummary({
       <div className="ds-group">
         <span className="ds-k">Agreed</span>
         <div className="ds-row">
-          <span className="ds-sub">Terms, Participant Waiver &amp; Refund Policy accepted</span>
+          <span className="ds-sub">
+            Terms, Participant Waiver &amp; Refund Policy accepted · Eyewear risk acknowledged
+          </span>
         </div>
       </div>
     </div>
@@ -217,7 +219,7 @@ export function CheckoutView(props: CheckoutViewProps) {
         looksLikeEmail(guardian.email) &&
         guardian.authorized,
     );
-  const detailsOk = playersOk && guardianOk && agree.terms;
+  const detailsOk = playersOk && guardianOk && agree.terms && agree.eyewear;
   const editDetails = () => {
     setRevealed(false);
     onEditDetails?.();
@@ -461,6 +463,20 @@ export function CheckoutView(props: CheckoutViewProps) {
                           </a>
                           . I understand Breakaway will contact me with important updates about my
                           booking.
+                        </span>
+                      </label>
+                      <label className="check">
+                        <input
+                          type="checkbox"
+                          checked={agree.eyewear}
+                          onChange={(e) => setAgree((a) => ({ ...a, eyewear: e.target.checked }))}
+                        />
+                        <span className="box">
+                          <Icon name="check" size={14} strokeWidth={3} />
+                        </span>
+                        <span className="txt">
+                          I understand protective eyewear is recommended but optional, and accept the
+                          risks of participating without it.
                         </span>
                       </label>
                     </div>

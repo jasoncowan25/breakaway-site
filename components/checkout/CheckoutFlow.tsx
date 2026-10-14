@@ -74,7 +74,7 @@ export function CheckoutFlow({ camp, account, scenario }: CheckoutFlowProps) {
   const [leaving, setLeaving] = useState<string[]>([]); // ids playing their exit animation
   const acctOptIn = true;
   const [savedCardOpen, setSavedCardOpen] = useState(false);
-  const [agree, setAgree] = useState<Agreements>({ terms: false, marketing: false });
+  const [agree, setAgree] = useState<Agreements>({ terms: false, eyewear: false, marketing: false });
 
   // login → prefill the correct identity (guardian in kids mode, player 0 otherwise)
   useEffect(() => {
