@@ -32,6 +32,7 @@ export type CheckoutCampView = {
   venue: string
   location: string
   priceLabel: string
+  dayDate?: string | null
   offerCode: string | null
   offerLabel: string | null
   capacity: number
@@ -363,6 +364,7 @@ function CheckoutClientInner({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           campId: camp.id,
+          dayDate: camp.dayDate ?? undefined,
           offerCode: camp.offerCode ?? undefined,
           checkoutMode,
           accountOptIn: checkoutMode !== "kids",

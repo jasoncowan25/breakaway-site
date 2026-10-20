@@ -1,5 +1,16 @@
 import type { ApiCampSingleDay } from "./breakaway-api"
 
+export function dayTicketCheckoutHref(slug: string, date: string): string {
+  return `/checkout/${encodeURIComponent(slug)}?day=${encodeURIComponent(date)}`
+}
+
+export function checkoutDayTicket(offer: ApiCampSingleDay | null | undefined, date: string) {
+  const day = offer?.days.find(day => day.date === date)
+  const priceCents = day?.priceCents ?? offer?.priceCents
+  if (!day?.available || priceCents == null || !Number.isSafeInteger(priceCents) || priceCents <= 0) return null
+  return { ...day, priceCents }
+}
+
 export function dayTicketBadge(offer: ApiCampSingleDay | null | undefined): string | null {
   return offer && offer.days.length > 1 ? `1 or ${offer.days.length} Days` : null
 }

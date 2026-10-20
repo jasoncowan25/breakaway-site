@@ -8,6 +8,7 @@ import {
   looksLikeCheckoutLinkCode,
 } from "@/lib/checkout-links"
 import { resolveCheckoutOffer, type CheckoutOffer } from "@/lib/checkout-offers"
+import { checkoutDayTicket, ticketMoney } from "@/lib/day-tickets"
 import { formatRecurringCampDates, formatSessionTime } from "@/lib/session-time"
 
 import { CheckoutClient, type CheckoutCampView } from "./checkout-client"
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 
 type PageProps = {
   params: Promise<{ slug: string }>
-  searchParams?: Promise<{ preview?: string; offer?: string }>
+  searchParams?: Promise<{ preview?: string; offer?: string; day?: string }>
 }
 
 function canPreview(token: string | undefined) {
@@ -36,7 +37,7 @@ function canPreview(token: string | undefined) {
 
 function formatMoney(cents: number | null) {
   if (cents == null) return "Price announced after registration"
-  return `$${Math.round(cents / 100).toLocaleString("en-CA")} CAD`
+  return `${ticketMoney(cents)} CAD`
 }
 
 function formatDate(value: string) {
@@ -91,18 +92,19 @@ function subtitleForCamp(camp: ApiCamp) {
 function toCheckoutCampView(
   camp: ApiCamp,
   offer: CheckoutOffer | null,
-  options: { bypassCapacity?: boolean } = {},
+  options: { bypassCapacity?: boolean; day?: NonNullable<ReturnType<typeof checkoutDayTicket>> } = {},
 ): CheckoutCampView | null {
   if (!camp.slug) return null
 
   const capacity = camp.capacity ?? 0
+  const day = options.day
   // A custom link with seat counting turned off books regardless of how full
   // the camp is (the admin accepted the oversubscription when creating it).
-  const spotsLeft = options.bypassCapacity ? Math.max(1, capacity || 6) : (camp.spotsLeft ?? capacity)
+  const spotsLeft = options.bypassCapacity ? Math.max(1, capacity || 6) : (day ? day.remaining ?? capacity : camp.spotsLeft ?? capacity)
   const skillLabel = skillLabelForCamp(camp)
   const subtitle = subtitleForCamp(camp)
   const coach = camp.coaches.find((item) => item.isFeatured) ?? camp.coaches[0]
-  const recurring = formatRecurringCampDates(
+  const recurring = day ? null : formatRecurringCampDates(
     offer?.sessionDates ?? camp.sessionDates,
     offer?.sessionLabel ?? camp.sessionLabel,
   )
@@ -112,7 +114,7 @@ function toCheckoutCampView(
     slug: camp.slug,
     title: camp.title,
     subtitle,
-    dateLabel: recurring?.dateLabel ?? formatDateRange(camp.startDate, camp.endDate),
+    dateLabel: day ? formatDate(day.date) : recurring?.dateLabel ?? formatDateRange(camp.startDate, camp.endDate),
     timeLabel: recurring
       ? [recurring.scheduleLabel, recurring.sessionCountLabel, offer?.scheduleNote]
           .filter(Boolean)
@@ -120,12 +122,13 @@ function toCheckoutCampView(
       : formatSessionTime(camp.sessionLabel) ?? "Time announced after registration",
     venue: camp.venue ?? camp.facility?.name ?? "Breakaway",
     location: camp.location ?? camp.facility?.city ?? "Breakaway",
-    priceLabel: formatMoney(offer?.unitPriceCents ?? camp.basePriceCents),
+    priceLabel: formatMoney(day?.priceCents ?? offer?.unitPriceCents ?? camp.basePriceCents),
+    dayDate: day?.date ?? null,
     offerCode: offer?.code ?? null,
     offerLabel: offer?.label ?? null,
     capacity,
     spotsLeft,
-    isSoldOut: options.bypassCapacity ? false : camp.isSoldOut,
+    isSoldOut: options.bypassCapacity ? false : day ? !day.available : camp.isSoldOut,
     heroImageUrl: camp.childrenEligible && recurring ? "/images/kids-camp-group-photo.png" : heroImageForCamp(camp),
     skillLabel,
     coachName: coach?.displayName ?? "Breakaway coach",
@@ -255,12 +258,13 @@ function CheckoutLinkUnavailable({
 export default async function CheckoutPage({ params, searchParams }: PageProps) {
   const [{ slug }, query] = await Promise.all([
     params,
-    searchParams ?? Promise.resolve({} as { preview?: string; offer?: string }),
+    searchParams ?? Promise.resolve({} as { preview?: string; offer?: string; day?: string }),
   ])
   const preview = canPreview(query.preview)
   const camp = await fetchPublicCampBySlug(slug, { noStore: true })
 
   if (!camp) {
+    if (query.day !== undefined) notFound()
     // /checkout/<code> — a private custom checkout link minted from the admin.
     if (looksLikeCheckoutLinkCode(slug)) {
       const resolved = await fetchPublicCheckoutLink(slug)
@@ -291,7 +295,15 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
   const offer = resolveCheckoutOffer(camp.id, query.offer)
   if (query.offer && !offer) notFound()
 
-  const view = toCheckoutCampView(camp, offer)
+  const day = query.day !== undefined ? checkoutDayTicket(camp.singleDay, query.day) : null
+  if (query.day !== undefined && (!day || query.offer)) {
+    return <CheckoutLinkUnavailable
+      message="This single-day ticket is unavailable. Please choose an available date on the camp page."
+      campTitle={camp.title}
+      campSlug={camp.slug}
+    />
+  }
+  const view = toCheckoutCampView(camp, offer, { day: day ?? undefined })
   if (!view) notFound()
 
   return <CheckoutClient camp={view} />

@@ -4,11 +4,11 @@ import { useId, useState } from "react"
 import { ArrowRight, Award, Calendar, Clock, MapPin, MessageSquare, Users, UtensilsCrossed } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ticketMoney } from "@/lib/day-tickets"
+import { dayTicketCheckoutHref, ticketMoney } from "@/lib/day-tickets"
 import type { PublicCamp } from "@/lib/public-camps"
 
 type Props = {
-  camp: Pick<PublicCamp, "priceLabel" | "priceCents" | "singleDay" | "isSoldOut" | "spotsLeft" |
+  camp: Pick<PublicCamp, "slug" | "priceLabel" | "priceCents" | "singleDay" | "isSoldOut" | "spotsLeft" |
     "capacity" | "dateLabel" | "venue" | "schedule" | "lunchType">
   fullCheckoutHref: string | null
 }
@@ -22,8 +22,8 @@ export function CampBookingCard({ camp, fullCheckoutHref }: Props) {
       label: new Intl.DateTimeFormat("en-CA", { weekday: "long", month: "short", day: "numeric", timeZone: "UTC" })
         .format(new Date(`${day.date}T12:00:00Z`)),
       price: day.priceCents ?? offer?.priceCents ?? null,
-      available: day.available && Boolean(day.checkoutUrl),
-      href: day.checkoutUrl,
+      available: day.available,
+      href: dayTicketCheckoutHref(camp.slug, day.date),
       remaining: day.remaining,
     })),
     { id: "full", label: offer?.days.length === 2 ? "Both days" : "Full camp",
