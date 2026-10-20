@@ -5,11 +5,12 @@ import { fetchPublicCampBySlug, fetchPublicCheckoutLink, type ApiCamp } from "@/
 import {
   checkoutLinkUnavailableMessage,
   checkoutOfferFromLink,
+  checkoutOfferSpotsLeft,
   looksLikeCheckoutLinkCode,
 } from "@/lib/checkout-links"
 import { resolveCheckoutOffer, type CheckoutOffer } from "@/lib/checkout-offers"
 import { checkoutDayTicket, ticketMoney } from "@/lib/day-tickets"
-import { formatRecurringCampDates, formatSessionTime } from "@/lib/session-time"
+import { formatCheckoutCampSchedule } from "@/lib/session-time"
 
 import { CheckoutClient, type CheckoutCampView } from "./checkout-client"
 import "@/styles/tokens.css"
@@ -38,30 +39,6 @@ function canPreview(token: string | undefined) {
 function formatMoney(cents: number | null) {
   if (cents == null) return "Price announced after registration"
   return `${ticketMoney(cents)} CAD`
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en-CA", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(`${value}T00:00:00Z`))
-}
-
-function formatDateRange(startDate: string, endDate: string | null) {
-  if (!endDate || endDate === startDate) return formatDate(startDate)
-
-  const start = new Date(`${startDate}T00:00:00Z`)
-  const end = new Date(`${endDate}T00:00:00Z`)
-  const sameMonth = start.getUTCFullYear() === end.getUTCFullYear() && start.getUTCMonth() === end.getUTCMonth()
-
-  if (sameMonth) {
-    const month = new Intl.DateTimeFormat("en-CA", { month: "long", timeZone: "UTC" }).format(start)
-    return `${month} ${start.getUTCDate()}-${end.getUTCDate()}, ${end.getUTCFullYear()}`
-  }
-
-  return `${formatDate(startDate)} - ${formatDate(endDate)}`
 }
 
 function heroImageForCamp(camp: ApiCamp) {
@@ -100,26 +77,25 @@ function toCheckoutCampView(
   const day = options.day
   // A custom link with seat counting turned off books regardless of how full
   // the camp is (the admin accepted the oversubscription when creating it).
-  const spotsLeft = options.bypassCapacity ? Math.max(1, capacity || 6) : (day ? day.remaining ?? capacity : camp.spotsLeft ?? capacity)
+  const spotsLeft = options.bypassCapacity ? Math.max(1, capacity || 6) : (day ? day.remaining ?? capacity : checkoutOfferSpotsLeft(camp, offer))
   const skillLabel = skillLabelForCamp(camp)
   const subtitle = subtitleForCamp(camp)
   const coach = camp.coaches.find((item) => item.isFeatured) ?? camp.coaches[0]
-  const recurring = day ? null : formatRecurringCampDates(
-    offer?.sessionDates ?? camp.sessionDates,
-    offer?.sessionLabel ?? camp.sessionLabel,
-  )
+  const schedule = formatCheckoutCampSchedule({
+    startDate: camp.startDate,
+    endDate: camp.endDate,
+    sessionDates: day ? [day.date] : offer?.sessionDates ?? camp.sessionDates,
+    sessionLabel: offer?.sessionLabel ?? camp.sessionLabel,
+    scheduleNote: offer?.scheduleNote,
+  })
 
   return {
     id: camp.id,
     slug: camp.slug,
     title: camp.title,
     subtitle,
-    dateLabel: day ? formatDate(day.date) : recurring?.dateLabel ?? formatDateRange(camp.startDate, camp.endDate),
-    timeLabel: recurring
-      ? [recurring.scheduleLabel, recurring.sessionCountLabel, offer?.scheduleNote]
-          .filter(Boolean)
-          .join(" · ")
-      : formatSessionTime(camp.sessionLabel) ?? "Time announced after registration",
+    dateLabel: schedule.dateLabel,
+    timeLabel: schedule.timeLabel,
     venue: camp.venue ?? camp.facility?.name ?? "Breakaway",
     location: camp.location ?? camp.facility?.city ?? "Breakaway",
     priceLabel: formatMoney(day?.priceCents ?? offer?.unitPriceCents ?? camp.basePriceCents),
@@ -128,14 +104,14 @@ function toCheckoutCampView(
     offerLabel: offer?.label ?? null,
     capacity,
     spotsLeft,
-    isSoldOut: options.bypassCapacity ? false : day ? !day.available : camp.isSoldOut,
-    heroImageUrl: camp.childrenEligible && recurring ? "/images/kids-camp-group-photo.png" : heroImageForCamp(camp),
+    isSoldOut: options.bypassCapacity ? false : day ? !day.available : offer ? camp.isSoldOutOverride || spotsLeft <= 0 : camp.isSoldOut,
+    heroImageUrl: camp.childrenEligible && schedule.isRecurring ? "/images/kids-camp-group-photo.png" : heroImageForCamp(camp),
     skillLabel,
     coachName: coach?.displayName ?? "Breakaway coach",
     isKidsCamp: camp.childrenEligible,
     collectTshirtSizes: camp.collectTshirtSizes,
     lunchType: camp.lunchType,
-    isRecurring: Boolean(recurring),
+    isRecurring: schedule.isRecurring,
   }
 }
 

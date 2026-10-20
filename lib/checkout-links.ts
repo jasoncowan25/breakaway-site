@@ -5,6 +5,7 @@
  * page already renders for the legacy hard-coded offers.
  */
 import type { CheckoutOffer } from "@/lib/checkout-offers"
+import type { ApiCamp } from "./breakaway-api"
 
 export type ApiCheckoutLinkUnavailableReason = "disabled" | "limit_reached"
 
@@ -66,6 +67,18 @@ export function checkoutOfferFromLink(link: ApiCheckoutLink, campSessionLabel: s
     sessionLabel: link.sessionLabel ?? campSessionLabel ?? "",
     scheduleNote: checkoutLinkScheduleNote(link) ?? "",
   }
+}
+
+/** A private link needs seats only on the dates it includes. */
+export function checkoutOfferSpotsLeft(
+  camp: Pick<ApiCamp, "spotsLeft" | "capacity" | "remainingByDay" | "singleDay">,
+  offer: CheckoutOffer | null,
+): number {
+  const fallback = camp.spotsLeft ?? camp.capacity ?? 0
+  if (!offer?.sessionDates.length) return fallback
+  const days = camp.remainingByDay ?? camp.singleDay?.days ?? []
+  const remaining = offer.sessionDates.map(date => days.find(day => day.date === date)?.remaining)
+  return remaining.every((count): count is number => count != null) ? Math.min(...remaining) : fallback
 }
 
 export function checkoutLinkUnavailableMessage(reason: ApiCheckoutLinkUnavailableReason | null): string {

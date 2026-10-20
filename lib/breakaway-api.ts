@@ -102,6 +102,7 @@ export interface ApiCamp {
   // full-camp buyer needs a seat on every day. isSoldOut refers to the
   // whole-camp product only — single days may still be bookable (singleDay).
   spotsLeft: number | null
+  remainingByDay?: Array<{ date: string; remaining: number | null }>
   isSoldOut: boolean
   // Single-day ticket offer ($X/day, one Stripe link per camp day). Null when
   // the camp doesn't sell single days.

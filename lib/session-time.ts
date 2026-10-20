@@ -108,3 +108,52 @@ function render(c: Clock): string {
 
   return `${hour12}:${String(c.m).padStart(2, "0")} ${mer}`
 }
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("en-CA", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${value}T00:00:00Z`))
+}
+
+function formatDateRange(startDate: string, endDate: string | null) {
+  if (!endDate || endDate === startDate) return formatDate(startDate)
+
+  const start = new Date(`${startDate}T00:00:00Z`)
+  const end = new Date(`${endDate}T00:00:00Z`)
+  const sameMonth = start.getUTCFullYear() === end.getUTCFullYear() && start.getUTCMonth() === end.getUTCMonth()
+
+  if (sameMonth) {
+    const month = new Intl.DateTimeFormat("en-CA", { month: "long", timeZone: "UTC" }).format(start)
+    return `${month} ${start.getUTCDate()}-${end.getUTCDate()}, ${end.getUTCFullYear()}`
+  }
+
+  return `${formatDate(startDate)} - ${formatDate(endDate)}`
+}
+
+/** The checkout must show the purchased sessions, including a single-session link. */
+export function formatCheckoutCampSchedule(input: {
+  startDate: string
+  endDate: string | null
+  sessionDates?: string[] | null
+  sessionLabel?: string | null
+  scheduleNote?: string | null
+}): { dateLabel: string; timeLabel: string; isRecurring: boolean } {
+  const dates = [...new Set(input.sessionDates ?? [])].sort()
+  const first = dates[0]
+  const sameWeekday = first && dates.every(date =>
+    new Date(`${date}T00:00:00Z`).getUTCDay() === new Date(`${first}T00:00:00Z`).getUTCDay(),
+  )
+  const recurring = sameWeekday ? formatRecurringCampDates(dates, input.sessionLabel) : null
+  return {
+    dateLabel: recurring?.dateLabel ?? formatDateRange(first ?? input.startDate, dates.at(-1) ?? input.endDate),
+    timeLabel: [
+      recurring?.scheduleLabel ?? formatSessionTime(input.sessionLabel) ?? "Time announced after registration",
+      recurring?.sessionCountLabel,
+      input.scheduleNote,
+    ].filter(Boolean).join(" · "),
+    isRecurring: Boolean(recurring),
+  }
+}
