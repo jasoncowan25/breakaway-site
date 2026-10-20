@@ -1,11 +1,11 @@
+import { CampBookingCard } from "@/components/CampBookingCard"
+import { dayTicketBadge } from "@/lib/day-tickets"
 import type { Metadata } from "next"
 import { notFound, permanentRedirect } from "next/navigation"
 import {
   Calendar,
   Clock,
   MapPin,
-  Users,
-  ArrowRight,
   Eye,
   Quote,
   Target,
@@ -14,15 +14,12 @@ import {
   TrendingUp,
   Shield,
   Compass,
-  Award,
   UtensilsCrossed,
-  MessageSquare,
   Trophy,
 } from "lucide-react"
 
 import { JsonLd } from "@/components/JsonLd"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { getPublicCampBySlug, publicBadgeText } from "@/lib/public-camps"
 import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
@@ -111,16 +108,11 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
 
   if (!camp) notFound()
 
-  const badgeText = publicBadgeText(camp.badge)
+  const badgeText = dayTicketBadge(camp.singleDay) ?? publicBadgeText(camp.badge)
   const venuePhotos = camp.facility?.photos.length ? camp.facility.photos : [camp.heroImageUrl]
   const moduleIcons = [Target, Send, Move, TrendingUp]
-  const showSpotsLeft = camp.capacity < 8
-  const availabilityLabel = showSpotsLeft
-    ? `Only ${camp.spotsLeft} ${camp.spotsLeft === 1 ? "spot" : "spots"}`
-    : `Only ${camp.capacity} spots`
   const newCheckoutEnabled = isNewCheckoutEnabled(camp.slug)
   const checkoutHref = newCheckoutEnabled ? camp.checkoutPath ?? camp.checkoutUrl : camp.checkoutUrl
-  const checkoutIsExternal = Boolean(checkoutHref && /^https?:\/\//i.test(checkoutHref))
 
   return (
     <div className="min-h-screen bg-background">
@@ -189,7 +181,7 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
       </section>
 
       <main className="mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 lg:px-8 lg:pt-14">
-        <div className="flex flex-col gap-8 lg:flex-row">
+        <div className="flex flex-col-reverse gap-8 lg:flex-row">
         <div className="flex-1 space-y-10 md:space-y-12">
           <section>
             <h2 className="mb-6 text-3xl font-bold text-primary">What You&apos;ll Master</h2>
@@ -341,160 +333,13 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
           )}
         </div>
 
-        <aside className="hidden w-80 shrink-0 lg:block">
-          <div className="sticky top-24">
-          <Card className="border-2 border-primary/20 p-6">
-            <div className="space-y-4">
-              <div>
-                <div className="mb-1 text-3xl font-bold text-primary">{camp.priceLabel}</div>
-                <div className="text-sm text-muted-foreground">Per player</div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>{camp.dateLabel}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span>{camp.schedule.dailyTimeLabel}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span>{camp.venue}</span>
-                </div>
-              </div>
-
-              {camp.schedule.days.length > 0 ? (
-                <div className="rounded-lg border border-border bg-muted/20 p-3">
-                  <div className="mb-2 text-sm font-semibold text-primary">Daily schedule</div>
-                  <div className="space-y-2">
-                    {camp.schedule.days.map((day) => (
-                      <div key={day.dateLabel} className="text-sm">
-                        <div className="font-medium text-foreground">{day.dateLabel}</div>
-                        <div className="mt-0.5 text-muted-foreground">
-                          Start {day.startTime} · Finish {day.endTime}
-                        </div>
-                        {day.lunchBreakLabel ? (
-                          <div className="mt-0.5 text-muted-foreground">
-                            Lunch {day.lunchBreakLabel}
-                          </div>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {showSpotsLeft ? (
-                <div className="rounded-lg bg-accent/10 p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-                      <Users className="h-4 w-4 text-accent-foreground" />
-                      Spots left
-                    </span>
-                    <span className="text-2xl font-bold text-primary">{camp.spotsLeft}</span>
-                  </div>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-background">
-                    <div
-                      className="h-full rounded-full bg-accent"
-                      style={{
-                        width: `${Math.min(100, Math.round((camp.registeredCount / Math.max(1, camp.capacity)) * 100))}%`,
-                      }}
-                    />
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    {camp.registeredCount} of {camp.capacity} spots claimed.
-                  </p>
-                </div>
-              ) : !camp.isSoldOut ? (
-                <div className="rounded-lg bg-accent/10 p-3">
-                  <p className="text-sm font-semibold text-accent-foreground">
-                    {availabilityLabel}
-                  </p>
-                </div>
-              ) : null}
-
-              {camp.isSoldOut ? (
-                <Button disabled className="w-full py-6 text-lg">
-                  Sold out
-                </Button>
-              ) : checkoutHref ? (
-                <Button asChild className="w-full bg-primary py-6 text-lg text-white hover:bg-primary/90">
-                  <a
-                    href={checkoutHref}
-                    target={checkoutIsExternal ? "_blank" : undefined}
-                    rel={checkoutIsExternal ? "noopener noreferrer" : undefined}
-                  >
-                    Book Now
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-              ) : (
-                <Button disabled className="w-full py-6 text-lg">
-                  Checkout coming soon
-                </Button>
-              )}
-
-              <div className="space-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
-                {camp.lunchType === "catered" ? (
-                  <div className="flex items-center gap-2 font-medium">
-                    <UtensilsCrossed className="h-4 w-4" />
-                    <span>Catered Lunch Included</span>
-                  </div>
-                ) : camp.lunchType === "byo" ? (
-                  <div className="flex items-center gap-2">
-                    <UtensilsCrossed className="h-4 w-4" />
-                    <span>Bring your own lunch</span>
-                  </div>
-                ) : null}
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  <span>{camp.capacity >= 8 ? "4:1 small group instruction" : `${camp.capacity}-player cap`}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  <span>Scrimmage sessions with coaching feedback</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Award className="h-4 w-4" />
-                  <span>Prizes & giveaways</span>
-                </div>
-              </div>
-            </div>
-          </Card>
+        <aside className="w-full shrink-0 lg:w-[360px]">
+          <div className="lg:sticky lg:top-24">
+            <CampBookingCard camp={camp} fullCheckoutHref={checkoutHref} />
           </div>
         </aside>
         </div>
       </main>
-
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-white p-4 shadow-lg lg:hidden">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="text-2xl font-bold text-primary">{camp.priceLabel}</div>
-            <div className="text-xs font-semibold text-accent-foreground">
-              {camp.isSoldOut
-                ? "Sold out"
-                : availabilityLabel}
-            </div>
-          </div>
-          {camp.isSoldOut || !checkoutHref ? (
-            <Button disabled className="px-8">
-              {camp.isSoldOut ? "Sold out" : "Coming soon"}
-            </Button>
-          ) : (
-            <Button asChild className="bg-primary px-8 text-white hover:bg-primary/90">
-              <a
-                href={checkoutHref}
-                target={checkoutIsExternal ? "_blank" : undefined}
-                rel={checkoutIsExternal ? "noopener noreferrer" : undefined}
-              >
-                Book Now
-              </a>
-            </Button>
-          )}
-        </div>
-      </div>
 
       <div className="h-20 lg:hidden" />
 

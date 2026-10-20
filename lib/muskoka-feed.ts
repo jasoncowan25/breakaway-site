@@ -69,14 +69,18 @@ function mapSingleDay(c: ApiCampEventCamp): MuskokaCamp["singleDay"] {
   // The offer only renders once day links exist — a camp flagged
   // single_day_enabled with no links yet stays a plain 3-day card.
   if (!c.singleDay || !c.singleDay.days.some((d) => d.checkoutUrl)) return null
+  const prices = c.singleDay.days.map(day => day.priceCents ?? c.singleDay!.priceCents)
+    .filter((price): price is number => price != null)
+  const lowest = prices.length ? Math.min(...prices) : null
+  const varied = new Set(prices).size > 1
+  const money = (cents: number) => new Intl.NumberFormat("en-CA", {
+    style: "currency", currency: "CAD", maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
+  }).format(cents / 100)
   return {
-    priceLabel:
-      c.singleDay.priceCents == null
-        ? "Price TBA"
-        : `$${Math.round(c.singleDay.priceCents / 100).toLocaleString()} CAD / day`,
+    priceLabel: lowest == null ? "Price TBA" : `${varied ? "From " : ""}${money(lowest)} CAD / day`,
     days: c.singleDay.days.map((d) => ({
       date: d.date,
-      label: dayButtonLabel(d.date),
+      label: `${dayButtonLabel(d.date)}${varied && d.priceCents != null ? ` · ${money(d.priceCents)}` : ""}`,
       checkoutUrl: d.checkoutUrl,
       available: d.available,
       remaining: d.remaining,

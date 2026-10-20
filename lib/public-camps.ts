@@ -1,3 +1,5 @@
+import { fetchPublicCampBySlug, fetchPublicCamps, type ApiCamp, type ApiCampSingleDay } from "@/lib/breakaway-api"
+import { dayTicketBadge, dayTicketStartingPrice, ticketMoney } from "@/lib/day-tickets"
 import { getPublicCampModules, type PublicCampModule } from "@/lib/public-camp-modules"
 import {
   campHasNotEnded,
@@ -35,6 +37,9 @@ type CampRow = {
   dupr_max: number | null
   status: string
   base_price_cad: number | null
+  single_day_enabled: boolean | null
+  single_day_price_cad: number | null
+  single_day_prices_cad: Record<string, number> | null
   capacity: number | null
   stripe_payment_link_ids: string[] | null
   is_sold_out_override: boolean | null
@@ -212,6 +217,8 @@ export type PublicCamp = {
   location: string
   venue: string
   priceLabel: string
+  priceCents?: number | null
+  singleDay?: ApiCampSingleDay | null
   checkoutUrl: string | null
   checkoutPath: string | null
   capacity: number
@@ -413,6 +420,18 @@ function subtitleForCamp(row: CampRow) {
     return `2-Day Advanced Training • Intermediate Players (${skill})`
   }
   return `${skill} skill level • ${row.location ?? "Breakaway"} camp`
+}
+
+function flexibleSubtitleForCamp(row: CampRow, offer: ApiCampSingleDay) {
+  const title = row.title.toLowerCase()
+  const level = title.includes("intermediate") ? "Intermediate"
+    : title.includes("advanced") ? "Advanced"
+    : title.includes("fundamental") || title.includes("beginner") ? "Fundamentals"
+    : "Pickleball"
+  const ratings = row.dupr_min != null && row.dupr_max != null
+    ? ` · Levels ${row.dupr_min.toFixed(1)}–${row.dupr_max.toFixed(1)}`
+    : ""
+  return `${level} Training · ${dayTicketBadge(offer) ?? "Single-day tickets"}${ratings}`
 }
 
 function venueCopyForCamp(facility: FacilityRow | null, venue: string) {
@@ -726,7 +745,7 @@ async function getPublishedCampRows(limit: number, options: SupabaseRestOptions 
     "camps",
     {
       select:
-        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,hero_image_url,thumbnail_image_url,facility_id,featured_coach_id,include_testimonials,breaks",
+        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,single_day_enabled,single_day_price_cad,single_day_prices_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,hero_image_url,thumbnail_image_url,facility_id,featured_coach_id,include_testimonials,breaks",
       public_visibility: "eq.published",
       slug: "not.is.null",
       // Camps that belong to a Camp Event (e.g. Muskoka Summer) are surfaced
@@ -870,11 +889,17 @@ function publicCampRowToCard(
   registeredCount: number,
   facility: FacilityRow | null,
   coach: CoachRow | null,
+  apiCamp?: ApiCamp,
 ): PublicCampCard {
   const capacity = row.capacity ?? 0
   const spotsLeft = row.is_sold_out_override ? 0 : Math.max(0, capacity - registeredCount)
   const badge = badgeForCamp(row, spotsLeft, capacity)
-  const badgeLabel = publicBadgeText(badge)
+  const offer = apiCamp?.singleDay
+  const dayBadge = dayTicketBadge(offer)
+  const startingPrice = dayTicketStartingPrice(offer)
+  const hasDayAvailability = offer?.days.some(day => day.available) ?? false
+  const soldOut = (apiCamp?.isSoldOut ?? spotsLeft <= 0) && !hasDayAvailability
+  const badgeLabel = dayBadge ?? publicBadgeText(badge)
   // Card thumbnail: admin-chosen thumbnail/hero image wins, else facility photo.
   const heroImageUrl =
     row.thumbnail_image_url ||
@@ -894,16 +919,15 @@ function publicCampRowToCard(
     }),
     format: row.title.toLowerCase().includes("clinic") ? "Clinic" : "Camp",
     skillLevel: skillLabel(row),
-    // Admin-managed standalone camps have one exact price, so show it as-is
-    // (no "From" — that prefix is for the event hubs with per-player ranges).
-    price: priceLabel(row.base_price_cad),
+    // Flexible camps advertise the least expensive available day.
+    price: startingPrice != null ? `From ${ticketMoney(startingPrice)} CAD` : priceLabel(row.base_price_cad),
     image: heroImageUrl ?? "/toronto-coaching-instruction.png",
-    badges: badgeLabel ? [{ text: titleCaseBadge(badgeLabel), variant: badgeVariant(badge) }] : [],
+    badges: badgeLabel ? [{ text: dayBadge ?? titleCaseBadge(badgeLabel), variant: dayBadge ? "accent" : badgeVariant(badge) }] : [],
     coach: coach?.display_name ?? "Breakaway coach",
     link: `/pickleball-camps/${canonicalCampSlug(row.slug, row.id)}`,
     imageEnhanced: false,
-    soldOut: spotsLeft <= 0,
-    spotsRemaining: spotsLeft <= 0 ? undefined : spotsLeft,
+    soldOut,
+    spotsRemaining: soldOut ? undefined : (hasDayAvailability ? Math.max(...(offer?.days.filter(day => day.available).map(day => day.remaining ?? capacity) ?? [])) : apiCamp?.spotsLeft ?? spotsLeft),
     buttonText: "Learn More",
   }
 }
@@ -922,10 +946,11 @@ export async function getPublishedPublicCamps(limit = 24) {
 export async function getPublishedPublicCampCards(limit = 24) {
   const options = { revalidate: PUBLIC_CAMP_REVALIDATE_SECONDS }
   const rows = await getPublishedCampRows(limit, options)
-  const [registeredCounts, facilitiesById, coachesByCampId] = await Promise.all([
+  const [registeredCounts, facilitiesById, coachesByCampId, apiCamps] = await Promise.all([
     getRegisteredCountsForCamps(rows, options),
     getFacilitiesForCamps(rows, options),
     getCoachNamesForCamps(rows, options),
+    fetchPublicCamps(),
   ])
   const liveCards = rows.map((row) =>
     publicCampRowToCard(
@@ -933,6 +958,7 @@ export async function getPublishedPublicCampCards(limit = 24) {
       registeredCounts.get(row.id) ?? 0,
       row.facility_id ? facilitiesById.get(row.facility_id) ?? null : null,
       coachesByCampId.get(row.id) ?? null,
+      apiCamps.find(camp => camp.id === row.id),
     ),
   )
 
@@ -981,7 +1007,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
     "camps",
     {
       select:
-        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,hero_image_url,thumbnail_image_url,facility_id,featured_coach_id,include_testimonials,breaks",
+        "id,slug,title,full_label,start_date,end_date,venue,location,notes,dupr_min,dupr_max,status,base_price_cad,single_day_enabled,single_day_price_cad,single_day_prices_cad,capacity,stripe_payment_link_ids,is_sold_out_override,camp_kind,session_label,landing_page_url,module_ids,public_visibility,website_published_at,badge_mode,badge_label,public_summary,public_modules_intro,hero_media_asset_id,thumbnail_media_asset_id,hero_image_url,thumbnail_image_url,facility_id,featured_coach_id,include_testimonials,breaks",
       slug: `eq.${slug}`,
       limit: "1",
     },
@@ -995,7 +1021,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
   if (visibility === "archived" && !options.preview) return null
 
   const linkIds = row.stripe_payment_link_ids ?? []
-  const [linkMap, registeredCount, facilityRows, assignmentRows, directCoachRows, campTestimonialRows] = await Promise.all([
+  const [linkMap, registeredCount, facilityRows, assignmentRows, directCoachRows, campTestimonialRows, apiCamp] = await Promise.all([
     getPaymentLinks(linkIds, requestOptions),
     getRegisteredCount(row.id, linkIds.filter((id) => !/^https?:\/\//i.test(id)), requestOptions),
     row.facility_id
@@ -1040,6 +1066,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
           requestOptions,
         )
       : Promise.resolve([]),
+    fetchPublicCampBySlug(slug, options),
   ])
 
   const assignments = assignmentRows ?? []
@@ -1100,7 +1127,7 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
     title: row.title,
     startDate: row.start_date,
     endDate: row.end_date,
-    subtitle: subtitleForCamp(row),
+    subtitle: apiCamp?.singleDay ? flexibleSubtitleForCamp(row, apiCamp.singleDay) : subtitleForCamp(row),
     dateLabel: dateLabel(row.start_date, row.end_date),
     timeLabel: row.session_label || "Time announced after registration",
     schedule,
@@ -1108,12 +1135,14 @@ export async function getPublicCampBySlug(slug: string, options: { preview?: boo
     location: row.location ?? "Breakaway",
     venue: row.venue ?? row.location ?? "Breakaway",
     priceLabel: priceLabel(row.base_price_cad),
-    checkoutUrl: linkMap.get(linkIds[0] ?? "") ?? null,
+    priceCents: row.base_price_cad,
+    singleDay: apiCamp?.singleDay ?? null,
+    checkoutUrl: apiCamp?.checkoutUrl ?? (row.single_day_enabled ? null : linkMap.get(linkIds[0] ?? "") ?? null),
     checkoutPath: row.slug ? `/checkout/${row.slug}` : null,
     capacity,
-    registeredCount,
-    spotsLeft,
-    isSoldOut: spotsLeft <= 0,
+    registeredCount: apiCamp?.registeredCount ?? registeredCount,
+    spotsLeft: apiCamp?.spotsLeft ?? spotsLeft,
+    isSoldOut: apiCamp?.isSoldOut ?? (row.single_day_enabled ? true : spotsLeft <= 0),
     badge,
     summary:
       row.public_summary ??

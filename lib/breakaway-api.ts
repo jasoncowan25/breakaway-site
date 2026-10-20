@@ -113,6 +113,7 @@ export interface ApiCamp {
 }
 
 export interface ApiCampSingleDayDay {
+  priceCents?: number | null
   date: string // YYYY-MM-DD
   remaining: number | null
   available: boolean
