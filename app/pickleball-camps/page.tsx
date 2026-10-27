@@ -17,28 +17,12 @@ export const metadata: Metadata = {
   },
 }
 
-type CampsPageProps = {
-  searchParams?: Promise<{
-    location?: string
-    skill?: string
-    view?: string
-  }>
-}
+export const dynamic = "force-dynamic"
 
-function locationsFromParam(location?: string) {
-  if (location === "toronto-gta") return ["Toronto & GTA"]
-  if (location === "muskoka") return ["Muskoka"]
-  if (location === "punta-cana") return ["Punta Cana"]
-  return []
-}
-
-export default async function CampsPage({ searchParams }: CampsPageProps) {
-  const paramsPromise: NonNullable<CampsPageProps["searchParams"]> =
-    searchParams ?? Promise.resolve({})
-  const [publishedCampCards, upcomingMuskokaCamps, params, recaps] = await Promise.all([
+export default async function CampsPage() {
+  const [publishedCampCards, upcomingMuskokaCamps, recaps] = await Promise.all([
     getPublishedPublicCampCards(),
     getUpcomingMuskokaCamps(),
-    paramsPromise,
     getRecaps(),
   ])
 
@@ -54,9 +38,6 @@ export default async function CampsPage({ searchParams }: CampsPageProps) {
         publishedCampCards={publishedCampCards}
         recapCards={recaps.map(recapCard)}
         muskokaCamps={upcomingMuskokaCamps}
-        initialSelectedLocations={locationsFromParam(params.location)}
-        initialSelectedSkillLevels={params.skill ? [params.skill] : []}
-        initialView={params.view === "completed" ? "completed" : "upcoming"}
       />
     </>
   )

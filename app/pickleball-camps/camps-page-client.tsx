@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useId, useState } from "react"
 import { CampCard } from "@/components/CampCard"
 import { MuskokaHubCard } from "@/components/MuskokaHubCard"
 import { Button } from "@/components/ui/button"
@@ -8,7 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Filter } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
+import { readCampFilterState, writeCampFilterState, type CampFilterState } from "@/lib/camp-filter-state"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import type { PublicCampCard } from "@/lib/public-camps"
 import type { MuskokaCamp } from "@/lib/muskoka-camps"
@@ -24,37 +25,119 @@ type CampsPageClientProps = {
   publishedCampCards?: PublicCampCard[]
   recapCards?: ReturnType<typeof import("@/lib/recaps/get").recapCard>[]
   muskokaCamps?: MuskokaCamp[]
-  initialSelectedLocations?: string[]
-  initialSelectedSkillLevels?: string[]
-  initialView?: "upcoming" | "completed"
+}
+
+function FilterSidebar({ selectedLocations, selectedSkillLevels, selectedFormats, toggleLocation, toggleSkillLevel, toggleFormat }: {
+  selectedLocations: string[]
+  selectedSkillLevels: string[]
+  selectedFormats: string[]
+  toggleLocation: (value: string) => void
+  toggleSkillLevel: (value: string) => void
+  toggleFormat: (value: string) => void
+}) {
+  const idPrefix = useId()
+  return (
+    <div className="space-y-6">
+      <Accordion type="multiple" defaultValue={["locations", "skill", "format"]}>
+        <AccordionItem value="locations">
+          <AccordionTrigger className="text-sm font-semibold">Locations</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3">
+              {["Toronto & GTA", "Muskoka", "Punta Cana"].map((location) => (
+                <div key={location} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`${idPrefix}-location-${encodeURIComponent(location)}`}
+                    checked={selectedLocations.includes(location)}
+                    onCheckedChange={() => toggleLocation(location)}
+                  />
+                  <Label htmlFor={`${idPrefix}-location-${encodeURIComponent(location)}`} className="text-sm cursor-pointer">
+                    {location}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="skill">
+          <AccordionTrigger className="text-sm font-semibold">Skill Level</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap gap-2">
+              {CAMP_SKILL_FILTERS.map((level) => (
+                <Button
+                  key={level}
+                  variant={selectedSkillLevels.includes(level) ? "default" : "outline"}
+                  size="sm"
+                  className="rounded-full"
+                  onClick={() => toggleSkillLevel(level)}
+                  aria-pressed={selectedSkillLevels.includes(level)}
+                >
+                  {level}
+                </Button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="format">
+          <AccordionTrigger className="text-sm font-semibold">Format</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3">
+              {["Camp", "Clinic"].map((format) => (
+                <div key={format} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`${idPrefix}-format-${encodeURIComponent(format)}`}
+                    checked={selectedFormats.includes(format)}
+                    onCheckedChange={() => toggleFormat(format)}
+                  />
+                  <Label htmlFor={`${idPrefix}-format-${encodeURIComponent(format)}`} className="text-sm cursor-pointer">
+                    {format}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="coach">
+          <AccordionTrigger className="text-sm font-semibold">Coach</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3">
+              {["Joey Manchurek"].map((coach) => (
+                <div key={coach} className="flex items-center space-x-2">
+                  <Checkbox id={`${idPrefix}-coach-${encodeURIComponent(coach)}`} />
+                  <Label htmlFor={`${idPrefix}-coach-${encodeURIComponent(coach)}`} className="text-sm cursor-pointer">
+                    {coach}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
+  )
+
 }
 
 function CampsPageContent({
   publishedCampCards = [],
   recapCards = [],
   muskokaCamps = [],
-  initialSelectedLocations = [],
-  initialSelectedSkillLevels = [],
-  initialView = "upcoming",
 }: CampsPageClientProps) {
-  const router = useRouter()
   const [showFilters, setShowFilters] = useState(false)
-  const [selectedSkillLevels, setSelectedSkillLevels] = useState<string[]>(initialSelectedSkillLevels)
-  const [selectedLocations, setSelectedLocations] = useState<string[]>(initialSelectedLocations)
-  const [selectedFormats, setSelectedFormats] = useState<string[]>([])
-  const [dateFilter, setDateFilter] = useState<"upcoming" | "completed">(initialView)
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const filters = readCampFilterState(searchParams)
+  const { locations: selectedLocations, skillLevels: selectedSkillLevels, formats: selectedFormats, view: dateFilter } = filters
 
-  const setView = (view: "upcoming" | "completed") => {
-    setDateFilter(view)
-    const params = new URLSearchParams(window.location.search)
-    if (view === "completed") {
-      params.set("view", "completed")
-    } else {
-      params.delete("view")
-    }
-    const queryString = params.toString()
-    router.replace(queryString ? `/pickleball-camps?${queryString}` : "/pickleball-camps", { scroll: false })
+  const updateFilters = (update: (current: CampFilterState) => CampFilterState) => {
+    const currentQuery = window.location.search
+    const current = readCampFilterState(new URLSearchParams(currentQuery))
+    const query = writeCampFilterState(currentQuery, update(current))
+    window.history.pushState(null, "", `${pathname}${query ? `?${query}` : ""}${window.location.hash}`)
   }
+  const setView = (view: CampFilterState["view"]) => updateFilters((current) => ({ ...current, view }))
 
   const upcomingCamps = [
     ...publishedCampCards,
@@ -103,102 +186,20 @@ function CampsPageContent({
     skillLevels: selectedSkillLevels,
   })
 
-  const toggleLocation = (location: string) => {
-    setSelectedLocations((prev) => (prev.includes(location) ? prev.filter((l) => l !== location) : [...prev, location]))
+  const toggle = (field: "locations" | "skillLevels" | "formats", value: string) => {
+    updateFilters((current) => ({
+      ...current,
+      [field]: current[field].includes(value) ? current[field].filter((item) => item !== value) : [...current[field], value],
+    }))
   }
-
-  const toggleSkillLevel = (level: string) => {
-    setSelectedSkillLevels((prev) => (prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]))
-  }
-
-  const toggleFormat = (format: string) => {
-    setSelectedFormats((prev) => (prev.includes(format) ? prev.filter((f) => f !== format) : [...prev, format]))
-  }
+  const toggleLocation = (value: string) => toggle("locations", value)
+  const toggleSkillLevel = (value: string) => toggle("skillLevels", value)
+  const toggleFormat = (value: string) => toggle("formats", value)
 
   const handleApplyFilters = () => {
     setShowFilters(false)
   }
 
-  const FilterSidebar = () => (
-    <div className="space-y-6">
-      <Accordion type="multiple" defaultValue={["locations", "skill", "format"]}>
-        <AccordionItem value="locations">
-          <AccordionTrigger className="text-sm font-semibold">Locations</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3">
-              {["Toronto & GTA", "Muskoka", "Punta Cana"].map((location) => (
-                <div key={location} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`location-${location}`}
-                    checked={selectedLocations.includes(location)}
-                    onCheckedChange={() => toggleLocation(location)}
-                  />
-                  <Label htmlFor={`location-${location}`} className="text-sm cursor-pointer">
-                    {location}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="skill">
-          <AccordionTrigger className="text-sm font-semibold">Skill Level</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-wrap gap-2">
-              {CAMP_SKILL_FILTERS.map((level) => (
-                <Button
-                  key={level}
-                  variant={selectedSkillLevels.includes(level) ? "default" : "outline"}
-                  size="sm"
-                  className="rounded-full"
-                  onClick={() => toggleSkillLevel(level)}
-                >
-                  {level}
-                </Button>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="format">
-          <AccordionTrigger className="text-sm font-semibold">Format</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3">
-              {["Camp", "Clinic"].map((format) => (
-                <div key={format} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`format-${format}`}
-                    checked={selectedFormats.includes(format)}
-                    onCheckedChange={() => toggleFormat(format)}
-                  />
-                  <Label htmlFor={`format-${format}`} className="text-sm cursor-pointer">
-                    {format}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="coach">
-          <AccordionTrigger className="text-sm font-semibold">Coach</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3">
-              {["Joey Manchurek"].map((coach) => (
-                <div key={coach} className="flex items-center space-x-2">
-                  <Checkbox id={`coach-${coach}`} />
-                  <Label htmlFor={`coach-${coach}`} className="text-sm cursor-pointer">
-                    {coach}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </div>
-  )
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -266,7 +267,7 @@ function CampsPageContent({
                 <SheetTitle>Filter Camps</SheetTitle>
               </SheetHeader>
               <div className="mt-6 px-4 flex-1 overflow-y-auto">
-                <FilterSidebar />
+                <FilterSidebar selectedLocations={selectedLocations} selectedSkillLevels={selectedSkillLevels} selectedFormats={selectedFormats} toggleLocation={toggleLocation} toggleSkillLevel={toggleSkillLevel} toggleFormat={toggleFormat} />
               </div>
               <div className="p-4 border-t bg-background">
                 <Button onClick={handleApplyFilters} className="w-full" size="lg">
@@ -282,7 +283,7 @@ function CampsPageContent({
           {/* Desktop Sidebar */}
           <aside className="hidden md:block w-64 flex-shrink-0">
             <div className="sticky top-24">
-              <FilterSidebar />
+              <FilterSidebar selectedLocations={selectedLocations} selectedSkillLevels={selectedSkillLevels} selectedFormats={selectedFormats} toggleLocation={toggleLocation} toggleSkillLevel={toggleSkillLevel} toggleFormat={toggleFormat} />
             </div>
           </aside>
 
