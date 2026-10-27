@@ -165,7 +165,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
         <section id="coach" className={styles.coach}>
           <div className={styles.coachPhoto}><Image src="/images/kids-weekly/kids-camp-joey.jpg" alt="Joey Manchurek briefing a group of young players before a session" fill sizes="(max-width: 800px) 90vw, 50vw" /></div>
           <div className={styles.coachCopy}>
-            <span className={styles.eyebrowDark}>Head Coach</span><h2>Led By Joey Manchurek</h2><p>Joey designs every Breakaway kids program and coaches it alongside the Breakaway team. Sessions are built the way a pro trains — clear focus, real reps, and enough game play that kids leave wanting the next week.</p>
+            <span className={styles.eyebrowDark}>Head Coach</span><h2>Built By Joey Manchurek</h2><p>Joey designs every Breakaway kids program and coaches it alongside the Breakaway team. Sessions are built the way a pro trains — clear focus, real reps, and enough game play that kids leave wanting the next week.</p>
             <div className={styles.stats}><div><strong>5.0</strong><span>DUPR Rating</span></div><div><strong>500+</strong><span>Players Coached</span></div><div><strong>{sessionRange}</strong><span>Weeks Of Progression</span></div></div>
           </div>
         </section>
