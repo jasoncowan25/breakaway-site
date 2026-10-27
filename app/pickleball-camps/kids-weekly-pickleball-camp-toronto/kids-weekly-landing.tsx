@@ -5,12 +5,10 @@ import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
 import {
   ArrowRight,
-  Award,
   CalendarDays,
   CalendarOff,
   CheckCircle2,
   Clock3,
-  HeartPulse,
   MapPin,
   Users,
 } from "lucide-react"
@@ -28,9 +26,9 @@ type Props = {
 }
 
 const experienceSteps = [
-  ["Warm-Up & Footwork", "Dynamic warm-up, paddle handling and movement work to get everyone loose and on the same page."],
-  ["Skill Of The Week", "One focus per session — serve, return, dinking, volleys or court positioning — coached in small groups."],
-  ["Games & Match Play", "Rally games, team challenges and supervised match play so the new skill gets used the same night."],
+  ["Warm-Up & Coaching", "Joey Manchurek and the Breakaway coaching team lead warm-ups, footwork and paddle skills."],
+  ["Skill Of The Week", "Kids build a new skill each week through drills and small-group coaching."],
+  ["Games & Match Play", "Kids put their skills into action through fun games, team challenges and matches with friends."],
 ]
 
 const faqs = [
@@ -159,14 +157,8 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
           </div>
         </section>
 
-        <section className={styles.values} aria-label="Program benefits">
-          <div><span><Award aria-hidden="true" /></span><h3>Pro-Led Coaching</h3><p>Taught by Breakaway&apos;s pro coaches, on a program built by Joey Manchurek</p></div>
-          <div><span><HeartPulse aria-hidden="true" /></span><h3>Skills Then Games</h3><p>Kids drill the fundamentals, then play them out in rally games and match play</p></div>
-          <div><span><Users aria-hidden="true" /></span><h3>Active With Friends</h3><p>A weekly indoor program that keeps kids moving all through the winter</p></div>
-        </section>
-
         <section id="session" className={styles.experience}>
-          <div className={styles.sectionIntro}><span>The Experience</span><h2>Here&apos;s How A Session Runs</h2><p>The same structure every week, so kids know what to expect and coaches can build on last week&apos;s work.</p></div>
+          <div className={styles.sectionIntro}><span>The Experience</span><h2>Here&apos;s How A Session Runs</h2><p>Each week follows a familiar routine, helping kids build skills, confidence and friendships.</p></div>
           <div className={styles.steps}>{experienceSteps.map(([title, body], index) => <div key={title}><span>{index + 1}</span><h3>{title}</h3><p>{body}</p></div>)}</div>
         </section>
 
