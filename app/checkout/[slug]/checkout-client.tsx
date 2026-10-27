@@ -13,6 +13,7 @@ import type { Stripe, StripeElements } from "@stripe/stripe-js"
 import { CheckoutView } from "@/components/checkout/CheckoutView"
 import { Icon } from "@/components/Icon"
 import { checkoutAmount } from "@/lib/checkout-amount"
+import { kidsWeeklyLandingPathForCamp } from "@/lib/kids-weekly-camp"
 import { checkoutPaymentQuoteError } from "@/lib/checkout-payment-quote"
 import type {
   Account,
@@ -31,6 +32,8 @@ export type CheckoutCampView = {
   timeLabel: string
   venue: string
   location: string
+  address?: string | null
+  directionsUrl?: string | null
   priceLabel: string
   dayDate?: string | null
   offerCode: string | null
@@ -134,6 +137,8 @@ function toDesignCamp(camp: CheckoutCampView): Camp {
     dateSub: camp.timeLabel,
     location: camp.venue,
     locSub: camp.location,
+    address: camp.address,
+    directionsUrl: camp.directionsUrl,
     skill,
     skillSub,
     pricePerPlayer,
@@ -514,6 +519,7 @@ function CheckoutClientInner({
       <div className="backdrop bg-clean" style={{ justifyContent: "center" }}>
         <CheckoutView
           camp={designCamp}
+          backHref={kidsWeeklyLandingPathForCamp(camp.slug) ?? `/pickleball-camps/${camp.slug}`}
           kidsMode={kidsMode}
           players={players}
           guardian={guardian}

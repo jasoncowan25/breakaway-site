@@ -9,6 +9,7 @@ export type PublicCampCard = {
   format: string
   skillLevel: string
   price: string
+  priceNote?: string
   image: string
   badges: Array<{
     text: string
@@ -83,6 +84,7 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     format: "Camp",
     skillLevel: "Kids",
     price: "From $520",
+    priceNote: "+ HST",
     image: "/images/kids-weekly/kids-camp-joey.jpg",
     badges: [
       { text: "Winter 2027", variant: "accent" },

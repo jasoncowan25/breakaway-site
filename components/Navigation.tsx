@@ -21,14 +21,14 @@ export function Navigation({ campItems = EMPTY_CAMP_ITEMS }: NavigationProps) {
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+        <div className="flex h-16 items-center justify-between gap-3">
+          <Link href="/" className="flex min-w-0 items-center">
             <Image
               src="/breakaway-text-logo-on-white.png"
               alt="Breakaway Pickleball Camps"
               width={200}
               height={48}
-              className="h-10 w-auto"
+              className="h-auto w-[168px] max-w-full"
             />
           </Link>
 
@@ -68,7 +68,7 @@ export function Navigation({ campItems = EMPTY_CAMP_ITEMS }: NavigationProps) {
           </div>
 
           {/* CTA Button */}
-          <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button asChild className="shrink-0 bg-primary text-primary-foreground hover:bg-primary/90">
             <Link href="/pickleball-camps">Find Your Camp</Link>
           </Button>
         </div>

@@ -10,6 +10,7 @@ import {
   skippedWeeks,
   canRenderKidsWeeklyLanding,
   kidsWeeklyLandingPathForCamp,
+  kidsWeeklyProgramKey,
   shouldListKidsWeeklyCampAsStandalone,
 } from "../lib/kids-weekly-camp.ts"
 
@@ -54,7 +55,9 @@ test("builds the Monday card at The JAR from its 14 live sessions", () => {
 
   assert.equal(program.checkoutHref, "/checkout/toronto-kids-weekly-pickleball-camp-jan-4-2027")
   assert.equal(program.priceLabel, "$560 CAD")
-  assert.equal(program.spotsLabel, "30 spots")
+  assert.equal(program.spotsLabel, "Capacity: 30")
+  assert.equal(program.capacity, 30)
+  assert.equal(program.taxLabel, "+ HST")
   assert.equal(program.sessionsLabel, "14 one-hour sessions")
   assert.equal(program.eyebrow, "Mondays · 14 Weeks")
   assert.equal(program.day, "Mondays")
@@ -63,7 +66,7 @@ test("builds the Monday card at The JAR from its 14 live sessions", () => {
   assert.equal(program.durationBadge, "1-hour sessions")
   assert.equal(program.ctaLabel, "Book Mondays")
   assert.equal(program.ctaDisabled, false)
-  assert.equal(program.whoFor, "Brand new, or playing under a year")
+  assert.equal(program.whoFor, "All levels, from complete beginners to experienced players")
 })
 
 test("builds the Tuesday card at The Picklr Toronto West", () => {
@@ -112,12 +115,46 @@ test("the public route requires at least one published child camp unless preview
   assert.equal(canRenderKidsWeeklyLanding([null, null, null], true), false)
 })
 
-test("routes all three weekly child camps to the single public landing page", () => {
+test("routes each current weekly camp to its selected program on the shared landing page", () => {
   for (const key of KIDS_WEEKLY_PROGRAM_KEYS) {
-    assert.equal(kidsWeeklyLandingPathForCamp(KIDS_WEEKLY_PROGRAMS[key].slug), KIDS_WEEKLY_LANDING_PATH)
+    assert.equal(kidsWeeklyLandingPathForCamp(KIDS_WEEKLY_PROGRAMS[key].slug), `${KIDS_WEEKLY_LANDING_PATH}?program=${key}`)
   }
   assert.equal(kidsWeeklyLandingPathForCamp("toronto-kids-weekly-experienced-sep-7-2026"), KIDS_WEEKLY_LANDING_PATH)
   assert.equal(kidsWeeklyLandingPathForCamp("toronto-intermediate-intensive"), null)
+})
+
+test("unknown or missing program selections safely use Monday", () => {
+  for (const key of KIDS_WEEKLY_PROGRAM_KEYS) assert.equal(kidsWeeklyProgramKey(key), key)
+  for (const value of [null, undefined, "", "unknown", "__proto__"]) {
+    assert.equal(kidsWeeklyProgramKey(value), KIDS_WEEKLY_DEFAULT_PROGRAM)
+  }
+})
+
+test("capacity labels do not misrepresent remaining seats and do not change sold-out behavior", () => {
+  const available = buildKidsWeeklyProgram("jarMon", camp({ capacity: 24, spotsLeft: 2 }))
+  assert.equal(available.spotsLabel, "Capacity: 24")
+  assert.equal(available.ctaDisabled, false)
+  for (const overrides of [{ spotsLeft: 0 }, { isSoldOut: true }]) {
+    const soldOut = buildKidsWeeklyProgram("jarMon", camp(overrides))
+    assert.equal(soldOut.capacity, 30)
+    assert.equal(soldOut.spotsLabel, "Sold out")
+    assert.equal(soldOut.ctaDisabled, true)
+  }
+  const missing = buildKidsWeeklyProgram("jarMon", null)
+  assert.equal(missing.ctaDisabled, true)
+  assert.equal(missing.taxLabel, null)
+})
+
+test("venue directions come from the camp's facility record, with no guessed fallback", () => {
+  const facility = { name: "The Picklr Toronto West", city: "Etobicoke", address: "70 Carson St" }
+  const program = buildKidsWeeklyProgram("picklrTue", camp({ facility }))
+  assert.equal(program.address, facility.address)
+  assert.equal(new URL(program.directionsUrl).searchParams.get("destination"), "The Picklr Toronto West, 70 Carson St, Etobicoke")
+  for (const facility of [null, { name: "The JAR", address: "  " }]) {
+    const program = buildKidsWeeklyProgram("jarMon", camp({ facility }))
+    assert.equal(program.address, null)
+    assert.equal(program.directionsUrl, null)
+  }
 })
 
 test("keeps weekly child camps out of standalone camp listings", () => {

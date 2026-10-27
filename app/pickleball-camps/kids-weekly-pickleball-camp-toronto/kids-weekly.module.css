@@ -13,6 +13,11 @@
 
 .page * { box-sizing: border-box; }
 .page a { text-decoration: none; }
+.page .directions { display: block; margin-top: 4px; color: var(--navy); font-size: 13px; line-height: 1.5; text-decoration: underline; overflow-wrap: anywhere; }
+.page .taxNote { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+.bookingCard { min-width: 0; scroll-margin-top: 80px; }
+.bookingPrice > div { flex-wrap: wrap; }
+.cardHeading { flex-wrap: wrap; }
 .page :focus-visible { outline: 3px solid rgba(144, 209, 35, .75); outline-offset: 3px; }
 
 .hero { position: relative; overflow: hidden; background: var(--navy-dark); }
