@@ -36,7 +36,7 @@ const experienceSteps = [
 const faqs = [
   ["Which program should my child join?", "All three are the same All Skill Levels program, and complete beginners are welcome. Pick the night and club that suit your week: Mondays or Thursdays at The JAR in Toronto, or Tuesdays at The Picklr Toronto West in Etobicoke."],
   ["What do they need to bring?", "Indoor court shoes, a water bottle, and a paddle if they have one. We keep loaner paddles and balls at the club."],
-  ["What if we miss a week?", "Sessions build week to week but stand on their own, so a missed night is fine. Let us know in advance and we'll catch them up."],
+  ["What if my child misses a week?", "Each session stands on its own, so your child can join back in the following week."],
   ["Can siblings or friends register together?", "Yes. Add siblings joining the same program in one checkout. Friends can register separately and email us their names — we'll group them where the skill match works."],
 ]
 
@@ -77,7 +77,6 @@ function ProgramCard({ program, onChoose }: { program: Program; onChoose: () => 
       </div>
       <p>{program.description}</p>
       <div className={styles.cardPrice}><strong>{program.priceLabel.replace(" CAD", "")}</strong><span>CAD / {program.weeksLabel}</span></div>
-      {program.taxLabel && <p className={styles.taxNote}>{program.taxLabel}</p>}
       <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.durationBadge}</span>
       <ProgramCta program={program} compact onChoose={onChoose} />
       <div className={styles.includes}>
@@ -153,7 +152,6 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
                 <div><strong>{program.priceLabel}</strong><span>/ {program.weeksLabel}</span></div>
                 <span>{program.spotsLabel}</span>
               </div>
-              {program.taxLabel && <p className={styles.taxNote}>{program.taxLabel}</p>}
               <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.durationBadge}</span>
               <ProgramCta program={program} onChoose={() => selectProgram(program.key, true)} />
               <p className={styles.secureCopy}>Secure checkout. Your spot is confirmed instantly.</p>

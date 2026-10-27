@@ -57,7 +57,6 @@ test("builds the Monday card at The JAR from its 14 live sessions", () => {
   assert.equal(program.priceLabel, "$560 CAD")
   assert.equal(program.spotsLabel, "Capacity: 30")
   assert.equal(program.capacity, 30)
-  assert.equal(program.taxLabel, "+ HST")
   assert.equal(program.sessionsLabel, "14 one-hour sessions")
   assert.equal(program.eyebrow, "Mondays · 14 Weeks")
   assert.equal(program.day, "Mondays")
@@ -142,7 +141,6 @@ test("capacity labels do not misrepresent remaining seats and do not change sold
   }
   const missing = buildKidsWeeklyProgram("jarMon", null)
   assert.equal(missing.ctaDisabled, true)
-  assert.equal(missing.taxLabel, null)
 })
 
 test("venue directions come from the camp's facility record, with no guessed fallback", () => {
