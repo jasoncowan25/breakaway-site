@@ -103,6 +103,21 @@ export type KidsWeeklyCampLike = Pick<
   | "publicVisibility"
 >
 
+const SHORT_DATE = new Intl.DateTimeFormat("en-CA", { month: "short", day: "numeric", timeZone: "UTC" })
+
+/** Weekly dates the run skips (holidays, breaks): every gap longer than a week. */
+export function skippedWeeks(sessionDates: readonly string[] | null | undefined): string[] {
+  const dates = [...(sessionDates ?? [])].sort()
+  const skipped: string[] = []
+  for (let i = 1; i < dates.length; i++) {
+    const next = Date.parse(`${dates[i]}T00:00:00Z`)
+    for (let d = Date.parse(`${dates[i - 1]}T00:00:00Z`) + 7 * 864e5; d < next; d += 7 * 864e5) {
+      skipped.push(new Date(d).toISOString().slice(0, 10))
+    }
+  }
+  return skipped
+}
+
 function formatMoney(cents: number | null | undefined) {
   if (cents == null) return "Registration unavailable"
   return `$${Math.round(cents / 100).toLocaleString("en-CA")} CAD`
@@ -134,6 +149,8 @@ export function buildKidsWeeklyProgram(
   const timeLabel = liveTime.join(" · ") || "Time to be confirmed"
   const scheduleLabel = recurring?.scheduleLabel ?? "Schedule unavailable"
   const dateLabel = recurring?.dateLabel ?? "Schedule unavailable"
+  const skipped = skippedWeeks(camp?.sessionDates).map((date) => SHORT_DATE.format(new Date(`${date}T00:00:00Z`)))
+  const skippedLabel = skipped.length ? skipped.join(" · ") : null
   const sessionsLabel = sessionCount > 0
     ? `${sessionCount} ${config.duration} sessions`
     : "Schedule unavailable"
@@ -162,7 +179,14 @@ export function buildKidsWeeklyProgram(
     scheduleLabel,
     timeLabel,
     durationBadge: `${config.duration === "one-hour" ? "1-hour" : "2-hour"} sessions`,
-    includes: [scheduleLabel, dateLabel, sessionsLabel, ...track.includes],
+    skippedLabel,
+    includes: [
+      scheduleLabel,
+      dateLabel,
+      sessionsLabel,
+      ...(skippedLabel ? [`No class ${skipped.join(" or ")}`] : []),
+      ...track.includes,
+    ],
     ctaDisabled: unavailable || soldOut,
     ctaLabel: soldOut
       ? "Sold out"

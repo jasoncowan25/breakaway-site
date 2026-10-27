@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Award,
   CalendarDays,
+  CalendarOff,
   CheckCircle2,
   Clock3,
   HeartPulse,
@@ -129,6 +130,9 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
               <div className={styles.bookingFacts}>
                 <div><span><CalendarDays size={17} aria-hidden="true" /></span><div><strong>{program.day}</strong><p>{program.dateLabel}</p></div></div>
                 <div><span><Clock3 size={17} aria-hidden="true" /></span><div><strong>{program.timeLabel}</strong><p>{program.sessionsLabel}</p></div></div>
+                {program.skippedLabel && (
+                  <div><span><CalendarOff size={17} aria-hidden="true" /></span><div><strong>No class</strong><p>{program.skippedLabel}</p></div></div>
+                )}
                 <div><span><MapPin size={17} aria-hidden="true" /></span><div><strong>{program.venue}</strong><p>{program.city}</p></div></div>
               </div>
               <div className={styles.bookingPrice}>
@@ -143,7 +147,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
         </section>
 
         <section className={styles.values} aria-label="Program benefits">
-          <div><span><Award aria-hidden="true" /></span><h3>Pro-Led Coaching</h3><p>Every session is run by Joey Manchurek and the Breakaway coaching staff</p></div>
+          <div><span><Award aria-hidden="true" /></span><h3>Pro-Led Coaching</h3><p>Taught by Breakaway&apos;s pro coaches, on a program built by Joey Manchurek</p></div>
           <div><span><HeartPulse aria-hidden="true" /></span><h3>Skills Then Games</h3><p>Kids drill the fundamentals, then play them out in rally games and match play</p></div>
           <div><span><Users aria-hidden="true" /></span><h3>Active With Friends</h3><p>A weekly indoor program that keeps kids moving all through the winter</p></div>
         </section>
@@ -161,7 +165,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
         <section id="coach" className={styles.coach}>
           <div className={styles.coachPhoto}><Image src="/images/kids-weekly/kids-camp-joey.jpg" alt="Joey Manchurek briefing a group of young players before a session" fill sizes="(max-width: 800px) 90vw, 50vw" /></div>
           <div className={styles.coachCopy}>
-            <span className={styles.eyebrowDark}>Lead Instructor</span><h2>Coached By Joey Manchurek</h2><p>Joey runs every Breakaway kids program himself. Sessions are built the way a pro trains — clear focus, real reps, and enough game play that kids leave wanting the next week.</p>
+            <span className={styles.eyebrowDark}>Head Coach</span><h2>Built By Joey Manchurek</h2><p>Joey designs every Breakaway kids program and coaches it alongside the Breakaway team. Sessions are built the way a pro trains — clear focus, real reps, and enough game play that kids leave wanting the next week.</p>
             <div className={styles.stats}><div><strong>5.0</strong><span>DUPR Rating</span></div><div><strong>500+</strong><span>Players Coached</span></div><div><strong>{sessionRange}</strong><span>Weeks Of Progression</span></div></div>
           </div>
         </section>

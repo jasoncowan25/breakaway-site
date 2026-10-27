@@ -7,6 +7,7 @@ import {
   KIDS_WEEKLY_PROGRAM_KEYS,
   KIDS_WEEKLY_PROGRAMS,
   buildKidsWeeklyProgram,
+  skippedWeeks,
   canRenderKidsWeeklyLanding,
   kidsWeeklyLandingPathForCamp,
   shouldListKidsWeeklyCampAsStandalone,
@@ -81,6 +82,14 @@ test("builds the Tuesday card at The Picklr Toronto West", () => {
   assert.equal(program.city, "Etobicoke, ON")
   assert.equal(program.dateLabel, "January 5 – April 6, 2027")
   assert.equal(program.ctaLabel, "Book Tuesdays")
+  assert.equal(program.skippedLabel, "Mar 16")
+  assert.ok(program.includes.includes("No class Mar 16"))
+})
+
+test("lists the weeks a run skips", () => {
+  assert.deepEqual(skippedWeeks(MONDAYS), ["2027-02-15", "2027-03-15"])
+  assert.deepEqual(skippedWeeks(["2027-01-07", "2027-01-14"]), [])
+  assert.equal(buildKidsWeeklyProgram("jarMon", camp()).skippedLabel, "Feb 15 · Mar 15")
 })
 
 test("falls back to the configured weekday when the camp is missing", () => {
