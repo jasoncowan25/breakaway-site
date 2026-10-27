@@ -41,48 +41,21 @@ test("publishes the approved captions and promotional badges for featured Toront
   )
 })
 
-test("keeps the Kids filter available without promoting the started weekly program", () => {
+test("promotes the winter Kids Weekly program under the Kids filter", () => {
   const kids = STATIC_PUBLIC_CAMP_CARDS
-    .filter((camp) => camp.skillLevel === "Kids")
+    .filter((camp) => campMatchesFilters(camp, { locations: [], formats: [], skillLevels: ["Kids"] }))
     .map((camp) => camp.id)
 
-  assert.deepEqual(kids, [])
+  assert.deepEqual(kids, ["kids-weekly-pickleball-camp-toronto"])
   assert.ok(CAMP_SKILL_FILTERS.includes("Kids"))
-})
-
-test("Kids filtering excludes the started weekly kids program", () => {
-  const result = STATIC_PUBLIC_CAMP_CARDS
-    .filter((camp) =>
-      campMatchesFilters(camp, {
-        locations: [],
-        formats: [],
-        skillLevels: ["Kids"],
-      }),
-    )
-    .map((camp) => camp.id)
-
-  assert.deepEqual(result, [])
   assert.equal(
-    shouldShowMuskokaHub({
-      campCount: 8,
-      locations: [],
-      formats: [],
-      skillLevels: ["Kids"],
-    }),
+    shouldShowMuskokaHub({ campCount: 8, locations: [], formats: [], skillLevels: ["Kids"] }),
     false,
   )
 })
 
-test("hides the started weekly program from related links and active static navigation", () => {
-  assert.equal(RELATED_CAMP_LINKS.some((link) => link.href.includes("kids-weekly")), false)
-  assert.equal(
-    staticPublicCampNavItems("2026-09-17").some((item) => item.href.includes("kids-weekly")),
-    false,
-  )
-  assert.equal(
-    staticPublicCampNavItems("2026-09-17").some(
-      (item) => item.href === "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
-    ),
-    true,
-  )
+test("links the Kids Weekly page from related links and navigation until the run ends", () => {
+  assert.equal(RELATED_CAMP_LINKS.some((link) => link.href.includes("kids-weekly")), true)
+  assert.equal(staticPublicCampNavItems("2027-04-19").some((item) => item.href.includes("kids-weekly")), true)
+  assert.equal(staticPublicCampNavItems("2027-04-20").some((item) => item.href.includes("kids-weekly")), false)
 })
