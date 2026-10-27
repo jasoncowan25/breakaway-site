@@ -183,7 +183,6 @@ export function buildKidsWeeklyProgram(
     priceLabel: formatMoney(camp?.basePriceCents),
     capacity,
     spotsLabel: soldOut ? "Sold out" : `Capacity: ${capacity}`,
-    taxLabel: camp?.basePriceCents != null ? "+ HST" : null,
     sessionCount,
     sessionsLabel,
     weeksLabel: sessionCount > 0
