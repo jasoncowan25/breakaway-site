@@ -4,58 +4,72 @@ import { formatRecurringCampDates } from "./session-time.ts"
 export const KIDS_WEEKLY_LANDING_PATH =
   "/pickleball-camps/kids-weekly-pickleball-camp-toronto"
 
+const JAR = { venue: "The JAR Pickleball Club", city: "Toronto, ON", venueShort: "The JAR" } as const
+const PICKLR_WEST = { venue: "The Picklr Toronto West", city: "Etobicoke, ON", venueShort: "Picklr West" } as const
+
+/** Winter 2027: three All Skill Levels nights across two clubs. */
 export const KIDS_WEEKLY_PROGRAMS = {
-  allLevelsMon: {
-    slug: "toronto-kids-weekly-all-levels-mondays-sep-14-2026",
+  jarMon: {
+    slug: "toronto-kids-weekly-pickleball-camp-jan-4-2027",
     name: "All Skill Levels",
-    shortName: "All Levels",
+    shortName: JAR.venueShort,
+    ...JAR,
     track: "allLevels",
     day: "Mondays",
     duration: "one-hour",
-    capacity: 20,
-    badge: "Just Added",
-    description: "The same fundamentals track as Thursdays, on a shorter 12-week Monday schedule.",
+    capacity: 30,
+    badge: null,
+    description: "Grip, serve and rally first, then real game play — Monday evenings at The JAR in Toronto.",
   },
-  allLevelsThu: {
-    slug: "toronto-kids-weekly-all-levels-sep-10-2026",
+  picklrTue: {
+    slug: "etobicoke-kids-weekly-pickleball-camp-jan-5-2027",
     name: "All Skill Levels",
-    shortName: "All Levels",
+    shortName: PICKLR_WEST.venueShort,
+    ...PICKLR_WEST,
+    track: "allLevels",
+    day: "Tuesdays",
+    duration: "one-hour",
+    capacity: 30,
+    badge: "New Location",
+    description: "The same program after school on Tuesdays at The Picklr Toronto West in Etobicoke.",
+  },
+  jarThu: {
+    slug: "toronto-kids-weekly-pickleball-camp-jan-7-2027",
+    name: "All Skill Levels",
+    shortName: JAR.venueShort,
+    ...JAR,
     track: "allLevels",
     day: "Thursdays",
     duration: "one-hour",
-    capacity: 20,
+    capacity: 30,
     badge: null,
-    description: "Start with grip, serve and rally, then build into real game play by the end of the season.",
-  },
-  experienced: {
-    slug: "toronto-kids-weekly-experienced-sep-7-2026",
-    name: "Experienced",
-    shortName: "Experienced",
-    track: "experienced",
-    day: "Mondays",
-    duration: "two-hour",
-    capacity: 10,
-    badge: null,
-    description: "Longer sessions built around sharper drills, strategy and match play for kids who know the game.",
+    description: "Grip, serve and rally first, then real game play — Thursday evenings at The JAR in Toronto.",
   },
 } as const
 
 export type KidsWeeklyProgramKey = keyof typeof KIDS_WEEKLY_PROGRAMS
 
-/** Landing-page order: the new Monday section leads, per the Sep 2026 design. */
+/** Landing-page order: by weekday. */
 export const KIDS_WEEKLY_PROGRAM_KEYS: readonly KidsWeeklyProgramKey[] = [
-  "allLevelsMon",
-  "allLevelsThu",
-  "experienced",
+  "jarMon",
+  "picklrTue",
+  "jarThu",
 ]
 
-/** The booking card opens on the original Thursday program. */
-export const KIDS_WEEKLY_DEFAULT_PROGRAM: KidsWeeklyProgramKey = "allLevelsThu"
+/** The booking card opens on the first night of the week. */
+export const KIDS_WEEKLY_DEFAULT_PROGRAM: KidsWeeklyProgramKey = "jarMon"
 
 export const KIDS_WEEKLY_PROGRAM_SLUGS = Object.values(KIDS_WEEKLY_PROGRAMS).map(
   (program) => program.slug,
 )
-const KIDS_WEEKLY_PROGRAM_SLUG_SET = new Set<string>(KIDS_WEEKLY_PROGRAM_SLUGS)
+
+/** Fall 2026 programs: still routed here so their old URLs land on the current season. */
+const KIDS_WEEKLY_PAST_SLUGS = [
+  "toronto-kids-weekly-all-levels-mondays-sep-14-2026",
+  "toronto-kids-weekly-all-levels-sep-10-2026",
+  "toronto-kids-weekly-experienced-sep-7-2026",
+]
+const KIDS_WEEKLY_PROGRAM_SLUG_SET = new Set<string>([...KIDS_WEEKLY_PROGRAM_SLUGS, ...KIDS_WEEKLY_PAST_SLUGS])
 
 const TRACK_COPY = {
   allLevels: {
@@ -94,6 +108,11 @@ function formatMoney(cents: number | null | undefined) {
   return `$${Math.round(cents / 100).toLocaleString("en-CA")} CAD`
 }
 
+/** Experienced books by track; every other program books by its night. */
+function bookingName(track: keyof typeof TRACK_COPY, day: string) {
+  return track === "experienced" ? "Experienced" : day
+}
+
 export function buildKidsWeeklyProgram(
   key: KidsWeeklyProgramKey,
   camp: KidsWeeklyCampLike | null,
@@ -123,6 +142,8 @@ export function buildKidsWeeklyProgram(
     key,
     name: config.name,
     shortName: config.shortName,
+    venue: config.venue,
+    city: config.city,
     track: config.track,
     day,
     badge: config.badge,
@@ -147,7 +168,7 @@ export function buildKidsWeeklyProgram(
       ? "Sold out"
       : unavailable
         ? "Registration unavailable"
-        : `Book ${config.track === "experienced" ? "Experienced" : day}`,
+        : `Book ${bookingName(config.track, day)}`,
   }
 }
 

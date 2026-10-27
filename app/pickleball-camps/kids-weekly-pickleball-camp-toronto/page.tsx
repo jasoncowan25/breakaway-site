@@ -15,13 +15,13 @@ import { KidsWeeklyLanding } from "./kids-weekly-landing"
 const canonical = "/pickleball-camps/kids-weekly-pickleball-camp-toronto"
 
 export const metadata: Metadata = {
-  title: "Kids Weekly Pickleball Camp Toronto | Fall 2026",
+  title: "Kids Weekly Pickleball Camp Toronto | Winter 2027",
   description:
-    "Weekly pickleball sessions for kids ages 9–14 at The JAR Pickleball Club in Toronto. Choose All Skill Levels on Mondays or Thursdays, or Experienced on Mondays.",
+    "Weekly pickleball sessions for kids ages 9–14. Mondays or Thursdays at The JAR Pickleball Club in Toronto, or Tuesdays at The Picklr Toronto West in Etobicoke.",
   alternates: { canonical },
   openGraph: {
-    title: "Kids Weekly Pickleball Camp — Fall 2026",
-    description: "Weekly pro-led coaching for ages 9–14 at The JAR Pickleball Club in Toronto.",
+    title: "Kids Weekly Pickleball Camp — Winter 2027",
+    description: "Weekly pro-led coaching for ages 9–14 in Toronto and Etobicoke.",
     url: canonical,
     images: [
       {

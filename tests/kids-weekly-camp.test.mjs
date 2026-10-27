@@ -12,99 +12,79 @@ import {
   shouldListKidsWeeklyCampAsStandalone,
 } from "../lib/kids-weekly-camp.ts"
 
-// Sep 14 2026 is a Monday; the real run skips Sep 21 and Oct 12.
+// Jan 4 2027 is a Monday; the real run skips Feb 15 (Family Day) and Mar 15 (March Break).
 const MONDAYS = [
-  "2026-09-14", "2026-09-28", "2026-10-05", "2026-10-19", "2026-10-26", "2026-11-02",
-  "2026-11-09", "2026-11-16", "2026-11-23", "2026-11-30", "2026-12-07", "2026-12-14",
+  "2027-01-04", "2027-01-11", "2027-01-18", "2027-01-25", "2027-02-01", "2027-02-08", "2027-02-22",
+  "2027-03-01", "2027-03-08", "2027-03-22", "2027-03-29", "2027-04-05", "2027-04-12", "2027-04-19",
+]
+const TUESDAYS = [
+  "2027-01-05", "2027-01-12", "2027-01-19", "2027-01-26", "2027-02-02", "2027-02-09", "2027-02-16",
+  "2027-02-23", "2027-03-02", "2027-03-09", "2027-03-23", "2027-03-30", "2027-04-06",
 ]
 
 function camp(overrides = {}) {
   return {
     id: "camp-1",
-    slug: KIDS_WEEKLY_PROGRAMS.allLevelsThu.slug,
-    title: "Kids Weekly Pickleball Camp — All Levels",
-    fullLabel: "Kids Weekly Pickleball Camp — All Levels",
-    startDate: "2026-09-10",
-    endDate: "2026-12-17",
-    basePriceCents: 60000,
-    capacity: 20,
+    slug: KIDS_WEEKLY_PROGRAMS.jarMon.slug,
+    title: "Kids Weekly Pickleball Camp",
+    fullLabel: "Kids Weekly Pickleball Camp",
+    startDate: "2027-01-04",
+    endDate: "2027-04-19",
+    basePriceCents: 56000,
+    capacity: 30,
     registeredCount: 3,
-    spotsLeft: 17,
+    spotsLeft: 27,
     isSoldOut: false,
-    sessionLabel: "5:00 PM - 6:00 PM",
-    sessionDates: Array.from({ length: 15 }, (_, index) => `2026-09-${String(10 + index).padStart(2, "0")}`),
+    sessionLabel: "6:00 PM – 7:00 PM",
+    sessionDates: MONDAYS,
     publicVisibility: "published",
     childrenEligible: true,
     ...overrides,
   }
 }
 
-test("lists the three programs with the Monday section first and Thursdays selected by default", () => {
-  assert.deepEqual(KIDS_WEEKLY_PROGRAM_KEYS, ["allLevelsMon", "allLevelsThu", "experienced"])
-  assert.equal(KIDS_WEEKLY_DEFAULT_PROGRAM, "allLevelsThu")
+test("lists the three winter nights in weekday order with Mondays selected by default", () => {
+  assert.deepEqual(KIDS_WEEKLY_PROGRAM_KEYS, ["jarMon", "picklrTue", "jarThu"])
+  assert.equal(KIDS_WEEKLY_DEFAULT_PROGRAM, "jarMon")
 })
 
-test("builds the Thursday all-levels card from one camp and its 15 sessions", () => {
-  const program = buildKidsWeeklyProgram("allLevelsThu", camp())
+test("builds the Monday card at The JAR from its 14 live sessions", () => {
+  const program = buildKidsWeeklyProgram("jarMon", camp())
 
-  assert.equal(program.checkoutHref, "/checkout/toronto-kids-weekly-all-levels-sep-10-2026")
-  assert.equal(program.priceLabel, "$600 CAD")
-  assert.equal(program.spotsLabel, "20 spots")
-  assert.equal(program.sessionsLabel, "15 one-hour sessions")
-  assert.equal(program.eyebrow, "Thursdays · 15 Weeks")
-  assert.equal(program.day, "Thursdays")
-  assert.equal(program.timeLabel, "5:00 PM – 6:00 PM")
+  assert.equal(program.checkoutHref, "/checkout/toronto-kids-weekly-pickleball-camp-jan-4-2027")
+  assert.equal(program.priceLabel, "$560 CAD")
+  assert.equal(program.spotsLabel, "30 spots")
+  assert.equal(program.sessionsLabel, "14 one-hour sessions")
+  assert.equal(program.eyebrow, "Mondays · 14 Weeks")
+  assert.equal(program.day, "Mondays")
+  assert.equal(program.venue, "The JAR Pickleball Club")
+  assert.equal(program.city, "Toronto, ON")
   assert.equal(program.durationBadge, "1-hour sessions")
-  assert.equal(program.badge, null)
-  assert.equal(program.ctaLabel, "Book Thursdays")
-  assert.equal(program.ctaDisabled, false)
-  assert.deepEqual(program.includes.slice(0, 3), [
-    "Thursdays · 5:00 PM – 6:00 PM",
-    "September 10 – September 24, 2026",
-    "15 one-hour sessions",
-  ])
-})
-
-test("builds the new Monday all-levels card with its Just Added badge", () => {
-  const program = buildKidsWeeklyProgram("allLevelsMon", camp({
-    slug: KIDS_WEEKLY_PROGRAMS.allLevelsMon.slug,
-    basePriceCents: 48000,
-    sessionLabel: "6:00 PM - 7:00 PM",
-    sessionDates: MONDAYS,
-  }))
-
-  assert.equal(program.checkoutHref, "/checkout/toronto-kids-weekly-all-levels-mondays-sep-14-2026")
-  assert.equal(program.priceLabel, "$480 CAD")
-  assert.equal(program.badge, "Just Added")
-  assert.equal(program.eyebrow, "Mondays · 12 Weeks")
-  assert.equal(program.sessionsLabel, "12 one-hour sessions")
-  assert.equal(program.weeksLabel, "12 weeks")
-  assert.equal(program.dateLabel, "September 14 – December 14, 2026")
   assert.equal(program.ctaLabel, "Book Mondays")
+  assert.equal(program.ctaDisabled, false)
   assert.equal(program.whoFor, "Brand new, or playing under a year")
 })
 
-test("builds experienced program duration copy from its live 12-session schedule", () => {
-  const program = buildKidsWeeklyProgram("experienced", camp({
-    slug: KIDS_WEEKLY_PROGRAMS.experienced.slug,
-    basePriceCents: 96000,
-    capacity: 10,
-    spotsLeft: 9,
-    sessionLabel: "5:00 PM - 7:00 PM",
-    sessionDates: MONDAYS,
+test("builds the Tuesday card at The Picklr Toronto West", () => {
+  const program = buildKidsWeeklyProgram("picklrTue", camp({
+    slug: KIDS_WEEKLY_PROGRAMS.picklrTue.slug,
+    basePriceCents: 52000,
+    sessionLabel: "16:00 - 17:00",
+    sessionDates: TUESDAYS,
   }))
 
-  assert.equal(program.priceLabel, "$960 CAD")
-  assert.equal(program.spotsLabel, "10 spots")
-  assert.equal(program.sessionCount, 12)
-  assert.equal(program.sessionsLabel, "12 two-hour sessions")
-  assert.equal(program.durationBadge, "2-hour sessions")
-  assert.equal(program.ctaLabel, "Book Experienced")
-  assert.equal(program.includes.at(-1), "Capped at 10 players for more court time")
+  assert.equal(program.checkoutHref, "/checkout/etobicoke-kids-weekly-pickleball-camp-jan-5-2027")
+  assert.equal(program.priceLabel, "$520 CAD")
+  assert.equal(program.badge, "New Location")
+  assert.equal(program.eyebrow, "Tuesdays · 13 Weeks")
+  assert.equal(program.venue, "The Picklr Toronto West")
+  assert.equal(program.city, "Etobicoke, ON")
+  assert.equal(program.dateLabel, "January 5 – April 6, 2027")
+  assert.equal(program.ctaLabel, "Book Tuesdays")
 })
 
 test("falls back to the configured weekday when the camp is missing", () => {
-  const program = buildKidsWeeklyProgram("allLevelsMon", null)
+  const program = buildKidsWeeklyProgram("jarMon", null)
   assert.equal(program.day, "Mondays")
   assert.equal(program.eyebrow, "Mondays")
   assert.equal(program.ctaLabel, "Registration unavailable")
@@ -112,8 +92,8 @@ test("falls back to the configured weekday when the camp is missing", () => {
 })
 
 test("disables only the missing or sold-out program", () => {
-  assert.equal(buildKidsWeeklyProgram("experienced", null).ctaDisabled, true)
-  assert.equal(buildKidsWeeklyProgram("allLevelsThu", camp({ spotsLeft: 0, isSoldOut: true })).ctaLabel, "Sold out")
+  assert.equal(buildKidsWeeklyProgram("jarThu", null).ctaDisabled, true)
+  assert.equal(buildKidsWeeklyProgram("jarMon", camp({ spotsLeft: 0, isSoldOut: true })).ctaLabel, "Sold out")
 })
 
 test("the public route requires at least one published child camp unless previewing", () => {
@@ -127,6 +107,7 @@ test("routes all three weekly child camps to the single public landing page", ()
   for (const key of KIDS_WEEKLY_PROGRAM_KEYS) {
     assert.equal(kidsWeeklyLandingPathForCamp(KIDS_WEEKLY_PROGRAMS[key].slug), KIDS_WEEKLY_LANDING_PATH)
   }
+  assert.equal(kidsWeeklyLandingPathForCamp("toronto-kids-weekly-experienced-sep-7-2026"), KIDS_WEEKLY_LANDING_PATH)
   assert.equal(kidsWeeklyLandingPathForCamp("toronto-intermediate-intensive"), null)
 })
 

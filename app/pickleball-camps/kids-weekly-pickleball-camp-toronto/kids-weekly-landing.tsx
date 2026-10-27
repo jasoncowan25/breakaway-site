@@ -33,7 +33,7 @@ const experienceSteps = [
 ]
 
 const faqs = [
-  ["Which program should my child join?", "If they've played a year or more, choose Experienced. Everyone else — including complete beginners — should start in All Skill Levels, on whichever night suits your week: Mondays over 12 weeks or Thursdays over 15."],
+  ["Which program should my child join?", "All three are the same All Skill Levels program, and complete beginners are welcome. Pick the night and club that suit your week: Mondays or Thursdays at The JAR in Toronto, or Tuesdays at The Picklr Toronto West in Etobicoke."],
   ["What do they need to bring?", "Indoor court shoes, a water bottle, and a paddle if they have one. We keep loaner paddles and balls at the club."],
   ["What if we miss a week?", "Sessions build week to week but stand on their own, so a missed night is fine. Let us know in advance and we'll catch them up."],
   ["Can siblings or friends register together?", "Yes. Add siblings joining the same program in one checkout. Friends can register separately and email us their names — we'll group them where the skill match works."],
@@ -68,6 +68,10 @@ function ProgramCard({ program }: { program: Program }) {
         <Users size={19} aria-hidden="true" />
         <div><span>Who it&apos;s for</span><strong>{program.whoFor}</strong></div>
       </div>
+      <div className={styles.whoFor}>
+        <MapPin size={19} aria-hidden="true" />
+        <div><span>Where</span><strong>{program.venue} · {program.city}</strong></div>
+      </div>
       <p>{program.description}</p>
       <div className={styles.cardPrice}><strong>{program.priceLabel.replace(" CAD", "")}</strong><span>CAD / {program.weeksLabel}</span></div>
       <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.durationBadge}</span>
@@ -98,17 +102,17 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
     <div className={styles.page}>
       <main>
         <section id="top" className={styles.hero}>
-          <Image className={styles.heroImage} src="/images/kids-weekly/kids-camp-group.png" alt="The full Breakaway kids camp group on court at The JAR Pickleball Club" fill sizes="100vw" priority />
+          <Image className={styles.heroImage} src="/images/kids-weekly/kids-camp-group.png" alt="The full Breakaway kids camp group on court" fill sizes="100vw" priority />
           <div className={styles.heroOverlay} />
           <div className={styles.heroInner}>
             <div className={styles.heroCopy}>
-              <span className={styles.eyebrow}>Ages 9–14 · Fall 2026</span>
+              <span className={styles.eyebrow}>Ages 9–14 · Winter 2027</span>
               <h1>Kids Weekly Pickleball Camp</h1>
-              <p>Kids learn real pickleball skills and put them straight into games. Pro-led coaching every week at The JAR Pickleball Club — a great way to stay active with friends through the fall.</p>
+              <p>Kids learn real pickleball skills and put them straight into games. Pro-led coaching every week in Toronto and Etobicoke — a great way to stay active with friends through the winter.</p>
               <div className={styles.heroPills}>
                 <span><Users size={15} aria-hidden="true" />Ages 9–14</span>
                 <span><CalendarDays size={15} aria-hidden="true" />{sessionRange} Weekly Sessions</span>
-                <span><MapPin size={15} aria-hidden="true" />The JAR Pickleball Club</span>
+                <span><MapPin size={15} aria-hidden="true" />Toronto &amp; Etobicoke</span>
               </div>
             </div>
 
@@ -125,7 +129,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
               <div className={styles.bookingFacts}>
                 <div><span><CalendarDays size={17} aria-hidden="true" /></span><div><strong>{program.day}</strong><p>{program.dateLabel}</p></div></div>
                 <div><span><Clock3 size={17} aria-hidden="true" /></span><div><strong>{program.timeLabel}</strong><p>{program.sessionsLabel}</p></div></div>
-                <div><span><MapPin size={17} aria-hidden="true" /></span><div><strong>The JAR Pickleball Club</strong><p>Toronto, ON</p></div></div>
+                <div><span><MapPin size={17} aria-hidden="true" /></span><div><strong>{program.venue}</strong><p>{program.city}</p></div></div>
               </div>
               <div className={styles.bookingPrice}>
                 <div><strong>{program.priceLabel}</strong><span>/ {program.weeksLabel}</span></div>
@@ -141,7 +145,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
         <section className={styles.values} aria-label="Program benefits">
           <div><span><Award aria-hidden="true" /></span><h3>Pro-Led Coaching</h3><p>Every session is run by Joey Manchurek and the Breakaway coaching staff</p></div>
           <div><span><HeartPulse aria-hidden="true" /></span><h3>Skills Then Games</h3><p>Kids drill the fundamentals, then play them out in rally games and match play</p></div>
-          <div><span><Users aria-hidden="true" /></span><h3>Active With Friends</h3><p>A weekly indoor program that keeps kids moving all through the fall</p></div>
+          <div><span><Users aria-hidden="true" /></span><h3>Active With Friends</h3><p>A weekly indoor program that keeps kids moving all through the winter</p></div>
         </section>
 
         <section id="session" className={styles.experience}>
@@ -150,7 +154,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
         </section>
 
         <section id="programs" className={styles.programs}>
-          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Three weekly options for ages 9 to 14 at The JAR Pickleball Club. Pick the night that fits your week and the track that fits your child.</p></div>
+          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Three weekly options for ages 9 to 14 at two clubs. Pick the night and location that fit your week.</p></div>
           <div className={styles.programGrid}>{programs.map((item) => <ProgramCard key={item.key} program={item} />)}</div>
         </section>
 
