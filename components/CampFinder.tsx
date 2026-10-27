@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useId, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useRouter } from "next/navigation"
@@ -8,6 +8,7 @@ import { ChevronDown, X } from "lucide-react"
 
 export function CampFinder() {
   const router = useRouter()
+  const contentId = useId()
   const [location, setLocation] = useState("")
   const [skillLevel, setSkillLevel] = useState("")
   const [isMinimized, setIsMinimized] = useState(false)
@@ -22,7 +23,10 @@ export function CampFinder() {
   return (
     <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl max-w-4xl mx-auto overflow-hidden transition-all duration-300">
       {/* Header - always visible, clickable to toggle */}
-      <button 
+      <button
+        type="button"
+        aria-expanded={!isMinimized}
+        aria-controls={contentId}
         onClick={() => setIsMinimized(!isMinimized)}
         className="w-full p-4 md:p-6 flex items-center justify-between cursor-pointer hover:bg-gray-50/50 transition-colors"
       >
@@ -33,7 +37,7 @@ export function CampFinder() {
       </button>
       
       {/* Collapsible content */}
-      <div className={`transition-all duration-300 ease-in-out ${isMinimized ? "max-h-0 opacity-0 overflow-hidden" : "max-h-96 opacity-100"}`}>
+      <div id={contentId} inert={isMinimized} aria-hidden={isMinimized} className={`transition-all duration-300 ease-in-out ${isMinimized ? "max-h-0 opacity-0 overflow-hidden" : "max-h-96 opacity-100"}`}>
         <div className="px-4 pb-4 md:px-6 md:pb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -60,7 +64,7 @@ export function CampFinder() {
                   <SelectItem value="2.5">2.5 (Under 3.0)</SelectItem>
                   <SelectItem value="3.0">3.0</SelectItem>
                   <SelectItem value="3.5">3.5</SelectItem>
-                  <SelectItem value="4.0">4.0+</SelectItem>
+                  <SelectItem value="4.0+">4.0+</SelectItem>
                 </SelectContent>
               </Select>
             </div>

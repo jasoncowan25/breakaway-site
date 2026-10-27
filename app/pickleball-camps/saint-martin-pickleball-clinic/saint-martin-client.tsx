@@ -1,5 +1,6 @@
 "use client"
 
+import { CompletedCampNotice } from "@/components/CompletedCampNotice"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
@@ -7,7 +8,7 @@ import { Calendar, MapPin, Clock, Award, Users, Target } from "lucide-react"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 
-export default function SaintMartinClinic() {
+export default function SaintMartinClinic({ isCompleted }: { isCompleted: boolean }) {
   const [isSticky, setIsSticky] = useState(false)
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export default function SaintMartinClinic() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="mx-auto max-w-7xl">
-            <Badge className="mb-4 bg-accent text-accent-foreground">Pop-Up Clinic</Badge>
+            <Badge className="mb-4 bg-accent text-accent-foreground">{isCompleted ? "Completed" : "Pop-Up Clinic"}</Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">{clinic.title}</h1>
             <p className="text-xl text-white/90">
               {clinic.subtitle} • Skill Level {clinic.skillLevel}
@@ -77,6 +78,7 @@ export default function SaintMartinClinic() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        {isCompleted && <div className="mb-8"><CompletedCampNotice recapHref="/pickleball-camps/saint-martin-pickleball-clinic/recap" /></div>}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content */}
           <div className="flex-1 space-y-8">
@@ -258,16 +260,21 @@ export default function SaintMartinClinic() {
                     </div>
                   </div>
 
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <p className="text-sm font-semibold text-red-800">Only {clinic.spotsLeft} spots left</p>
-                  </div>
+                  {isCompleted ? <CompletedCampNotice recapHref="/pickleball-camps/saint-martin-pickleball-clinic/recap" /> : (
+                    <>
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                        <p className="text-sm font-semibold text-red-800">Only {clinic.spotsLeft} spots left</p>
+                      </div>
 
-                  <Button
-                    className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg py-6"
-                    onClick={() => window.open(clinic.checkoutUrl, "_blank")}
-                  >
-                    Book Now
-                  </Button>
+                      <Button
+                        className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg py-6"
+                        onClick={() => window.open(clinic.checkoutUrl, "_blank")}
+                      >
+                        Book Now
+                      </Button>
+
+                    </>
+                  )}
 
                   <div className="pt-4 border-t border-border space-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
@@ -291,6 +298,7 @@ export default function SaintMartinClinic() {
       </div>
 
       {/* Mobile Sticky Bottom Bar */}
+      {!isCompleted && <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border p-4 shadow-lg z-50">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -307,6 +315,7 @@ export default function SaintMartinClinic() {
       </div>
 
       <div className="lg:hidden h-20" />
+      </>}
 
     </div>
   )
