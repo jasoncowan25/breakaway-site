@@ -38,6 +38,8 @@ export interface Camp {
   dateSub: string;
   location: string;
   locSub: string;
+  address?: string | null;
+  directionsUrl?: string | null;
   /** Skill band label, e.g. "Intermediate". */
   skill: string;
   /** Skill band detail, e.g. "3.0–3.5". */

@@ -11,6 +11,7 @@ interface CampCardProps {
   date: string
   location: string
   price: string
+  priceNote?: string
   image: string
   badges?: Array<{ text: string; variant: "default" | "destructive" | "secondary" | "accent" }>
   coach?: string
@@ -24,7 +25,7 @@ interface CampCardProps {
   soldOut?: boolean // Whether the camp is sold out
 }
 
-export function CampCard({ id, title, date, location, price, image, badges, coach, link, buttonText, imageEnhanced, compact, spotsRemaining, availabilityLabel, isLoadingAvailability, soldOut }: CampCardProps) {
+export function CampCard({ id, title, date, location, price, priceNote, image, badges, coach, link, buttonText, imageEnhanced, compact, spotsRemaining, availabilityLabel, isLoadingAvailability, soldOut }: CampCardProps) {
   const campLink = link || `/pickleball-camps/${id}`
   const showAvailability = availabilityLabel !== undefined || spotsRemaining !== undefined || isLoadingAvailability
   const visibleBadges = badges?.filter((badge) =>
@@ -108,8 +109,8 @@ export function CampCard({ id, title, date, location, price, image, badges, coac
           )}
 
           {/* Footer */}
-          <div className={`flex items-center justify-between ${compact ? "pt-2" : "pt-4 border-t border-border"}`}>
-            {!compact && <span className="text-2xl font-bold text-primary">{price}</span>}
+          <div className={`flex flex-wrap items-center justify-between gap-3 ${compact ? "pt-2" : "pt-4 border-t border-border"}`}>
+            {!compact && <div><span className="text-2xl font-bold text-primary">{price}</span>{priceNote && <span className="block text-sm text-muted-foreground">{priceNote}</span>}</div>}
             <Button
               variant="outline"
               className={`border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent ${compact ? "w-full" : ""}`}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Icon } from "../Icon";
 import { Field, Visa } from "./primitives";
 import { PlayerCard, YouCard } from "./PlayerCard";
@@ -16,6 +17,7 @@ import type { Account, Agreements, Camp, Guardian as GuardianModel, Player } fro
 
 export interface CheckoutViewProps {
   camp: Camp;
+  backHref?: string;
   kidsMode: boolean;
   players: Player[];
   guardian: GuardianModel;
@@ -155,6 +157,7 @@ function DetailsSummary({
 export function CheckoutView(props: CheckoutViewProps) {
   const {
     camp,
+    backHref,
     kidsMode,
     players,
     guardian,
@@ -237,14 +240,19 @@ export function CheckoutView(props: CheckoutViewProps) {
 
   const goBack = () => {
     if (typeof window !== "undefined" && window.history.length > 1) window.history.back();
-    // INTEGRATION: replace with router.back() / a link to the camp detail page.
   };
 
   return (
     <div className="shell view">
-      <button type="button" className="back-link" onClick={goBack}>
-        <Icon name="back" size={18} strokeWidth={2.5} /> Back
-      </button>
+      {backHref ? (
+        <Link className="back-link" href={backHref}>
+          <Icon name="back" size={18} strokeWidth={2.5} /> Back to camp
+        </Link>
+      ) : (
+        <button type="button" className="back-link" onClick={goBack}>
+          <Icon name="back" size={18} strokeWidth={2.5} /> Back
+        </button>
+      )}
       <div className="checkout-grid">
         <div className="panel">
           <div className="panel-head">
@@ -635,6 +643,7 @@ export function CheckoutView(props: CheckoutViewProps) {
                   <Icon name="pin" size={15} />
                   <span>
                     <b>{camp.location}</b>, {camp.locSub}
+                    {camp.address && camp.directionsUrl && <a className="venue-directions" href={camp.directionsUrl} target="_blank" rel="noopener noreferrer">{camp.address} · Directions</a>}
                   </span>
                 </div>
                 <div className="r">

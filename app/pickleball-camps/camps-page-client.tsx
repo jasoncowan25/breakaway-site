@@ -223,10 +223,10 @@ function CampsPageContent({
           </div>
         </div>
 
-        <div className="mb-6 flex gap-2 border-b">
+        <div className="mb-6 grid grid-cols-2 gap-2 border-b sm:flex">
           <Button
             variant="ghost"
-            className={`rounded-none border-b-2 ${
+            className={`h-auto min-h-9 min-w-0 whitespace-normal rounded-none border-b-2 ${
               dateFilter === "upcoming"
                 ? "border-primary text-primary font-semibold"
                 : "border-transparent text-muted-foreground"
@@ -239,7 +239,7 @@ function CampsPageContent({
           </Button>
           <Button
             variant="ghost"
-            className={`rounded-none border-b-2 ${
+            className={`h-auto min-h-9 min-w-0 whitespace-normal rounded-none border-b-2 ${
               dateFilter === "completed"
                 ? "border-primary text-primary font-semibold"
                 : "border-transparent text-muted-foreground"

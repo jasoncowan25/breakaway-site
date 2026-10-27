@@ -11,6 +11,7 @@ import {
 import { resolveCheckoutOffer, type CheckoutOffer } from "@/lib/checkout-offers"
 import { checkoutDayTicket, ticketMoney } from "@/lib/day-tickets"
 import { formatCheckoutCampSchedule } from "@/lib/session-time"
+import { campVenueDetails } from "@/lib/camp-venue"
 
 import { CheckoutClient, type CheckoutCampView } from "./checkout-client"
 import "@/styles/tokens.css"
@@ -98,6 +99,7 @@ function toCheckoutCampView(
     timeLabel: schedule.timeLabel,
     venue: camp.venue ?? camp.facility?.name ?? "Breakaway",
     location: camp.location ?? camp.facility?.city ?? "Breakaway",
+    ...campVenueDetails(camp.facility),
     priceLabel: formatMoney(day?.priceCents ?? offer?.unitPriceCents ?? camp.basePriceCents),
     dayDate: day?.date ?? null,
     offerCode: offer?.code ?? null,

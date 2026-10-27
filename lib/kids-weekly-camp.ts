@@ -1,5 +1,6 @@
 import type { ApiCamp } from "./breakaway-api.ts"
 import { formatRecurringCampDates } from "./session-time.ts"
+import { campVenueDetails } from "./camp-venue.ts"
 
 export const KIDS_WEEKLY_LANDING_PATH =
   "/pickleball-camps/kids-weekly-pickleball-camp-toronto"
@@ -73,7 +74,7 @@ const KIDS_WEEKLY_PROGRAM_SLUG_SET = new Set<string>([...KIDS_WEEKLY_PROGRAM_SLU
 
 const TRACK_COPY = {
   allLevels: {
-    whoFor: "Brand new, or playing under a year",
+    whoFor: "All levels, from complete beginners to experienced players",
     includes: ["Fundamentals: serve, return, dinking, volleys", "Paddles available to borrow"],
   },
   experienced: {
@@ -82,8 +83,18 @@ const TRACK_COPY = {
   },
 } as const
 
+export function kidsWeeklyProgramKey(value: string | null | undefined): KidsWeeklyProgramKey {
+  return KIDS_WEEKLY_PROGRAM_KEYS.find((key) => key === value) ?? KIDS_WEEKLY_DEFAULT_PROGRAM
+}
+
+export function kidsWeeklyProgramPath(key: KidsWeeklyProgramKey) {
+  return `${KIDS_WEEKLY_LANDING_PATH}?program=${key}`
+}
+
 export function kidsWeeklyLandingPathForCamp(slug: string | null | undefined) {
   if (!slug || !KIDS_WEEKLY_PROGRAM_SLUG_SET.has(slug)) return null
+  const key = KIDS_WEEKLY_PROGRAM_KEYS.find((key) => KIDS_WEEKLY_PROGRAMS[key].slug === slug)
+  if (key) return kidsWeeklyProgramPath(key)
   return KIDS_WEEKLY_LANDING_PATH
 }
 
@@ -101,7 +112,7 @@ export type KidsWeeklyCampLike = Pick<
   | "sessionDates"
   | "sessionLabel"
   | "publicVisibility"
->
+> & Partial<Pick<ApiCamp, "facility">>
 
 const SHORT_DATE = new Intl.DateTimeFormat("en-CA", { month: "short", day: "numeric", timeZone: "UTC" })
 
@@ -161,6 +172,7 @@ export function buildKidsWeeklyProgram(
     shortName: config.shortName,
     venue: config.venue,
     city: config.city,
+    ...campVenueDetails(camp?.facility),
     track: config.track,
     day,
     badge: config.badge,
@@ -169,7 +181,9 @@ export function buildKidsWeeklyProgram(
     eyebrow: sessionCount > 0 ? `${day} · ${sessionCount} Weeks` : day,
     checkoutHref: `/checkout/${config.slug}`,
     priceLabel: formatMoney(camp?.basePriceCents),
-    spotsLabel: soldOut ? "Sold out" : `${capacity} spots`,
+    capacity,
+    spotsLabel: soldOut ? "Sold out" : `Capacity: ${capacity}`,
+    taxLabel: camp?.basePriceCents != null ? "+ HST" : null,
     sessionCount,
     sessionsLabel,
     weeksLabel: sessionCount > 0

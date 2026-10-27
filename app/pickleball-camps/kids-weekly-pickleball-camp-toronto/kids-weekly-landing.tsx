@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { usePathname, useSearchParams } from "next/navigation"
 import {
   ArrowRight,
   Award,
@@ -15,7 +15,7 @@ import {
   Users,
 } from "lucide-react"
 
-import type { KidsWeeklyProgramKey, buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
+import { kidsWeeklyProgramKey, type KidsWeeklyProgramKey, type buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
 
 import styles from "./kids-weekly.module.css"
 
@@ -40,19 +40,21 @@ const faqs = [
   ["Can siblings or friends register together?", "Yes. Add siblings joining the same program in one checkout. Friends can register separately and email us their names — we'll group them where the skill match works."],
 ]
 
-function ProgramCta({ program, compact = false }: { program: Program; compact?: boolean }) {
+function ProgramCta({ program, compact = false, onChoose }: { program: Program; compact?: boolean; onChoose: () => void }) {
   if (program.ctaDisabled) {
     return <button className={compact ? styles.cardCta : styles.primaryCta} disabled>{program.ctaLabel}</button>
   }
   return (
-    <Link className={compact ? styles.cardCta : styles.primaryCta} href={program.checkoutHref}>
+    <Link className={compact ? styles.cardCta : styles.primaryCta} href={program.checkoutHref} onClick={(event) => {
+      if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && event.button === 0) onChoose()
+    }}>
       {program.ctaLabel}
       {!compact && <ArrowRight size={17} aria-hidden="true" />}
     </Link>
   )
 }
 
-function ProgramCard({ program }: { program: Program }) {
+function ProgramCard({ program, onChoose }: { program: Program; onChoose: () => void }) {
   return (
     <article className={styles.programCard}>
       <div className={styles.cardHeading}>
@@ -71,12 +73,13 @@ function ProgramCard({ program }: { program: Program }) {
       </div>
       <div className={styles.whoFor}>
         <MapPin size={19} aria-hidden="true" />
-        <div><span>Where</span><strong>{program.venue} · {program.city}</strong></div>
+        <div><span>Where</span><strong>{program.venue} · {program.city}</strong><VenueDirections program={program} /></div>
       </div>
       <p>{program.description}</p>
       <div className={styles.cardPrice}><strong>{program.priceLabel.replace(" CAD", "")}</strong><span>CAD / {program.weeksLabel}</span></div>
+      {program.taxLabel && <p className={styles.taxNote}>{program.taxLabel}</p>}
       <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.durationBadge}</span>
-      <ProgramCta program={program} compact />
+      <ProgramCta program={program} compact onChoose={onChoose} />
       <div className={styles.includes}>
         <b>This program includes:</b>
         {program.includes.map((item) => <span key={item}><CheckCircle2 size={18} aria-hidden="true" />{item}</span>)}
@@ -85,13 +88,24 @@ function ProgramCard({ program }: { program: Program }) {
   )
 }
 
+function VenueDirections({ program }: { program: Program }) {
+  if (!program.address || !program.directionsUrl) return null
+  return <a className={styles.directions} href={program.directionsUrl} target="_blank" rel="noopener noreferrer">{program.address} · Directions</a>
+}
+
 export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
-  const [selected, setSelected] = useState<KidsWeeklyProgramKey>(defaultKey)
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const selected = kidsWeeklyProgramKey(searchParams.get("program") ?? defaultKey)
+  const selectProgram = (key: KidsWeeklyProgramKey, replace = false) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("program", key)
+    const url = `${pathname}?${params.toString()}${window.location.hash}`
+    if (replace) window.history.replaceState(null, "", url)
+    else if (key !== selected) window.history.pushState(null, "", url)
+  }
   const program = programs.find((item) => item.key === selected) ?? programs[0]
-  const totalSpots = programs.reduce((sum, item) => {
-    const value = Number.parseInt(item.spotsLabel, 10)
-    return sum + (Number.isFinite(value) ? value : 0)
-  }, 0)
+  const totalCapacity = programs.reduce((sum, item) => sum + item.capacity, 0)
   const sessionCounts = programs.map((item) => item.sessionCount).filter((count) => count > 0)
   const shortestProgram = sessionCounts.length > 0 ? Math.min(...sessionCounts) : null
   const longestProgram = sessionCounts.length > 0 ? Math.max(...sessionCounts) : null
@@ -121,7 +135,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
               <div className={styles.bookingHeading}><h2>Reserve A Spot</h2><span>{program.ctaDisabled ? "Check availability" : "Registration Open"}</span></div>
               <div className={styles.programTabs} role="tablist" aria-label="Choose a program">
                 {programs.map((item) => (
-                  <button key={item.key} role="tab" aria-selected={selected === item.key} onClick={() => setSelected(item.key)}>
+                  <button key={item.key} role="tab" aria-selected={selected === item.key} onClick={() => selectProgram(item.key)}>
                     <span>{item.shortName}</span>
                     <small>{item.day}</small>
                   </button>
@@ -133,14 +147,15 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
                 {program.skippedLabel && (
                   <div><span><CalendarOff size={17} aria-hidden="true" /></span><div><strong>No class</strong><p>{program.skippedLabel}</p></div></div>
                 )}
-                <div><span><MapPin size={17} aria-hidden="true" /></span><div><strong>{program.venue}</strong><p>{program.city}</p></div></div>
+                <div><span><MapPin size={17} aria-hidden="true" /></span><div><strong>{program.venue}</strong><p>{program.city}</p><VenueDirections program={program} /></div></div>
               </div>
               <div className={styles.bookingPrice}>
                 <div><strong>{program.priceLabel}</strong><span>/ {program.weeksLabel}</span></div>
                 <span>{program.spotsLabel}</span>
               </div>
+              {program.taxLabel && <p className={styles.taxNote}>{program.taxLabel}</p>}
               <span className={styles.durationBadge}><Clock3 size={13} aria-hidden="true" />{program.durationBadge}</span>
-              <ProgramCta program={program} />
+              <ProgramCta program={program} onChoose={() => selectProgram(program.key, true)} />
               <p className={styles.secureCopy}>Secure checkout. Your spot is confirmed instantly.</p>
             </aside>
           </div>
@@ -159,7 +174,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
 
         <section id="programs" className={styles.programs}>
           <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Three weekly options for ages 9 to 14 at two clubs. Pick the night and location that fit your week.</p></div>
-          <div className={styles.programGrid}>{programs.map((item) => <ProgramCard key={item.key} program={item} />)}</div>
+          <div className={styles.programGrid}>{programs.map((item) => <ProgramCard key={item.key} program={item} onChoose={() => selectProgram(item.key, true)} />)}</div>
         </section>
 
         <section id="coach" className={styles.coach}>
@@ -177,7 +192,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
 
         <section className={styles.closingCta}>
           <Image src="/images/kids-weekly/kids-camp-joey.jpg" alt="" fill sizes="100vw" />
-          <div><h2>Give Them A Game They&apos;ll Keep Playing</h2><p>{totalSpots || 50} spots across all three programs. Registration closes when the courts are full.</p><Link href="#book">Book Now <ArrowRight size={17} aria-hidden="true" /></Link></div>
+          <div><h2>Give Them A Game They&apos;ll Keep Playing</h2><p>Total capacity: {totalCapacity} children across all three programs. Registration closes when the courts are full.</p><Link href={`?${searchParams.toString()}#book`}>Book Now <ArrowRight size={17} aria-hidden="true" /></Link></div>
         </section>
       </main>
     </div>
