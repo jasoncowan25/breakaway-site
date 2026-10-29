@@ -118,11 +118,11 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
           <div className={styles.heroOverlay} />
           <div className={styles.heroInner}>
             <div className={styles.heroCopy}>
-              <span className={styles.eyebrow}>Ages 9–14 · Winter 2027</span>
+              <span className={styles.eyebrow}>Ages 9–17 · Winter 2027</span>
               <h1>Kids Weekly Pickleball Camp</h1>
               <p>Kids learn real pickleball skills and put them straight into games. Pro-led coaching every week in Toronto and Etobicoke — a great way to stay active with friends through the winter.</p>
               <div className={styles.heroPills}>
-                <span><Users size={15} aria-hidden="true" />Ages 9–14</span>
+                <span><Users size={15} aria-hidden="true" />Ages 9–17</span>
                 <span><CalendarDays size={15} aria-hidden="true" />{sessionRange} Weekly Sessions</span>
                 <span><MapPin size={15} aria-hidden="true" />Toronto &amp; Etobicoke</span>
               </div>
@@ -163,7 +163,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
         </section>
 
         <section id="programs" className={styles.programs}>
-          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Three weekly options for ages 9 to 14 at two clubs. Pick the night and location that fit your week.</p></div>
+          <div className={styles.sectionIntro}><h2>Choose Your Program</h2><p>Three weekly options for ages 9 to 17 at two clubs. Pick the night and location that fit your week.</p></div>
           <div className={styles.programGrid}>{programs.map((item) => <ProgramCard key={item.key} program={item} onChoose={() => selectProgram(item.key, true)} />)}</div>
         </section>
 

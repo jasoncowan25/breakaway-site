@@ -87,7 +87,7 @@ export const STATIC_PUBLIC_CAMP_CARDS: PublicCampCard[] = [
     image: "/images/kids-weekly/kids-camp-joey.jpg",
     badges: [
       { text: "Winter 2027", variant: "accent" },
-      { text: "Ages 9–14", variant: "secondary" },
+      { text: "Ages 9–17", variant: "secondary" },
     ],
     coach: "Joey Manchurek",
     link: "/pickleball-camps/kids-weekly-pickleball-camp-toronto",
