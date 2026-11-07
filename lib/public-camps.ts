@@ -487,7 +487,6 @@ function badgeVariant(badge: Exclude<PublicCampBadge, "auto">): PublicCampCard["
 function locationFilterForCamp(camp: Pick<PublicCamp, "location" | "venue">) {
   const value = `${camp.location} ${camp.venue}`.toLowerCase()
   if (value.includes("muskoka")) return "Muskoka"
-  if (value.includes("punta")) return "Punta Cana"
   if (value.includes("toronto") || value.includes("jar") || value.includes("gta")) return "Toronto & GTA"
   return camp.location
 }

@@ -43,7 +43,7 @@ function FilterSidebar({ selectedLocations, selectedSkillLevels, selectedFormats
           <AccordionTrigger className="text-sm font-semibold">Locations</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3">
-              {["Toronto & GTA", "Muskoka", "Punta Cana"].map((location) => (
+              {["Toronto & GTA", "Muskoka"].map((location) => (
                 <div key={location} className="flex items-center space-x-2">
                   <Checkbox
                     id={`${idPrefix}-location-${encodeURIComponent(location)}`}
@@ -139,34 +139,6 @@ function CampsPageContent({
   }
   const setView = (view: CampFilterState["view"]) => updateFilters((current) => ({ ...current, view }))
 
-  const upcomingCamps = [
-    ...publishedCampCards,
-    {
-      id: "punta-cana-2026",
-      title: "Punta Cana Destination Retreat",
-      date: "Nov 24 – Dec 1, 2026",
-      sortDate: new Date("2026-11-24"),
-      location: "TRS Turquesa, Punta Cana, DR",
-      locationFilter: "Punta Cana",
-      format: "Camp",
-      skillLevel: "2.5-2.75,3.0,3.5,4.0+",
-      price: "Request Pricing",
-      image: "/punta-cana-resort-pool.jpg",
-      badges: [
-        { text: "Few spots left", variant: "destructive" as const },
-        { text: "Destination", variant: "secondary" as const },
-      ],
-      coach: "Joey Manchurek",
-      link: "/pickleball-camps/punta-cana",
-      imageEnhanced: true,
-      soldOut: false,
-      buttonText: "Learn More",
-    },
-  ].sort((a, b) => {
-    // Sort by date
-    return new Date(a.sortDate).getTime() - new Date(b.sortDate).getTime()
-  })
-
   const filterCamps = <T extends { locationFilter: string; format: string; skillLevel: string }>(camps: T[]) =>
     camps.filter((camp) =>
       campMatchesFilters(camp, {
@@ -176,7 +148,7 @@ function CampsPageContent({
       }),
     )
 
-  const filteredUpcomingCamps = filterCamps(upcomingCamps)
+  const filteredUpcomingCamps = filterCamps(publishedCampCards)
   const completedCamps = [...recapCards, ...COMPLETED_CAMP_CARDS.filter(camp => !recapCards.some(recap => recap.link === camp.link))].sort((a, b) => b.sortDate.localeCompare(a.sortDate))
   const filteredCompletedCamps = filterCamps(completedCamps)
   const showMuskokaHub = shouldShowMuskokaHub({

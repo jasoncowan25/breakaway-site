@@ -28,6 +28,21 @@ const nextConfig = {
       },
       // Specific camp page redirects (must come before wildcard)
       {
+        source: '/pickleball-camps/punta-cana',
+        destination: '/pickleball-camps',
+        permanent: true,
+      },
+      {
+        source: '/pickleball-camps/punta-cana-nov-24-dec-1-2026',
+        destination: '/pickleball-camps',
+        permanent: true,
+      },
+      {
+        source: '/checkout/punta-cana-nov-24-dec-1-2026',
+        destination: '/pickleball-camps',
+        permanent: true,
+      },
+      {
         source: '/camps/toronto-april',
         destination: '/pickleball-camps/toronto-intermediate-pickleball-camp',
         permanent: true,

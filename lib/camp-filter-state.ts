@@ -3,7 +3,6 @@ import { CAMP_SKILL_FILTERS, type CampFilters } from "./camp-discovery.ts"
 const LOCATION_KEYS = {
   "toronto-gta": "Toronto & GTA",
   muskoka: "Muskoka",
-  "punta-cana": "Punta Cana",
 } as const
 
 export type CampFilterState = CampFilters & { view: "upcoming" | "completed" }

@@ -45,9 +45,6 @@ export function Navigation({ campItems = EMPTY_CAMP_ITEMS }: NavigationProps) {
                 <DropdownMenuItem asChild>
                   <Link href="/pickleball-camps/muskoka">Muskoka Adult Pickleball Camps</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/pickleball-camps/punta-cana">Punta Cana Destination Retreat</Link>
-                </DropdownMenuItem>
                 {campItems.map((camp) => (
                   <DropdownMenuItem key={camp.href} asChild>
                     <Link href={camp.href}>{camp.title}</Link>

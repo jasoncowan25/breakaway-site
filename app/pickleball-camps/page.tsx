@@ -26,14 +26,9 @@ export default async function CampsPage() {
     getRecaps(),
   ])
 
-  const puntaCanaCard = {
-    title: "Punta Cana Destination Retreat",
-    link: "/pickleball-camps/punta-cana",
-  }
-
   return (
     <>
-      <JsonLd data={itemListJsonLd([...publishedCampCards, puntaCanaCard])} />
+      <JsonLd data={itemListJsonLd(publishedCampCards)} />
       <CampsPageClient
         publishedCampCards={publishedCampCards}
         recapCards={recaps.map(recapCard)}

@@ -23,25 +23,17 @@ async function assertPage(path, checks) {
   return text
 }
 
-await assertPage("/pickleball-camps", [
+const campsPage = await assertPage("/pickleball-camps", [
   ["<h1", "server-rendered h1"],
   ["Pickleball Camps", "server-rendered heading text"],
   ["Toronto Intermediate", "server-rendered Toronto camp card"],
-  ["Punta Cana", "server-rendered Punta Cana card"],
   ["Muskoka", "server-rendered Muskoka hub/card"],
 ])
 
-const { text: campsPage } = await fetchText("/pickleball-camps")
 assert.ok(
   !campsPage.includes("toronto-intermediate-intensive-oct-17-2026"),
   "/pickleball-camps should not emit the stale October slug",
 )
-
-await assertPage("/pickleball-camps/punta-cana", [
-  ['rel="canonical" href="https://www.breakawaypickleball.ca/pickleball-camps/punta-cana"', "canonical"],
-  ["Punta Cana Pickleball Retreat", "page title"],
-  ['type="application/ld+json"', "JSON-LD"],
-])
 
 await assertPage("/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3", [
   [
@@ -52,13 +44,18 @@ await assertPage("/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3
   ['type="application/ld+json"', "JSON-LD"],
 ])
 
-await assertPage("/schedule", [
-  ["Toronto Intermediate Intensive", "current Toronto camp"],
-  ["Punta Cana", "Punta Cana retreat"],
+const schedulePage = await assertPage("/schedule", [
+  ["Kids Weekly Pickleball Camp", "upcoming weekly camp"],
   ["Muskoka", "Muskoka hub/card"],
 ])
 
-for (const retired of ["/experience", "/pickleball-camp-experience"]) {
+for (const retired of [
+  "/experience",
+  "/pickleball-camp-experience",
+  "/pickleball-camps/punta-cana",
+  "/pickleball-camps/punta-cana-nov-24-dec-1-2026",
+  "/checkout/punta-cana-nov-24-dec-1-2026",
+]) {
   const redirect = await fetch(new URL(retired, baseUrl), { redirect: "manual" })
   assert.ok([301, 308].includes(redirect.status), `${retired} should permanently redirect`)
   assert.equal(
@@ -70,7 +67,6 @@ for (const retired of ["/experience", "/pickleball-camp-experience"]) {
 
 const { text: sitemap } = await fetchText("/sitemap.xml")
 for (const path of [
-  "/pickleball-camps/punta-cana",
   "/pickleball-coaches",
   "/schedule",
   "/pickleball-lessons",
@@ -78,13 +74,21 @@ for (const path of [
   "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
 ]) {
   const url = `https://www.breakawaypickleball.ca${path}`
-  assertIncludes(sitemap, url, "sitemap")
-  assert.equal(sitemap.indexOf(url), sitemap.lastIndexOf(url), `sitemap should include ${url} once`)
+  const entry = `<loc>${url}</loc>`
+  assertIncludes(sitemap, entry, "sitemap")
+  assert.equal(sitemap.indexOf(entry), sitemap.lastIndexOf(entry), `sitemap should include ${url} once`)
 }
 
 assert.ok(
   !sitemap.includes("/pickleball-camp-experience"),
   "sitemap should no longer list the retired experience page",
 )
+
+const homePage = await assertPage("/", [["Upcoming Signature Camps", "featured camps"]])
+for (const page of [homePage, campsPage, schedulePage, sitemap]) {
+  assert.doesNotMatch(page, /punta[ -]cana|dominican republic|trs turquesa/i)
+}
+const registration = await fetch(new URL("/api/punta-cana-register", baseUrl))
+assert.equal(registration.status, 404, "retired retreat registration endpoint")
 
 console.log("SEO smoke checks passed")

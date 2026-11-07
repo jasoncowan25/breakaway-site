@@ -33,25 +33,6 @@ export default async function HomePage() {
     getRecaps(),
   ])
 
-  const puntaCanaCamp = {
-    id: "punta-cana-2026",
-    title: "Punta Cana Destination Retreat",
-    date: "Nov 24 – Dec 1, 2026",
-    sortDate: new Date("2026-11-24"),
-    location: "TRS Turquesa, Punta Cana, DR",
-    price: "Request Pricing",
-    image: "/punta-cana-resort-pool.jpg",
-    badges: [
-      { text: "Few spots left", variant: "destructive" as const },
-      { text: "Destination", variant: "secondary" as const },
-    ],
-    coach: "Joey Manchurek",
-    link: "/pickleball-camps/punta-cana",
-    imageEnhanced: true,
-    soldOut: false,
-    buttonText: "Learn More",
-  }
-
   const managedRecaps = recaps.map(recapCard)
   const recentRecaps = [...managedRecaps, ...HOME_COMPLETED_CAMP_CARDS.filter(camp => !managedRecaps.some(recap => recap.link === camp.link))].sort((a, b) => b.sortDate.localeCompare(a.sortDate)).slice(0, HOME_COMPLETED_CAMP_CARDS.length)
 
@@ -116,7 +97,6 @@ export default async function HomePage() {
             {publishedCampCards.map((camp) => (
               <CampCard key={camp.id} {...camp} />
             ))}
-            <CampCard {...puntaCanaCamp} />
           </div>
         </div>
       </section>

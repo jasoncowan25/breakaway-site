@@ -38,7 +38,7 @@ test("changing a location replaces stale URL state while preserving other filter
   const updated = writeCampFilterState(original, state)
   assert.equal(new URLSearchParams(updated).get("location"), "toronto-gta")
   assert.deepEqual(read(updated), state)
-  assert.deepEqual(read(original).locations, ["Punta Cana"])
+  assert.deepEqual(read(original).locations, [])
 })
 
 test("unknown filters are ignored and duplicate values do not create hidden selections", () => {

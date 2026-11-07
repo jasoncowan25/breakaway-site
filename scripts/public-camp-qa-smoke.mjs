@@ -34,12 +34,12 @@ try {
       .map((node) => node.textContent).join("|") === expected.join("|"), titles)
   }
   const noOverflow = async () => assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
-  const allCards = ["Punta Cana Destination Retreat", "Kids Weekly Pickleball Camp"]
+  const allCards = ["Kids Weekly Pickleball Camp"]
 
   for (const query of ["skill=4.0", "skill=4.0%2B", "skill=4.0+", "skill=4.0&skill=4.0%2B"]) {
     await goto(`/pickleball-camps?${query}`)
     await page.getByRole("button", { name: "4.0+", exact: true, pressed: true }).waitFor()
-    await cards([allCards[0]])
+    await page.getByText("No upcoming camps match your selected filters.", { exact: true }).waitFor()
     await page.getByRole("button", { name: "4.0+", exact: true }).click()
     await page.getByRole("button", { name: "4.0+", exact: true, pressed: false }).waitFor()
     await cards(allCards)
@@ -48,21 +48,22 @@ try {
   pass("Legacy/current/duplicate 4.0+ links visibly select one chip and clear fully")
 
   await goto("/pickleball-camps?location=punta-cana&utm_source=qa")
-  await page.getByRole("checkbox", { name: "Punta Cana", exact: true }).click()
+  await cards(allCards)
+  assert.equal(await page.getByRole("checkbox", { name: "Punta Cana", exact: true }).count(), 0)
   await page.getByRole("checkbox", { name: "Toronto & GTA", exact: true }).click()
   await page.getByRole("checkbox", { name: "Camp", exact: true }).click()
   await page.getByRole("button", { name: "Kids", exact: true }).click()
-  await cards([allCards[1]])
+  await cards(allCards)
   const filteredUrl = page.url()
   assert.equal(new URL(filteredUrl).searchParams.get("location"), "toronto-gta")
   assert.equal(new URL(filteredUrl).searchParams.get("utm_source"), "qa")
   await panel().getByRole("link", { name: /Kids Weekly/ }).click()
   await page.locator("#book").waitFor()
   await page.goBack({ waitUntil: "load" })
-  await cards([allCards[1]])
+  await cards(allCards)
   assert.equal(page.url(), filteredUrl)
   await page.reload({ waitUntil: "load" })
-  await cards([allCards[1]])
+  await cards(allCards)
   await page.getByRole("checkbox", { name: "Toronto & GTA", exact: true, checked: true }).waitFor()
   await page.getByRole("checkbox", { name: "Camp", exact: true, checked: true }).waitFor()
   await page.getByRole("button", { name: "Kids", exact: true, pressed: true }).waitFor()
@@ -70,20 +71,20 @@ try {
     await page.getByRole("tab", { name: "Recently Completed", exact: true }).click()
     await page.getByRole("tabpanel", { name: "Recently Completed Camps", exact: true }).waitFor()
     await page.goBack()
-    await cards([allCards[1]])
+    await cards(allCards)
     await page.goForward()
     await page.getByRole("tabpanel", { name: "Recently Completed Camps", exact: true }).waitFor()
     await page.goBack()
-    await cards([allCards[1]])
+    await cards(allCards)
   }
   pass("Location/skill/format state survives detail return, reload and repeated tab Back/Forward")
 
-  await goto("/pickleball-camps?location=toronto-gta&location=punta-cana&format=Clinic")
+  await goto("/pickleball-camps?location=toronto-gta&location=muskoka&format=Clinic")
   await page.getByText("No upcoming camps match your selected filters.", { exact: true }).waitFor()
   await page.getByRole("checkbox", { name: "Clinic", exact: true }).click()
   await cards(allCards)
   await page.getByRole("checkbox", { name: "Toronto & GTA", exact: true, checked: true }).waitFor()
-  await page.getByRole("checkbox", { name: "Punta Cana", exact: true, checked: true }).waitFor()
+  await page.getByRole("checkbox", { name: "Muskoka", exact: true, checked: true }).waitFor()
   pass("Multi-location deep links and empty-state recovery")
 
   for (const width of [393, 320]) {
@@ -115,7 +116,7 @@ try {
     await open.click()
     const dialog = page.getByRole("dialog", { name: "Filter Camps" })
     await dialog.waitFor()
-    for (const name of ["Toronto & GTA", "Muskoka", "Punta Cana", "Camp", "Clinic"]) {
+    for (const name of ["Toronto & GTA", "Muskoka", "Camp", "Clinic"]) {
       await dialog.getByRole("checkbox", { name, exact: true }).waitFor()
     }
     const ids = await dialog.getByRole("checkbox").evaluateAll((nodes) => nodes.map((node) => node.id))
@@ -130,7 +131,7 @@ try {
     await page.screenshot({ path: `${output}/filters-${width}.png`, animations: "disabled" })
     await dialog.getByRole("button", { name: "Apply Filters", exact: true }).click()
     await dialog.waitFor({ state: "hidden" })
-    await cards([allCards[1]])
+    await cards(allCards)
     await open.click()
     await page.keyboard.press("Escape")
     await dialog.waitFor({ state: "hidden" })

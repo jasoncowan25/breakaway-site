@@ -49,7 +49,6 @@ export function CampFinder() {
                 <SelectContent>
                   <SelectItem value="toronto-gta">Toronto & GTA</SelectItem>
                   <SelectItem value="muskoka">Muskoka</SelectItem>
-                  <SelectItem value="punta-cana">Punta Cana</SelectItem>
                 </SelectContent>
               </Select>
             </div>

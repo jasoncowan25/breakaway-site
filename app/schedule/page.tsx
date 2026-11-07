@@ -23,28 +23,9 @@ export default async function SchedulePage() {
     getUpcomingMuskokaCamps(),
   ])
 
-  const puntaCanaCamp = {
-    id: "punta-cana-2026",
-    title: "Punta Cana Destination Retreat",
-    date: "Nov 24 – Dec 1, 2026",
-    sortDate: new Date("2026-11-24"),
-    location: "TRS Turquesa, Punta Cana, DR",
-    price: "Request Pricing",
-    image: "/punta-cana-resort-pool.jpg",
-    badges: [
-      { text: "Few spots left", variant: "destructive" as const },
-      { text: "Destination", variant: "secondary" as const },
-    ],
-    coach: "Joey Manchurek",
-    link: "/pickleball-camps/punta-cana",
-    imageEnhanced: true,
-    soldOut: false,
-    buttonText: "Learn More",
-  }
-
   return (
     <div className="min-h-screen bg-background">
-      <JsonLd data={itemListJsonLd([...publishedCampCards, puntaCanaCamp])} />
+      <JsonLd data={itemListJsonLd(publishedCampCards)} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
@@ -57,7 +38,6 @@ export default async function SchedulePage() {
           {publishedCampCards.map((camp) => (
             <CampCard key={camp.id} {...camp} />
           ))}
-          <CampCard {...puntaCanaCamp} />
         </div>
       </div>
 

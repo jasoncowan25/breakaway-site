@@ -5,8 +5,6 @@ import { absoluteUrl } from "@/lib/seo"
 
 // Camp pages with their recap status - single source of truth for sitemap
 const campPages = [
-  // Active camp pages
-  { slug: "punta-cana", hasRecap: false, isActive: true },
   // Evergreen/recurring camps (keep in sitemap for link equity)
   { slug: "kids-passover-pickleball-camp-toronto", hasRecap: true, isActive: true },
   // Completed camps with recaps
