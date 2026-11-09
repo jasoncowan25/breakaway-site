@@ -23,7 +23,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { getPublicCampBySlug, publicBadgeText } from "@/lib/public-camps"
 import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
-import { isNewCheckoutEnabled } from "@/lib/checkout-rollout"
+import { campCheckoutHref } from "@/lib/camp-checkout"
 import { breadcrumbJsonLd, campEventJsonLd } from "@/lib/seo"
 import { kidsWeeklyLandingPathForCamp } from "@/lib/kids-weekly-camp"
 
@@ -111,8 +111,7 @@ export default async function DynamicCampPage({ params, searchParams }: PageProp
   const badgeText = dayTicketBadge(camp.singleDay) ?? publicBadgeText(camp.badge)
   const venuePhotos = camp.facility?.photos.length ? camp.facility.photos : [camp.heroImageUrl]
   const moduleIcons = [Target, Send, Move, TrendingUp]
-  const newCheckoutEnabled = isNewCheckoutEnabled(camp.slug)
-  const checkoutHref = newCheckoutEnabled ? camp.checkoutPath ?? camp.checkoutUrl : camp.checkoutUrl
+  const checkoutHref = campCheckoutHref(camp)
 
   return (
     <div className="min-h-screen bg-background">
