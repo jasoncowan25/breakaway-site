@@ -90,6 +90,9 @@ export interface ApiCamp {
   publicModulesIntro: string | null
   heroMediaAssetId: string | null
   thumbnailMediaAssetId: string | null
+  // Banner photos chosen/uploaded in admin. Optional: older API deploys omit them.
+  heroImageUrl?: string | null
+  thumbnailImageUrl?: string | null
   includeTestimonials: boolean
   collectTshirtSizes: boolean
   childrenEligible: boolean

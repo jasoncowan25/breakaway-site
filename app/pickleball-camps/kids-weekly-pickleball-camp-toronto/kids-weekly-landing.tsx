@@ -13,7 +13,12 @@ import {
   Users,
 } from "lucide-react"
 
-import { kidsWeeklyProgramKey, type KidsWeeklyProgramKey, type buildKidsWeeklyProgram } from "@/lib/kids-weekly-camp"
+import {
+  KIDS_WEEKLY_DEFAULT_HERO_IMAGE,
+  kidsWeeklyProgramKey,
+  type KidsWeeklyProgramKey,
+  type buildKidsWeeklyProgram,
+} from "@/lib/kids-weekly-camp"
 
 import styles from "./kids-weekly.module.css"
 
@@ -23,6 +28,8 @@ type Props = {
   /** Landing-page order. */
   programs: Program[]
   defaultKey: KidsWeeklyProgramKey
+  /** Hero photo chosen in admin; the stock group photo when none is set. */
+  heroImageUrl?: string
 }
 
 const experienceSteps = [
@@ -90,7 +97,7 @@ function VenueDirections({ program }: { program: Program }) {
   return <a className={styles.directions} href={program.directionsUrl} target="_blank" rel="noopener noreferrer">{program.address} · Directions</a>
 }
 
-export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
+export function KidsWeeklyLanding({ programs, defaultKey, heroImageUrl = KIDS_WEEKLY_DEFAULT_HERO_IMAGE }: Props) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const selected = kidsWeeklyProgramKey(searchParams.get("program") ?? defaultKey)
@@ -114,7 +121,7 @@ export function KidsWeeklyLanding({ programs, defaultKey }: Props) {
     <div className={styles.page}>
       <main>
         <section id="top" className={styles.hero}>
-          <Image className={styles.heroImage} src="/images/kids-weekly/kids-camp-group.png" alt="The full Breakaway kids camp group on court" fill sizes="100vw" priority />
+          <Image className={styles.heroImage} src={heroImageUrl} alt={heroImageUrl === KIDS_WEEKLY_DEFAULT_HERO_IMAGE ? "The full Breakaway kids camp group on court" : "Breakaway kids pickleball camp on court"} fill sizes="100vw" priority />
           <div className={styles.heroOverlay} />
           <div className={styles.heroInner}>
             <div className={styles.heroCopy}>

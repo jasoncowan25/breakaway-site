@@ -102,6 +102,61 @@ export function shouldListKidsWeeklyCampAsStandalone(slug: string | null | undef
   return kidsWeeklyLandingPathForCamp(slug) === null
 }
 
+/** Page photos shown until one is chosen in admin (Website page → Hero / Thumbnail). */
+export const KIDS_WEEKLY_DEFAULT_HERO_IMAGE = "/images/kids-weekly/kids-camp-group.png"
+export const KIDS_WEEKLY_DEFAULT_CARD_IMAGE = "/images/kids-weekly/kids-camp-joey.jpg"
+
+/**
+ * An admin camp image URL, made servable from this site; null when unset.
+ * Links to this site become paths, and admin-relative facility paths
+ * (/facilities/jar1.jpg) map to where the same photos live here.
+ */
+export function publicCampImageUrl(url: string | null | undefined): string | null {
+  const value = url?.trim()
+  if (!value) return null
+  if (/^https?:\/\//i.test(value)) {
+    try {
+      const parsed = new URL(value)
+      if (/^(www\.)?breakawaypickleball\.ca$/i.test(parsed.hostname)) return parsed.pathname
+      return value
+    } catch {
+      return null
+    }
+  }
+  const path = value.startsWith("/") ? value : `/${value}`
+  return path.replace(/^\/facilities\/(muskoka-)/, "/muskoka-photos/$1").replace(/^\/facilities\//, "/")
+}
+
+type KidsWeeklyImageCamp = Partial<Pick<ApiCamp, "heroImageUrl" | "thumbnailImageUrl">> | null | undefined
+
+/**
+ * The first photo chosen in admin across the programs, in landing order. Every
+ * program launched with the stock group photo, so that one counts as unset —
+ * otherwise an untouched program would hide a photo picked on another.
+ */
+function chosenImage(camps: readonly KidsWeeklyImageCamp[], field: "heroImageUrl" | "thumbnailImageUrl") {
+  for (const camp of camps) {
+    const url = publicCampImageUrl(camp?.[field])
+    if (url && url !== KIDS_WEEKLY_DEFAULT_HERO_IMAGE) return url
+  }
+  return null
+}
+
+/** The landing-page hero: the admin Hero image, else the stock group photo. */
+export function kidsWeeklyHeroImage(camps: readonly KidsWeeklyImageCamp[]) {
+  return chosenImage(camps, "heroImageUrl") ?? KIDS_WEEKLY_DEFAULT_HERO_IMAGE
+}
+
+/** The camp-listing card photo: the admin Thumbnail, then Hero, else the stock card photo. */
+export function kidsWeeklyCardImage(camps: readonly KidsWeeklyImageCamp[]) {
+  return chosenImage(camps, "thumbnailImageUrl") ?? chosenImage(camps, "heroImageUrl") ?? KIDS_WEEKLY_DEFAULT_CARD_IMAGE
+}
+
+/** This season's program camps in landing order (null where a camp is missing). */
+export function kidsWeeklyProgramCamps<T extends { slug: string | null }>(camps: readonly T[]): Array<T | null> {
+  return KIDS_WEEKLY_PROGRAM_KEYS.map((key) => camps.find((camp) => camp.slug === KIDS_WEEKLY_PROGRAMS[key].slug) ?? null)
+}
+
 export type KidsWeeklyCampLike = Pick<
   ApiCamp,
   | "slug"

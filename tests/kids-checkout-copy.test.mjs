@@ -19,3 +19,8 @@ test("kids checkout uses weekly-program trust copy instead of all-day camp copy"
 test("experienced kids camps are labelled Experienced in checkout", () => {
   assert.match(checkoutPageSource, /text\.includes\("experienced"\).*return "Experienced"/s)
 })
+
+test("checkout shows the camp photo chosen in admin before any fallback", () => {
+  assert.match(checkoutPageSource, /publicCampImageUrl\(camp\.heroImageUrl\)/)
+  assert.match(checkoutPageSource, /heroImageUrl: heroImageForCamp\(camp, schedule\.isRecurring\)/)
+})

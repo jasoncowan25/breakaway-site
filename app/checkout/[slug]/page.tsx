@@ -12,6 +12,7 @@ import { resolveCheckoutOffer, type CheckoutOffer } from "@/lib/checkout-offers"
 import { checkoutDayTicket, ticketMoney } from "@/lib/day-tickets"
 import { formatCheckoutCampSchedule } from "@/lib/session-time"
 import { campVenueDetails } from "@/lib/camp-venue"
+import { KIDS_WEEKLY_DEFAULT_HERO_IMAGE, publicCampImageUrl } from "@/lib/kids-weekly-camp"
 
 import { CheckoutClient, type CheckoutCampView } from "./checkout-client"
 import "@/styles/tokens.css"
@@ -42,7 +43,12 @@ function formatMoney(cents: number | null) {
   return `${ticketMoney(cents)} CAD`
 }
 
-function heroImageForCamp(camp: ApiCamp) {
+/** The photo chosen in admin, else the kids group photo or a venue photo. */
+function heroImageForCamp(camp: ApiCamp, isRecurring: boolean) {
+  const chosen = publicCampImageUrl(camp.heroImageUrl) ?? publicCampImageUrl(camp.thumbnailImageUrl)
+  // Kids Weekly programs launched with the stock group photo, which isn't a choice.
+  if (chosen && chosen !== KIDS_WEEKLY_DEFAULT_HERO_IMAGE) return chosen
+  if (camp.childrenEligible && isRecurring) return "/images/kids-camp-group-photo.png"
   const text = `${camp.title} ${camp.venue ?? ""} ${camp.location ?? ""}`.toLowerCase()
   if (text.includes("muskoka") || text.includes("bracebridge")) return "/muskoka-photos/muskoka-court-indoor.jpg"
   if (text.includes("jar") || text.includes("toronto")) return "/jar3.png"
@@ -107,7 +113,7 @@ function toCheckoutCampView(
     capacity,
     spotsLeft,
     isSoldOut: options.bypassCapacity ? false : day ? !day.available : offer ? camp.isSoldOutOverride || spotsLeft <= 0 : camp.isSoldOut,
-    heroImageUrl: camp.childrenEligible && schedule.isRecurring ? "/images/kids-camp-group-photo.png" : heroImageForCamp(camp),
+    heroImageUrl: heroImageForCamp(camp, schedule.isRecurring),
     skillLabel,
     coachName: coach?.displayName ?? "Breakaway coach",
     isKidsCamp: camp.childrenEligible,

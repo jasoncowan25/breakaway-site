@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  KIDS_WEEKLY_DEFAULT_CARD_IMAGE,
+  KIDS_WEEKLY_DEFAULT_HERO_IMAGE,
   KIDS_WEEKLY_DEFAULT_PROGRAM,
   KIDS_WEEKLY_LANDING_PATH,
   KIDS_WEEKLY_PROGRAM_KEYS,
@@ -10,7 +12,11 @@ import {
   skippedWeeks,
   canRenderKidsWeeklyLanding,
   kidsWeeklyLandingPathForCamp,
+  kidsWeeklyCardImage,
+  kidsWeeklyHeroImage,
+  kidsWeeklyProgramCamps,
   kidsWeeklyProgramKey,
+  publicCampImageUrl,
   shouldListKidsWeeklyCampAsStandalone,
 } from "../lib/kids-weekly-camp.ts"
 
@@ -160,4 +166,59 @@ test("keeps weekly child camps out of standalone camp listings", () => {
     assert.equal(shouldListKidsWeeklyCampAsStandalone(KIDS_WEEKLY_PROGRAMS[key].slug), false)
   }
   assert.equal(shouldListKidsWeeklyCampAsStandalone("toronto-intermediate-intensive"), true)
+})
+
+// Every Winter 2027 program was launched with this stock photo URL.
+const STOCK = "https://breakawaypickleball.ca/images/kids-weekly/kids-camp-group.png"
+const UPLOADED = "https://xcpghjxxcfzobdjzjstu.supabase.co/storage/v1/object/public/camp-photos/abc.jpg"
+const OTHER = "https://xcpghjxxcfzobdjzjstu.supabase.co/storage/v1/object/public/camp-photos/def.jpg"
+
+test("admin camp image URLs become servable site URLs", () => {
+  assert.equal(publicCampImageUrl(null), null)
+  assert.equal(publicCampImageUrl("   "), null)
+  assert.equal(publicCampImageUrl(UPLOADED), UPLOADED)
+  assert.equal(publicCampImageUrl(STOCK), KIDS_WEEKLY_DEFAULT_HERO_IMAGE)
+  assert.equal(publicCampImageUrl("https://www.breakawaypickleball.ca/jar3.png"), "/jar3.png")
+  assert.equal(publicCampImageUrl("/facilities/jar1.jpg"), "/jar1.jpg")
+  assert.equal(publicCampImageUrl("/facilities/muskoka-path.jpg"), "/muskoka-photos/muskoka-path.jpg")
+})
+
+test("kids weekly hero keeps the stock photo until admin picks one", () => {
+  assert.equal(kidsWeeklyHeroImage([]), KIDS_WEEKLY_DEFAULT_HERO_IMAGE)
+  assert.equal(kidsWeeklyHeroImage([null, null, null]), KIDS_WEEKLY_DEFAULT_HERO_IMAGE)
+  assert.equal(
+    kidsWeeklyHeroImage([{ heroImageUrl: STOCK, thumbnailImageUrl: STOCK }]),
+    KIDS_WEEKLY_DEFAULT_HERO_IMAGE,
+  )
+})
+
+test("a hero photo picked on any program shows on the shared kids weekly page", () => {
+  // Changed on the Thursday camp only; Monday and Tuesday still hold the stock photo.
+  const camps = [
+    { heroImageUrl: STOCK, thumbnailImageUrl: STOCK },
+    { heroImageUrl: STOCK, thumbnailImageUrl: STOCK },
+    { heroImageUrl: UPLOADED, thumbnailImageUrl: STOCK },
+  ]
+  assert.equal(kidsWeeklyHeroImage(camps), UPLOADED)
+  // The listing card follows the hero when no separate thumbnail was picked.
+  assert.equal(kidsWeeklyCardImage(camps), UPLOADED)
+})
+
+test("the kids weekly card prefers the admin thumbnail over the hero", () => {
+  const camps = [{ heroImageUrl: UPLOADED, thumbnailImageUrl: OTHER }]
+  assert.equal(kidsWeeklyHeroImage(camps), UPLOADED)
+  assert.equal(kidsWeeklyCardImage(camps), OTHER)
+  assert.equal(kidsWeeklyCardImage([{ heroImageUrl: STOCK, thumbnailImageUrl: STOCK }]), KIDS_WEEKLY_DEFAULT_CARD_IMAGE)
+  // Older API responses without the image fields keep the stock photos.
+  assert.equal(kidsWeeklyCardImage([camp()]), KIDS_WEEKLY_DEFAULT_CARD_IMAGE)
+  assert.equal(kidsWeeklyHeroImage([camp()]), KIDS_WEEKLY_DEFAULT_HERO_IMAGE)
+})
+
+test("program camps are picked out of the full camp list in landing order", () => {
+  const thursday = { slug: KIDS_WEEKLY_PROGRAMS.jarThu.slug }
+  const monday = { slug: KIDS_WEEKLY_PROGRAMS.jarMon.slug }
+  assert.deepEqual(
+    kidsWeeklyProgramCamps([thursday, { slug: "toronto-intermediate-intensive" }, monday]),
+    [monday, null, thursday],
+  )
 })

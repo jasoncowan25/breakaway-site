@@ -7,7 +7,10 @@ import {
   todayIsoInToronto,
 } from "@/lib/upcoming-camps"
 import {
+  KIDS_WEEKLY_LANDING_PATH,
   KIDS_WEEKLY_PROGRAM_SLUGS,
+  kidsWeeklyCardImage,
+  kidsWeeklyProgramCamps,
   shouldListKidsWeeklyCampAsStandalone,
 } from "@/lib/kids-weekly-camp"
 import {
@@ -961,7 +964,13 @@ export async function getPublishedPublicCampCards(limit = 24) {
     ),
   )
 
-  return mergePublicCampCards(STATIC_PUBLIC_CAMP_CARDS, liveCards)
+  // The Kids Weekly card is hand-built, but its photo follows admin.
+  const kidsWeeklyImage = kidsWeeklyCardImage(kidsWeeklyProgramCamps(apiCamps))
+  const staticCards = STATIC_PUBLIC_CAMP_CARDS.map((card) =>
+    card.link === KIDS_WEEKLY_LANDING_PATH ? { ...card, image: kidsWeeklyImage } : card,
+  )
+
+  return mergePublicCampCards(staticCards, liveCards)
     .filter((camp) =>
       campHasNotEnded({
         startDate: camp.sortDate,
