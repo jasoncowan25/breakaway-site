@@ -3,19 +3,14 @@ import type { MetadataRoute } from "next"
 import { getPublishedPublicCampCards } from "@/lib/public-camps"
 import { absoluteUrl } from "@/lib/seo"
 
-// Camp pages with their recap status - single source of truth for sitemap
-const campPages = [
-  // Evergreen/recurring camps (keep in sitemap for link equity)
-  { slug: "kids-passover-pickleball-camp-toronto", hasRecap: true, isActive: true },
-  // Completed camps with recaps
-  { slug: "toronto-intermediate-pickleball-camp", hasRecap: true, isActive: false },
-  { slug: "saint-martin-pickleball-clinic", hasRecap: true, isActive: false },
-  { slug: "toronto-intensive-jan", hasRecap: true, isActive: false },
-]
+export const dynamic = "force-dynamic"
 
-const currentStandaloneCampPaths = [
-  "/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3",
-  "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
+// Completed events stay discoverable through recaps instead of old booking pages.
+const recapSlugs = [
+  "kids-passover-pickleball-camp-toronto",
+  "toronto-intermediate-pickleball-camp",
+  "saint-martin-pickleball-clinic",
+  "toronto-intensive-jan",
 ]
 
 function normalizeCampPath(path: string) {
@@ -61,21 +56,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((camp) => normalizeCampPath(camp.link))
     .filter((path) => path.startsWith("/pickleball-camps/"))
 
-  // Generate camp page URLs
-  const campPageUrls: MetadataRoute.Sitemap = campPages
-    .filter((camp) => camp.isActive)
-    .map((camp) => sitemapEntry(`/pickleball-camps/${camp.slug}`, "weekly", 0.9))
-
-  const currentCampUrls: MetadataRoute.Sitemap = [
-    ...currentStandaloneCampPaths,
-    ...dynamicCampPaths,
-  ].map((path) => sitemapEntry(path, "weekly", 0.9))
-
-  // Automatically generate recap URLs for camps with hasRecap: true
-  const recapUrls: MetadataRoute.Sitemap = campPages
-    .filter((camp) => camp.hasRecap)
-    .map((camp) => sitemapEntry(`/pickleball-camps/${camp.slug}/recap`, "monthly", 0.7))
+  // The feed excludes camps whose end date has passed in Toronto.
+  const currentCampUrls = dynamicCampPaths.map((path) => sitemapEntry(path, "weekly", 0.9))
+  const recapUrls = recapSlugs.map((slug) =>
+    sitemapEntry(`/pickleball-camps/${slug}/recap`, "monthly", 0.7),
+  )
 
   const managedRecaps = (await getRecaps()).map(recap => ({ ...sitemapEntry(`/pickleball-camps/${recap.slug}/recap`, "monthly", 0.7), lastModified: new Date(recap.publishedAt) }))
-  return dedupeSitemap([...staticPages, ...campPageUrls, ...currentCampUrls, ...managedRecaps, ...recapUrls])
+  return dedupeSitemap([...staticPages, ...currentCampUrls, ...managedRecaps, ...recapUrls])
 }

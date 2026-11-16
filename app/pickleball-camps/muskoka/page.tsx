@@ -6,16 +6,16 @@ import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: "Muskoka Pickleball Camps With Joey Manchurek | Breakaway Pickleball",
+  title: "Muskoka Pickleball Camps | Breakaway",
   description:
-    "Train with 5.0 DUPR pro Joey Manchurek this July at a brand new private indoor court near Lake Joseph. 6 small-group camps, 4 players max per session. Fundamentals and intermediate levels. $800 CAD.",
+    "Explore adult pickleball camps in Muskoka with Joey Manchurek. Small-group coaching near Lake Joseph. Find upcoming dates, skill levels and availability.",
   alternates: {
     canonical: "/pickleball-camps/muskoka",
   },
   openGraph: {
-    title: "Muskoka Pickleball Camps With Joey Manchurek | Breakaway Pickleball",
+    title: "Muskoka Pickleball Camps | Breakaway",
     description:
-      "Train with 5.0 DUPR pro Joey Manchurek this July at a brand new private indoor court near Lake Joseph. 6 small-group camps, 4 players max per session.",
+      "Explore adult pickleball camps in Muskoka with Joey Manchurek. Find upcoming dates and small-group coaching near Lake Joseph.",
     url: "/pickleball-camps/muskoka",
     images: ["/muskoka-photos/coach-joey-headshot.png"],
   },

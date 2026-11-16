@@ -11,6 +11,17 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Preserve completed-event links and take visitors to the matching recap.
+      ...[
+        'kids-passover-pickleball-camp-toronto',
+        'toronto-intermediate-pickleball-camp',
+        'toronto-intensive-jan',
+        'saint-martin-pickleball-clinic',
+      ].map((slug) => ({
+        source: `/pickleball-camps/${slug}`,
+        destination: `/pickleball-camps/${slug}/recap`,
+        permanent: true,
+      })),
       {
         source: '/lessons',
         destination: '/pickleball-lessons',

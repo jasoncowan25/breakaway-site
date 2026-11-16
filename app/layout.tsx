@@ -8,7 +8,7 @@ import { ScrollToTop } from "@/components/ScrollToTop"
 import { ResizeObserverFix } from "@/components/ResizeObserverFix"
 import { SiteChrome } from "@/components/SiteChrome"
 import { getPublishedPublicCampNavItems } from "@/lib/public-camps"
-import { DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT, SITE_URL, defaultOpenGraphImage } from "@/lib/seo"
+import { DEFAULT_OG_IMAGE, DEFAULT_OG_IMAGE_ALT, SITE_URL, HOME_TITLE, HOME_DESCRIPTION, defaultOpenGraphImage } from "@/lib/seo"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -23,19 +23,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
-  description:
-    "Premium pickleball training camps across Toronto, the GTA and Muskoka. Small groups, professional coaching, results-oriented programs for intermediate to advanced players.",
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   generator: "v0.app",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon-192x192.png", type: "image/png", sizes: "192x192" },
+      { url: "/favicon-48x48.png", type: "image/png", sizes: "48x48" },
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+    ],
     shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    apple: "/favicon-192x192.png",
   },
   openGraph: {
-    title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
-    description:
-      "Premium pickleball training camps across Toronto, the GTA and Muskoka. Small groups, professional coaching, results-oriented programs for intermediate to advanced players.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     images: defaultOpenGraphImage,
   },
   twitter: {

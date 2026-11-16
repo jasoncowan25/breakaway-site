@@ -2,6 +2,9 @@ import type { Metadata } from "next"
 import type { PublicCamp, PublicCampCard } from "@/lib/public-camps"
 
 export const SITE_URL = "https://www.breakawaypickleball.ca"
+export const HOME_TITLE = "Breakaway Pickleball | Adult Camps & Kids Programs"
+export const HOME_DESCRIPTION =
+  "Adult pickleball camps, kids programs and private lessons in Toronto, the GTA and Muskoka. Train with professional coaches in small groups."
 export const DEFAULT_OG_IMAGE = "/images/screenshot-202025-09-07-20at-2010.png"
 export const DEFAULT_OG_IMAGE_ALT = "Pickleball player in action at Breakaway camp"
 

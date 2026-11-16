@@ -70,8 +70,7 @@ for (const path of [
   "/pickleball-coaches",
   "/schedule",
   "/pickleball-lessons",
-  "/pickleball-camps/toronto-intermediate-intensive-sep-12-2026-3",
-  "/pickleball-camps/toronto-intermediate-intensive-oct-24-2026",
+  "/pickleball-camps/muskoka",
 ]) {
   const url = `https://www.breakawaypickleball.ca${path}`
   const entry = `<loc>${url}</loc>`
@@ -85,6 +84,39 @@ assert.ok(
 )
 
 const homePage = await assertPage("/", [["Upcoming Signature Camps", "featured camps"]])
+assertIncludes(homePage, "Breakaway Pickleball | Adult Camps &amp; Kids Programs", "homepage title")
+assertIncludes(homePage, 'href="/favicon-192x192.png"', "high-resolution favicon")
+assertIncludes(homePage, "Recently Completed Camps", "original homepage recap section")
+
+for (const slug of [
+  "kids-passover-pickleball-camp-toronto",
+  "toronto-intermediate-pickleball-camp",
+  "toronto-intensive-jan",
+  "saint-martin-pickleball-clinic",
+]) {
+  const path = `/pickleball-camps/${slug}`
+  const response = await fetch(new URL(path, baseUrl), { redirect: "manual" })
+  assert.equal(response.status, 308, `${path} should redirect permanently to its recap`)
+  assert.equal(response.headers.get("location"), `${path}/recap`)
+  await assertPage(`${path}/recap`, [["<h1", "recap heading"]])
+  assert.ok(!sitemap.includes(`<loc>https://www.breakawaypickleball.ca${path}</loc>`), "old booking page excluded from sitemap")
+}
+
+for (const slug of ["toronto-intermediate-intensive-sep-12-2026-3", "toronto-intermediate-intensive-oct-24-2026"]) {
+  const path = `/pickleball-camps/${slug}`
+  assert.ok(!sitemap.includes(`<loc>https://www.breakawaypickleball.ca${path}</loc>`), "completed dated camp excluded from sitemap")
+  await assertPage(path, [['name="robots" content="noindex, follow"', "completed camp indexing"]])
+}
+
+const iconResponse = await fetch(new URL("/favicon.ico", baseUrl))
+assert.equal(iconResponse.status, 200)
+const icon = Buffer.from(await iconResponse.arrayBuffer())
+assert.deepEqual([...icon.subarray(0, 4)], [0, 0, 1, 0], "favicon.ico must be a real ICO, not placeholder text")
+const pngResponse = await fetch(new URL("/favicon-192x192.png", baseUrl))
+assert.equal(pngResponse.status, 200)
+const png = Buffer.from(await pngResponse.arrayBuffer())
+assert.equal(png.readUInt32BE(16), 192, "favicon width")
+assert.equal(png.readUInt32BE(20), 192, "favicon height")
 for (const page of [homePage, campsPage, schedulePage, sitemap]) {
   assert.doesNotMatch(page, /punta[ -]cana|dominican republic|trs turquesa/i)
 }

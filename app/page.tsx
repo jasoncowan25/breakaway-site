@@ -13,15 +13,17 @@ import Link from "next/link"
 import { Fragment } from "react"
 import { getPublishedPublicCampCards } from "@/lib/public-camps"
 import { getUpcomingMuskokaCamps } from "@/lib/public-muskoka-camps"
-import { organizationJsonLd } from "@/lib/seo"
+import { HOME_TITLE, HOME_DESCRIPTION, defaultOpenGraphImage, organizationJsonLd } from "@/lib/seo"
 import { HOME_COMPLETED_CAMP_CARDS, RELATED_CAMP_LINKS } from "@/lib/camp-discovery"
 
 export const metadata: Metadata = {
-  title: "Breakaway Pickleball Camps — Pro-Level Training in Toronto, GTA & Muskoka",
-  description:
-    "Premium pickleball training camps across Toronto, the GTA and Muskoka. Small groups, professional coaching, results-oriented programs for intermediate to advanced players.",
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: defaultOpenGraphImage,
     url: "/",
   },
 }

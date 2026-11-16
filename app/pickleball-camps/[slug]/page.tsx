@@ -25,6 +25,7 @@ import { getPublicCampBySlug, publicBadgeText } from "@/lib/public-camps"
 import { fetchPublicCampShots, type ApiShotFamily } from "@/lib/breakaway-api"
 import { campCheckoutHref } from "@/lib/camp-checkout"
 import { breadcrumbJsonLd, campEventJsonLd } from "@/lib/seo"
+import { campHasNotEnded } from "@/lib/upcoming-camps"
 import { kidsWeeklyLandingPathForCamp } from "@/lib/kids-weekly-camp"
 
 // Fixed family → icon map (migration 0076). Every shot inherits its family's
@@ -88,7 +89,11 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       card: "summary_large_image",
       images: [camp.heroImageUrl],
     },
-    robots: preview ? { index: false, follow: false } : undefined,
+    robots: preview
+      ? { index: false, follow: false }
+      : !campHasNotEnded(camp)
+        ? { index: false, follow: true }
+        : undefined,
   }
 }
 
