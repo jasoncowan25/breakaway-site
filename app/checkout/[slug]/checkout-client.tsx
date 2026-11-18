@@ -437,6 +437,9 @@ function CheckoutClientInner({
         clientSecret: paymentSession.clientSecret,
         confirmParams: {
           return_url: `${window.location.origin}/checkout/confirmation`,
+          payment_method_data: {
+            billing_details: { name: `${clean(payer.firstName)} ${clean(payer.lastName)}` },
+          },
         },
         redirect: "if_required",
       })
