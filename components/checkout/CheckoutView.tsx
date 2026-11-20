@@ -259,11 +259,17 @@ export function CheckoutView(props: CheckoutViewProps) {
             <span className="eyebrow">{camp.eyebrow}</span>
             <h1 className="camp-title">{camp.title}</h1>
             <div className="coach-line">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={camp.coachPhoto} alt={camp.coachLead} />
-              <span className="ct">
-                Led by <b>{camp.coachLead}</b>{" "}&amp; the Breakaway coaching team
-              </span>
+              {kidsMode ? (
+                <span className="ct"><b>Breakaway Team</b></span>
+              ) : (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={camp.coachPhoto} alt={camp.coachLead} />
+                  <span className="ct">
+                    Led by <b>{camp.coachLead}</b>{" "}&amp; the Breakaway coaching team
+                  </span>
+                </>
+              )}
             </div>
             <div className="camp-meta">
               <div className="m">

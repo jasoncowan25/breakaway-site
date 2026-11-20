@@ -91,7 +91,7 @@ export function SuccessView({
                 <SkeletonLine className="skel-copy skel-center" />
               ) : (
                 <>
-                  {camp.coachLead} &amp; team · {players.length}{" "}
+                  {kidsMode ? "Breakaway Team" : `${camp.coachLead} & team`} · {players.length}{" "}
                   {players.length === 1 ? unit : units} registered
                 </>
               )}
